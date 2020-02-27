@@ -8,47 +8,45 @@
 
 package cl.transbank.pos.utils;
 
-public final class TbkReturn {
-  public final static TbkReturn TBK_OK = new TbkReturn("TBK_OK", TransbankWrapJNI.TBK_OK_get());
-  public final static TbkReturn TBK_NOK = new TbkReturn("TBK_NOK", TransbankWrapJNI.TBK_NOK_get());
+public enum TbkReturn {
+  TBK_OK(0),
+  TBK_NOK(-1);
 
   public final int swigValue() {
     return swigValue;
   }
 
-  public String toString() {
-    return swigName;
-  }
-
   public static TbkReturn swigToEnum(int swigValue) {
+    TbkReturn[] swigValues = TbkReturn.class.getEnumConstants();
     if (swigValue < swigValues.length && swigValue >= 0 && swigValues[swigValue].swigValue == swigValue)
       return swigValues[swigValue];
-    for (int i = 0; i < swigValues.length; i++)
-      if (swigValues[i].swigValue == swigValue)
-        return swigValues[i];
+    for (TbkReturn swigEnum : swigValues)
+      if (swigEnum.swigValue == swigValue)
+        return swigEnum;
     throw new IllegalArgumentException("No enum " + TbkReturn.class + " with value " + swigValue);
   }
 
-  private TbkReturn(String swigName) {
-    this.swigName = swigName;
-    this.swigValue = swigNext++;
+  @SuppressWarnings("unused")
+  private TbkReturn() {
+    this.swigValue = SwigNext.next++;
   }
 
-  private TbkReturn(String swigName, int swigValue) {
-    this.swigName = swigName;
+  @SuppressWarnings("unused")
+  private TbkReturn(int swigValue) {
     this.swigValue = swigValue;
-    swigNext = swigValue+1;
+    SwigNext.next = swigValue+1;
   }
 
-  private TbkReturn(String swigName, TbkReturn swigEnum) {
-    this.swigName = swigName;
+  @SuppressWarnings("unused")
+  private TbkReturn(TbkReturn swigEnum) {
     this.swigValue = swigEnum.swigValue;
-    swigNext = this.swigValue+1;
+    SwigNext.next = this.swigValue+1;
   }
 
-  private static TbkReturn[] swigValues = { TBK_OK, TBK_NOK };
-  private static int swigNext = 0;
   private final int swigValue;
-  private final String swigName;
+
+  private static class SwigNext {
+    private static int next = 0;
+  }
 }
 

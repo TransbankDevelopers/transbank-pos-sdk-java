@@ -62,8 +62,6 @@ public class TransbankWrapJNI {
   public final static native short calculate_lrc(String jarg1, int jarg2);
   public final static native int reply_ack(long jarg1, String jarg2, int jarg3);
   public final static native int write_message(long jarg1, long jarg2);
-  public final static native int TBK_OK_get();
-  public final static native int TBK_NOK_get();
   public final static native int open_port(String jarg1, int jarg2);
   public final static native String sale(int jarg1, String jarg2, boolean jarg3);
   public final static native String last_sale();
