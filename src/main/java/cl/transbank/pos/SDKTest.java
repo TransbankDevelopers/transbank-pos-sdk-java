@@ -14,13 +14,13 @@ import static cl.transbank.pos.helper.StringUtils.*;
 public class SDKTest {
 
     private static final boolean doGetTotals = false;
-    private static final boolean doGetKeys = false;
+    private static final boolean doGetKeys = true;
     private static final boolean doLastSale = false;
     private static final boolean doSell = false;
     private static final boolean doRefund = false;
     private static final boolean doDetails = false;
     private static final boolean doClose = false;
-    private static final boolean doNormalMode = true;
+    private static final boolean doNormalMode = false;
 
     public static void main(String [] args) throws Throwable {
         POS pos = POS.getInstance();

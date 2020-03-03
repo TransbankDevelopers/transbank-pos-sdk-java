@@ -29,7 +29,7 @@ public class KeysResponse {
     }
 
     public KeysResponse(BaseResponse cresponse) {
-        logger.debug("constructos ctotals: " + cresponse);
+        logger.debug("constructor ctotals: " + cresponse);
         //we get everything at once so we don't keep making JNI calls later on.
         this.responseCode = cresponse.getResponseCode();
         this.functionCode = cresponse.getFunction();
