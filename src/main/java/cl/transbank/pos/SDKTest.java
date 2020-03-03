@@ -1,6 +1,8 @@
 package cl.transbank.pos;
 
-import cl.transbank.pos.responses.ResponseCodes;
+import cl.transbank.pos.responses.CloseResponse;
+import cl.transbank.pos.responses.DetailResponse;
+import cl.transbank.pos.responses.RefundResponse;
 import cl.transbank.pos.responses.KeysResponse;
 import cl.transbank.pos.responses.SaleResponse;
 import cl.transbank.pos.responses.TotalsResponse;
@@ -11,10 +13,14 @@ import static cl.transbank.pos.helper.StringUtils.*;
 
 public class SDKTest {
 
-    private static final boolean doGetTotals = true;
+    private static final boolean doGetTotals = false;
     private static final boolean doGetKeys = false;
     private static final boolean doLastSale = false;
     private static final boolean doSell = false;
+    private static final boolean doRefund = false;
+    private static final boolean doDetails = false;
+    private static final boolean doClose = false;
+    private static final boolean doNormalMode = true;
 
     public static void main(String [] args) throws Throwable {
         POS pos = POS.getInstance();
@@ -51,6 +57,27 @@ public class SDKTest {
             System.out.println("+ last sale: " + lsr);
             System.out.println("+ lsr map: " + SaleResponse.map);
         }
+        if (pollResult && doRefund) {
+            System.out.println("+ puerto abierto. Devolviendo plata.");
+            RefundResponse rr = pos.refund(87);
+            System.out.println("+ refund: " + rr);
+        }
+        if (pollResult && doDetails) {
+            System.out.println("+ puerto abierto. Obteniendo detalles.");
+            List<DetailResponse> ldr = pos.details(false);
+            System.out.println("+ details: " + ldr);
+        }
+        if (pollResult && doClose) {
+            System.out.println("+ puerto abierto. Cierre Caja.");
+            CloseResponse cr = pos.close();
+            System.out.println("+ refund: " + cr);
+        }
+        if (pollResult && doNormalMode) {
+            System.out.println("+ puerto abierto. Modo normal (quitar POS de modo integrado)");
+            boolean normal = pos.setNormalMode();
+            System.out.println("+ normal mode? " + normal);
+        }
+        System.out.println("+ cerrando puerto");
         pos.closePort();
         System.out.println("+ puerto cerrado");
 

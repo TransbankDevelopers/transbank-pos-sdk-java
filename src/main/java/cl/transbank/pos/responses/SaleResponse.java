@@ -1,7 +1,5 @@
 package cl.transbank.pos.responses;
 
-import cl.transbank.pos.helper.StringUtils;
-import cl.transbank.pos.utils.BaseResponse;
 import org.apache.log4j.Logger;
 
 import java.time.LocalDate;
@@ -24,7 +22,7 @@ public class SaleResponse {
         //los valores deben ser INTs. Si no, se caera en el inicializador estatico.
         // _NO_ usar un 0 antes del numero porque en java eso significa un numero octal
         Map<String, Integer> values = Stream.of(new Object[][]{
-                { "function", 0},
+                { "functionCode", 0},
                 { "responseCode", 1},
                 { "commerceCode", 2},
                 { "terminalId", 3},
@@ -47,12 +45,12 @@ public class SaleResponse {
         map = Collections.unmodifiableMap(values);
     }
 
-    private final int function;
+    private final int functionCode;
     private final int responseCode;
     private final int commerceCode;
-    private final int terminalId;
+    private final String terminalId;
     private final String ticket;
-    private final int autorizationCode;
+    private final String authorizationCode;
     private final int amount;
     private final int sharesNumber;
     private final int sharesAmount;
@@ -69,12 +67,13 @@ public class SaleResponse {
     @Override
     public String toString() {
         return "SaleResponse{" +
-                "function=" + function +
+                "isSuccesful=" + isSuccessful() +
+                ", functionCode=" + functionCode +
                 ", responseCode=" + responseCode +
                 ", commerceCode=" + commerceCode +
                 ", terminalId=" + terminalId +
                 ", ticket=" + ticket +
-                ", autorizationCode=" + autorizationCode +
+                ", autorizationCode=" + authorizationCode +
                 ", amount=" + amount +
                 ", sharesNumber=" + sharesNumber +
                 ", sharesAmount=" + sharesAmount +
@@ -87,29 +86,30 @@ public class SaleResponse {
                 ", realDate=" + realDate +
                 ", employeeId=" + employeeId +
                 ", tip=" + tip +
-                "}";
+                " }\n";
     }
 
-    public SaleResponse(String last_sale) {
-        last_sale = last_sale.substring(1); //the first character is a space
+    public SaleResponse(String saledata) {
+        logger.debug("SaleResponse: string: " + saledata);
+        saledata = saledata.substring(1); //the first character is a space
 
-        String[] fields = last_sale.split( "\\|");
+        String[] fields = saledata.split( "\\|");
         for(int index = 0; index < fields.length; index++) {
             logger.debug("fields[ " + index + " ] = " + fields[index] );
         }
-        function = parseInt( fields[map.get("function")] );
+        functionCode = parseInt( fields[map.get("functionCode")] );
         responseCode = parseInt( fields[map.get("responseCode")] );
         commerceCode = parseInt( fields[map.get("commerceCode")] );
-        terminalId = parseInt( fields[map.get("terminalId")] );
+        terminalId = fields[map.get("terminalId")];
         ticket = fields[map.get("ticket")];
-        autorizationCode = parseInt( fields[map.get("autorizationCode")] );
+        authorizationCode = fields[map.get("autorizationCode")];
         amount = parseInt( fields[map.get("amount")] );
         sharesNumber = parseInt( fields[map.get("sharesNumber")] );
         sharesAmount = parseInt( fields[map.get("sharesAmount")] );
         last4Digits = parseInt( fields[map.get("last4Digits")] );
         operationNumber = parseInt( fields[map.get("operationNumber")] );
         cardType = fields[map.get("cardType")];
-        accountingDate = parseLocalDateTime(fields[map.get("accountingDate")]);
+        accountingDate = parseLocalDate(fields[map.get("accountingDate")]);
         accountNumber = parseLong( fields[map.get("accountNumber")] );
         cardBrand = fields[map.get("cardBrand")];
         realDate = parseLocalDateTime(fields[map.get("realDate")], fields[map.get("realTime")]);
@@ -117,55 +117,16 @@ public class SaleResponse {
         tip = parseInt( fields[map.get("tip")] );
     }
 
-    DateTimeFormatter realDateTimeformatter = DateTimeFormatter.ofPattern("ddMMyyyy HHmmss");
-
-    private LocalDateTime parseLocalDateTime(String realDate, String realTime) {
-        if ("00-00-00".equals(realDate) || isEmpty(realDate)) {
-            return null;
-        }
-        try {
-            LocalDateTime result = LocalDateTime.parse(realDate + " " + realTime, realDateTimeformatter);
-            return result;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    DateTimeFormatter accountingDateTimeformatter = DateTimeFormatter.ofPattern("ddMMyyyy");
-
-    private LocalDate parseLocalDateTime(String accountingDate) {
-        if ("00-00-00".equals(accountingDate) || isEmpty(accountingDate)) {
-            return null;
-        }
-        try {
-            LocalDate result = LocalDate.parse(accountingDate + " " + accountingDate, accountingDateTimeformatter);
-            return result;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public boolean isSuccessful() {
         return responseCode == 0;
-    }
-
-    public static void main(String args[]) {
-        String lastSaleCredito = " 0210|00|597029414300|75001146|000002|799889|2600|0||2008|000087|CR|||AX|03032020|112624|0|0| Ients/lib/idea_rt.jar\\=60277\\:/Applications/IntelliJ IDEA CE.app/C";
-        SaleResponse lsrc = new SaleResponse(lastSaleCredito);
-        logger.info("lsr: credito: " + lsrc);
-        String lastSaleDebito = " 0260|00|597029414300|75001146|000001|828630|2600|0||3331|000086|DB|00-00-00|********331|DB|02032020|162214|0|0| u";
-        SaleResponse lsrd = new SaleResponse(lastSaleDebito);
-        logger.info("lsr: debito: " + lsrd);
     }
 
     public String getResponseMessage() {
         return ResponseCodes.getMessage(this.getResponseCode());
     }
 
-    public int getFunction() {
-        return function;
+    public int getFunctionCode() {
+        return functionCode;
     }
 
     public int getResponseCode() {
@@ -176,7 +137,7 @@ public class SaleResponse {
         return commerceCode;
     }
 
-    public int getTerminalId() {
+    public String getTerminalId() {
         return terminalId;
     }
 
@@ -184,8 +145,8 @@ public class SaleResponse {
         return ticket;
     }
 
-    public int getAutorizationCode() {
-        return autorizationCode;
+    public String getAuthorizationCode() {
+        return authorizationCode;
     }
 
     public int getAmount() {
@@ -236,11 +197,19 @@ public class SaleResponse {
         return tip;
     }
 
-    public DateTimeFormatter getRealDateTimeformatter() {
-        return realDateTimeformatter;
+    public static void main(String args[]) {
+        String lastSaleCredito = " 0210|00|597029414300|75001146|000002|799889|2600|0||2008|000087|CR|||AX|03032020|112624|0|0| Ients/lib/idea_rt.jar\\=60277\\:/Applications/IntelliJ IDEA CE.app/C";
+        SaleResponse lsrc = new SaleResponse(lastSaleCredito);
+        logger.info("lsr: credito: " + lsrc);
+        String lastSaleDebito = " 0260|00|597029414300|75001146|000001|828630|2600|0||3331|000086|DB|00-00-00|********331|DB|02032020|162214|0|0| u";
+        SaleResponse lsrd = new SaleResponse(lastSaleDebito);
+        logger.info("lsr: debito: " + lsrd);
+        String line = "###";
+        String [] lines = line.split("###");
+        System.out.println("lines.length: " + lines.length);
+        for(String ll : lines) {
+            System.out.println("ll: " + ll);
+        }
     }
 
-    public DateTimeFormatter getAccountingDateTimeformatter() {
-        return accountingDateTimeformatter;
-    }
 }

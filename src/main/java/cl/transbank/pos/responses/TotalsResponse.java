@@ -9,7 +9,7 @@ public class TotalsResponse {
 
     private final int txCount;
     private final int txTotal;
-    private final int function;
+    private final int functionCode;
     private final int  responseCode;
 
     public TotalsResponse(TotalsCResponse cresponse) {
@@ -18,17 +18,7 @@ public class TotalsResponse {
         this.responseCode = cresponse.getResponseCode();
         this.txCount = cresponse.getTxCount();
         this.txTotal = cresponse.getTxTotal();
-        this.function = cresponse.getFunction();
-    }
-
-    @Override
-    public String toString() {
-        return "Function: " + this.getFunction() + "\n" +
-                "Response: " + this.getResponseCode() + "\n" +
-                "Success?: " + this.isSuccessful() + "\n" +
-                "Message?: " + this.getResponseMessage() + "\n" +
-                "TX Count: " + this.getTxCount() + "\n" +
-                "TX Total: " + this.getTxTotal();
+        this.functionCode = cresponse.getFunction();
     }
 
     public boolean isSuccessful() {
@@ -47,12 +37,22 @@ public class TotalsResponse {
         return txTotal;
     }
 
-    public int getFunction() {
-        return function;
+    public int getFunctionCode() {
+        return functionCode;
     }
 
     public int getResponseCode() {
         return responseCode;
     }
 
+    @Override
+    public String toString() {
+        return "TotalsResponse{ " +
+                "isSuccesful=" + isSuccessful() +
+                ", txCount=" + txCount +
+                ", txTotal=" + txTotal +
+                ", functionCode=" + functionCode +
+                ", responseCode=" + responseCode +
+                " }\n";
+    }
 }

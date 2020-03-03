@@ -1,5 +1,9 @@
 package cl.transbank.pos.helper;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class StringUtils {
 
     public static boolean isEmpty(String data) {
@@ -44,4 +48,35 @@ public class StringUtils {
         int length = padded.length();
         return padded.substring(length - padding, length);
     }
+
+    private final static DateTimeFormatter realDateTimeformatter = DateTimeFormatter.ofPattern("ddMMyyyy HHmmss");
+
+    public final static LocalDateTime parseLocalDateTime(String date, String time) {
+        if ("00-00-00".equals(date) || isEmpty(date)) {
+            return null;
+        }
+        try {
+            LocalDateTime result = LocalDateTime.parse(date + " " + time, realDateTimeformatter);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private final static DateTimeFormatter accountingDateTimeformatter = DateTimeFormatter.ofPattern("ddMMyyyy");
+
+    public final static LocalDate parseLocalDate(String date) {
+        if ("00-00-00".equals(date) || isEmpty(date)) {
+            return null;
+        }
+        try {
+            LocalDate result = LocalDate.parse(date + " " + date, accountingDateTimeformatter);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
