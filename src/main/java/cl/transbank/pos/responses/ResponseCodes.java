@@ -1,12 +1,11 @@
 package cl.transbank.pos.responses;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class CodesResponses {
+public class ResponseCodes {
 
     static {
         //las llaves deben ser INTs. Si no, se caera en el inicializador estatico.
@@ -65,6 +64,13 @@ public class CodesResponses {
         map = Collections.unmodifiableMap(values);
     }
 
-    public static Map<Integer, String> map;
+    public final static Map<Integer, String> map; //public so programmers can call up a list of possible messages
+
+    public static String getMessage(int code) {
+        if (map.containsKey(code)) {
+            return map.get(code);
+        }
+        return "Unexpected code [" + code + "]";
+    }
 
 }

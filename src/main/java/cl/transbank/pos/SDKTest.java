@@ -1,6 +1,6 @@
 package cl.transbank.pos;
 
-import cl.transbank.pos.responses.CodesResponses;
+import cl.transbank.pos.responses.ResponseCodes;
 import cl.transbank.pos.responses.KeysResponse;
 import cl.transbank.pos.responses.SaleResponse;
 import cl.transbank.pos.responses.TotalsResponse;
@@ -11,9 +11,9 @@ import static cl.transbank.pos.helper.StringUtils.*;
 
 public class SDKTest {
 
-    private static final boolean doGetTotals = false;
+    private static final boolean doGetTotals = true;
     private static final boolean doGetKeys = false;
-    private static final boolean doLastSale = true;
+    private static final boolean doLastSale = false;
     private static final boolean doSell = false;
 
     public static void main(String [] args) throws Throwable {
@@ -33,7 +33,7 @@ public class SDKTest {
         if (pollResult && doGetTotals) {
             System.out.println("+ puerto abierto. Cargando totales.");
             TotalsResponse tr = pos.getTotals();
-            System.out.println("totals: " + tr);
+            System.out.println("totals: " + tr.toString());
         }
         if (pollResult && doGetKeys) {
             System.out.println("+ puerto abierto y conectado. Cargando llaves.");
@@ -42,7 +42,7 @@ public class SDKTest {
         }
         if (pollResult && doSell) {
             System.out.println("+ puerto abierto y conectado. Realizando una venta.");
-            SaleResponse sr = pos.sale(2600, 1);
+            SaleResponse sr = pos.sale(2600, 2);
             System.out.println("sale response: " + sr);
         }
         if (pollResult && doLastSale) {
@@ -50,7 +50,6 @@ public class SDKTest {
             SaleResponse lsr = pos.getLastSale();
             System.out.println("+ last sale: " + lsr);
             System.out.println("+ lsr map: " + SaleResponse.map);
-            System.out.println("+ cr  map: " + CodesResponses.map);
         }
         pos.closePort();
         System.out.println("+ puerto cerrado");

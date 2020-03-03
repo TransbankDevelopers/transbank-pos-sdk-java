@@ -6,7 +6,8 @@ import cl.transbank.pos.exceptions.TransbankLinkException;
 import cl.transbank.pos.exceptions.TransbankPortNotConfiguredException;
 import cl.transbank.pos.exceptions.TransbankSaleException;
 import cl.transbank.pos.helper.StringUtils;
-import cl.transbank.pos.responses.CodesResponses;
+import cl.transbank.pos.responses.RefundResponse;
+import cl.transbank.pos.responses.ResponseCodes;
 import cl.transbank.pos.responses.KeysResponse;
 import cl.transbank.pos.responses.SaleResponse;
 import cl.transbank.pos.responses.TotalsResponse;
@@ -133,38 +134,46 @@ public class POS {
             if (sr.isSuccessful()) {
                 return sr;
             } else {
-                throw new TransbankSaleException("Sale returned an error: " + CodesResponses.map.get(sr.responseCode));
+                throw new TransbankSaleException("Sale returned an error: " + sr.getResponseCode() + " " + sr.getResponseMessage());
             }
 
         } else {
             throw new TransbankPortNotConfiguredException("The port is not configured. Please configure it before sending a sale.");
         }
     }
+
+    public RefundResponse refund(int operationId) throws TransbankPortNotConfiguredException {
+        if (port.isConfigured()) {
+            return null;
+        } else {
+            throw new TransbankPortNotConfiguredException("The port is not configured. Please configure it before trying to refund a sale.");
+        }
+    }
 }
 
 class Port {
-    private String port;
+    private String portName = null;
 
-    protected String getPort() {
-        return port;
+    protected String getPortName() {
+        return portName;
     }
 
     protected void usePortname(String port) throws TransbankInvalidPortException {
         if (StringUtils.isEmpty(port)) {
             throw new TransbankInvalidPortException("Se especifico un puerto vacio");
         }
-        this.port = port;
+        this.portName = port;
     }
 
     protected void clearPortname() {
-        this.port = null;
+        this.portName = null;
     }
 
     protected boolean isConfigured() {
-        return StringUtils.notEmpty(port);
+        return StringUtils.notEmpty(portName);
     }
 
     protected Port(String port) {
-        this.port = port;
+        this.portName = port;
     }
 }

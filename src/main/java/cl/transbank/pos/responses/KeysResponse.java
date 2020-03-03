@@ -1,26 +1,51 @@
 package cl.transbank.pos.responses;
 
 import cl.transbank.pos.utils.BaseResponse;
+import cl.transbank.pos.utils.TotalsCResponse;
+import org.apache.log4j.Logger;
 
-public class KeysResponse extends BaseResponse {
+public class KeysResponse {
 
-    public BaseResponse response;
-    public BaseResponse getResponse() {
-        return response;
+    final static Logger logger = Logger.getLogger(TotalsResponse.class);
+
+    private final int function;
+    private final int responseCode;
+    private final long commerceCode;
+    private final String terminalId;
+
+    public int getFunction() {
+        return function;
+    }
+
+    public int getResponseCode() {
+        return responseCode;
+    }
+
+    public long getCommerceCode() {
+        return commerceCode;
+    }
+
+    public String getTerminalId() {
+        return terminalId;
     }
 
     public KeysResponse(BaseResponse cresponse) {
-        response = cresponse;
+        logger.debug("constructos ctotals: " + cresponse);
+        //we get everything at once so we don't keep making JNI calls later on.
+        this.responseCode = cresponse.getResponseCode();
+        this.function = cresponse.getFunction();
+        this.commerceCode = cresponse.getCommerceCode();
+        this.terminalId = cresponse.getTerminalId();
     }
 
     public boolean isSuccessful() {
-        return response.getResponseCode() == 0;
+        return this.getResponseCode() == 0;
     }
 
     @Override
     public String toString() {
         return "Function: " + this.getFunction() + "\n" +
-                "Response: " + this.getResponse() + "\n" +
+                "Response: " + this.getResponseCode() + "\n" +
                 "Success?: " + this.isSuccessful() + "\n" +
                 "Commerce Code: " + this.getCommerceCode() + "\n" +
                 "Terminal Id: " + this.getTerminalId();
