@@ -1,5 +1,6 @@
 package cl.transbank.pos;
 
+import cl.transbank.pos.exceptions.TransbankException;
 import cl.transbank.pos.responses.CloseResponse;
 import cl.transbank.pos.responses.DetailResponse;
 import cl.transbank.pos.responses.RefundResponse;
@@ -14,7 +15,7 @@ import static cl.transbank.pos.helper.StringUtils.*;
 public class SDKTest {
 
     private static final boolean doGetTotals = false;
-    private static final boolean doGetKeys = true;
+    private static final boolean doGetKeys = false;
     private static final boolean doLastSale = false;
     private static final boolean doSell = false;
     private static final boolean doRefund = false;
@@ -22,7 +23,7 @@ public class SDKTest {
     private static final boolean doClose = false;
     private static final boolean doNormalMode = false;
 
-    public static void main(String [] args) throws Throwable {
+    public static void main(String [] args) throws TransbankException {
         POS pos = POS.getInstance();
         List<String> ports = pos.listPorts();
         System.out.println("ports: " + ports);
@@ -34,6 +35,8 @@ public class SDKTest {
         System.out.println("+ abriendo puerto");
         pos.openPort(port);
         System.out.println("+ puerto abierto. Chequeando que este conectado.");
+        String openPort = pos.getOpenPort();
+        System.out.println("+ puerto que esta abierto: " + openPort);
         boolean pollResult = pos.poll();
         System.out.println("+ poll? " + pollResult);
         if (pollResult && doGetTotals) {

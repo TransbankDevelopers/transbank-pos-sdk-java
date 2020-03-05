@@ -197,19 +197,4 @@ public class SaleResponse {
         return tip;
     }
 
-    public static void main(String args[]) {
-        String lastSaleCredito = " 0210|00|597029414300|75001146|000002|799889|2600|0||2008|000087|CR|||AX|03032020|112624|0|0| Ients/lib/idea_rt.jar\\=60277\\:/Applications/IntelliJ IDEA CE.app/C";
-        SaleResponse lsrc = new SaleResponse(lastSaleCredito);
-        logger.info("lsr: credito: " + lsrc);
-        String lastSaleDebito = " 0260|00|597029414300|75001146|000001|828630|2600|0||3331|000086|DB|00-00-00|********331|DB|02032020|162214|0|0| u";
-        SaleResponse lsrd = new SaleResponse(lastSaleDebito);
-        logger.info("lsr: debito: " + lsrd);
-        String line = "###";
-        String [] lines = line.split("###");
-        System.out.println("lines.length: " + lines.length);
-        for(String ll : lines) {
-            System.out.println("ll: " + ll);
-        }
-    }
-
 }
