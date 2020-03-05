@@ -1,2 +1,0 @@
--El servicio Last Sale no retorna una venta realizada en el POS si el POS se des-integra, se realiza una venta, y
- luego se re-integra, y se llama a Last Sale.
