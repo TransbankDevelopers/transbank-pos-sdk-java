@@ -24,27 +24,28 @@ public class DetailResponse {
     static {
         //los valores deben ser INTs. Si no, se caera en el inicializador estatico.
         // _NO_ usar un 0 antes del numero porque en java eso significa un numero octal
-        Map<String, Integer> values = Stream.of(new Object[][]{
-                { "functionCode", 0 },
-                { "responseCode", 1 },
-                { "commerceCode", 2 },
-                { "terminalId", 3 },
-                { "ticket", 4 },
-                { "authorizationCode", 5 },
-                { "amount", 6 },
-                { "last4Digits", 7 },
-                { "operationNumber", 8 },
-                { "cardType", 9 },
-                { "accountingDate", 10 },
-                { "accountNumber", 11 },
-                { "cardBrand", 12 },
-                { "realDate", 13 },
-                { "realTime", 14 },
-                { "employeeId", 15 },
-                { "tip", 16 },
-                { "feeAmount", 17 },
-                { "feeNumber", 18 }
-        }).collect(Collectors.toMap(data -> (String)data[0], data -> (Integer) data[1]));
+        Object[][] codePosition = {
+                {"functionCode", 0},
+                {"responseCode", 1},
+                {"commerceCode", 2},
+                {"terminalId", 3},
+                {"ticket", 4},
+                {"authorizationCode", 5},
+                {"amount", 6},
+                {"last4Digits", 7},
+                {"operationNumber", 8},
+                {"cardType", 9},
+                {"accountingDate", 10},
+                {"accountNumber", 11},
+                {"cardBrand", 12},
+                {"realDate", 13},
+                {"realTime", 14},
+                {"employeeId", 15},
+                {"tip", 16},
+                {"feeAmount", 17},
+                {"feeNumber", 18}
+        };
+        Map<String, Integer> values = Stream.of(codePosition).collect(Collectors.toMap(data -> (String)data[0], data -> (Integer) data[1]));
         map = Collections.unmodifiableMap(values);
     }
 

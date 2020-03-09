@@ -12,7 +12,7 @@ public class ResponseCodes {
     static {
         //las llaves deben ser INTs. Si no, se caera en el inicializador estatico.
         // _NO_ usar un 0 antes del numero porque en java eso significa un numero octal
-        Map<Integer, String> values = Stream.of(new Object[][]{
+        Object[][] codeMessage = {
                 {0, "Aprobado"},
                 {1, "Rechazado"},
                 {2, "Host no Responde"},
@@ -62,7 +62,8 @@ public class ResponseCodes {
                 {93, "Declinada"},
                 {94, "Error al Procesar Respuesta"},
                 {95, "Error al Imprimir TASA"}
-        }).collect(Collectors.toMap(data -> (Integer) data[0], data -> (String) data[1]));
+        };
+        Map<Integer, String> values = Stream.of(codeMessage).collect(Collectors.toMap(data -> (Integer) data[0], data -> (String) data[1]));
         map = Collections.unmodifiableMap(values);
     }
 

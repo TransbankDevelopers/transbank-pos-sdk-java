@@ -20,27 +20,28 @@ public class SaleResponse {
     static {
         //los valores deben ser INTs. Si no, se caera en el inicializador estatico.
         // _NO_ usar un 0 antes del numero porque en java eso significa un numero octal
-        Map<String, Integer> values = Stream.of(new Object[][]{
-                { "functionCode", 0},
-                { "responseCode", 1},
-                { "commerceCode", 2},
-                { "terminalId", 3},
-                { "ticket", 4},
-                { "autorizationCode", 5},
-                { "amount", 6},
-                { "sharesNumber", 7},
-                { "sharesAmount", 8},
-                { "last4Digits", 9},
-                { "operationNumber", 10},
-                { "cardType", 11},
-                { "accountingDate", 12},
-                { "accountNumber", 13},
-                { "cardBrand", 14},
-                { "realDate", 15},
-                { "realTime", 16},
-                { "employeeId", 17},
-                { "tip", 18}
-        }).collect(Collectors.toMap(data -> (String)data[0], data -> (Integer) data[1]));
+        Object[][] codePosition = {
+                {"functionCode", 0},
+                {"responseCode", 1},
+                {"commerceCode", 2},
+                {"terminalId", 3},
+                {"ticket", 4},
+                {"autorizationCode", 5},
+                {"amount", 6},
+                {"sharesNumber", 7},
+                {"sharesAmount", 8},
+                {"last4Digits", 9},
+                {"operationNumber", 10},
+                {"cardType", 11},
+                {"accountingDate", 12},
+                {"accountNumber", 13},
+                {"cardBrand", 14},
+                {"realDate", 15},
+                {"realTime", 16},
+                {"employeeId", 17},
+                {"tip", 18}
+        };
+        Map<String, Integer> values = Stream.of(codePosition).collect(Collectors.toMap(data -> (String)data[0], data -> (Integer) data[1]));
         map = Collections.unmodifiableMap(values);
     }
 
