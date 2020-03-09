@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 
 public class TotalsResponse {
 
-    final static Logger logger = Logger.getLogger(TotalsResponse.class);
+    private static final Logger logger = Logger.getLogger(TotalsResponse.class);
 
     private final int txCount;
     private final int txTotal;
@@ -23,10 +23,6 @@ public class TotalsResponse {
 
     public boolean isSuccessful() {
         return this.getResponseCode() == 0;
-    }
-
-    private String getResponseMessage() {
-        return ResponseCodes.getMessage(this.getResponseCode());
     }
 
     public int getTxCount() {

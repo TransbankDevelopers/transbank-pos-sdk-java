@@ -1,11 +1,8 @@
 package cl.transbank.pos.responses;
 
 import cl.transbank.pos.utils.RefundCResponse;
-import org.apache.log4j.Logger;
 
 public class RefundResponse {
-
-    final static Logger logger = Logger.getLogger(RefundResponse.class);
 
     private final int functionCode;
     private final int responseCode;
@@ -27,10 +24,6 @@ public class RefundResponse {
 
     public boolean isSuccessful() {
         return responseCode == 0;
-    }
-
-    private String getResponseMessage() {
-        return ResponseCodes.getMessage(this.getResponseCode());
     }
 
     public int getFunctionCode() {

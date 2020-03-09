@@ -1,9 +1,9 @@
 package cl.transbank.pos;
 
 import cl.transbank.pos.exceptions.TransbankCannotOpenPortException;
-import cl.transbank.pos.exceptions.TransbankException;
 import cl.transbank.pos.exceptions.TransbankInvalidPortException;
 import cl.transbank.pos.exceptions.TransbankLinkException;
+import cl.transbank.pos.exceptions.TransbankParseException;
 import cl.transbank.pos.exceptions.TransbankPortNotConfiguredException;
 import cl.transbank.pos.exceptions.TransbankUnexpectedError;
 import cl.transbank.pos.helper.StringUtils;
@@ -19,13 +19,14 @@ import cl.transbank.pos.utils.TransbankWrap;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static cl.transbank.pos.helper.StringUtils.pad;
 
 public class POS {
 
-    final static Logger logger = Logger.getLogger(POS.class);
+    private static final Logger logger = Logger.getLogger(POS.class);
 
     public static final String NATIVE_TRANSBANK_WRAP = "NATIVE_TRANSBANK_WRAP";
 
@@ -46,9 +47,10 @@ public class POS {
 
     private static POS instance = null;
 
+    private static final TbkBaudRate defaultBaudRate = TbkBaudRate.TBK_115200;
+
     private final String libraryPath;
     private final Port port;
-    private final TbkBaudRate defaultBaudRate = TbkBaudRate.TBK_115200;
 
     /**
      * The Constructor of the POS.
@@ -124,9 +126,7 @@ public class POS {
         }
         if (list != null) {
             String[] array = list.split("\\|");
-            for (String elem : array) {
-                result.add(elem);
-            }
+            Collections.addAll(result, array);
         }
         return result;
     }
@@ -148,7 +148,7 @@ public class POS {
      * @throws TransbankCannotOpenPortException when there's a problem opening the port
      */
     public void openPort(String portname) throws TransbankInvalidPortException, TransbankCannotOpenPortException {
-        openPort(portname, this.defaultBaudRate);
+        openPort(portname, defaultBaudRate);
     }
 
     /**
@@ -322,18 +322,13 @@ public class POS {
             logger.debug("details: lines: " + (lines == null ? -1 : lines.length));
             List<DetailResponse> ldr = new ArrayList<>();
             for (String line : lines) {
-                if (line.indexOf('|') < 0) {
-                    logger.debug("linea invalida: " + line);
-                    continue;
-                }
                 try {
                     DetailResponse dr = new DetailResponse(line);
                     logger.debug("refund: response: " + dr);
                     ldr.add(dr);
-                } catch (Exception e) {
+                } catch (TransbankParseException e) {
                     //if the parsing of the line fails, let's just skip it and go to the next one. Still, we log it
                     logger.debug("Parse error: " + line, e);
-                    continue;
                 }
             }
             return ldr;

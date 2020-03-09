@@ -1,5 +1,6 @@
 package cl.transbank.pos.responses;
 
+import cl.transbank.pos.exceptions.TransbankParseException;
 import org.apache.log4j.Logger;
 
 import java.time.LocalDate;
@@ -16,7 +17,7 @@ import static cl.transbank.pos.helper.StringUtils.parseLong;
 
 public class DetailResponse {
 
-    final static Logger logger = Logger.getLogger(DetailResponse.class);
+    private static final Logger logger = Logger.getLogger(DetailResponse.class);
 
     public static final Map<String, Integer> map;
 
@@ -66,32 +67,40 @@ public class DetailResponse {
     private final int feeAmount;
     private final int feeNumber;
 
-    public DetailResponse(String saleData) {
-        logger.debug("DetailsResponse: string: " + saleData);
-        saleData = saleData.trim(); //the first character is a space
+    public DetailResponse(String saleData) throws TransbankParseException {
+        if (saleData == null || saleData.indexOf('|') < 0) {
+            logger.debug("linea invalida: " + saleData);
+            throw new TransbankParseException("Could not parse into a DetailResponse the line " + saleData);
+        } try {
+            logger.debug("DetailsResponse: string: " + saleData);
+            saleData = saleData.trim(); //the first character is a space
 
-        String[] fields = saleData.split( "\\|");
-        for(int index = 0; index < fields.length; index++) {
-            logger.debug("fields[ " + index + " ] = " + fields[index] );
+            String[] fields = saleData.split("\\|");
+            for (int index = 0; index < fields.length; index++) {
+                logger.debug("fields[ " + index + " ] = " + fields[index]);
+            }
+            functionCode = parseInt(fields[map.get("functionCode")]);
+            responseCode = parseInt(fields[map.get("responseCode")]);
+            commerceCode = parseInt(fields[map.get("commerceCode")]);
+            terminalId = fields[map.get("terminalId")];
+            ticket = fields[map.get("ticket")];
+            authorizationCode = fields[map.get("authorizationCode")];
+            amount = parseInt(fields[map.get("amount")]);
+            last4Digits = parseInt(fields[map.get("last4Digits")]);
+            operationNumber = parseInt(fields[map.get("operationNumber")]);
+            cardType = fields[map.get("cardType")];
+            accountingDate = parseLocalDate(fields[map.get("accountingDate")]);
+            accountNumber = parseLong(fields[map.get("accountNumber")]);
+            cardBrand = fields[map.get("cardBrand")];
+            realDate = parseLocalDateTime(fields[map.get("realDate")], fields[map.get("realTime")]);
+            employeeId = parseInt(fields[map.get("employeeId")]);
+            tip = parseInt(fields[map.get("tip")]);
+            feeAmount = parseInt(fields[map.get("feeAmount")]);
+            feeNumber = parseInt(fields[map.get("feeNumber")]);
+        } catch (Exception e) {
+            logger.debug("Error al parsear: " + saleData);
+            throw new TransbankParseException("Error when parsing into a DetailResponse the line " + saleData, e);
         }
-        functionCode = parseInt( fields[map.get("functionCode")] );
-        responseCode = parseInt( fields[map.get("responseCode")] );
-        commerceCode = parseInt( fields[map.get("commerceCode")] );
-        terminalId = fields[map.get("terminalId")];
-        ticket = fields[map.get("ticket")];
-        authorizationCode = fields[map.get("authorizationCode")];
-        amount = parseInt( fields[map.get("amount")] );
-        last4Digits = parseInt( fields[map.get("last4Digits")] );
-        operationNumber = parseInt( fields[map.get("operationNumber")] );
-        cardType = fields[map.get("cardType")];
-        accountingDate = parseLocalDate(fields[map.get("accountingDate")]);
-        accountNumber = parseLong( fields[map.get("accountNumber")] );
-        cardBrand = fields[map.get("cardBrand")];
-        realDate = parseLocalDateTime(fields[map.get("realDate")], fields[map.get("realTime")]);
-        employeeId = parseInt( fields[map.get("employeeId")] );
-        tip = parseInt( fields[map.get("tip")] );
-        feeAmount = parseInt( fields[map.get("feeAmount")]);
-        feeNumber = parseInt( fields[map.get("feeNumber")]);
     }
 
     public boolean isSuccessful() {

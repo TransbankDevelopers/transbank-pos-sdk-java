@@ -1,5 +1,7 @@
 package cl.transbank.pos.responses;
 
+import cl.transbank.pos.exceptions.NotInstantiableException;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -64,7 +66,7 @@ public class ResponseCodes {
         map = Collections.unmodifiableMap(values);
     }
 
-    public final static Map<Integer, String> map; //public so programmers can call up a list of possible messages
+    public static final Map<Integer, String> map; //public so programmers can call up a list of possible messages
 
     public static String getMessage(int code) {
         if (map.containsKey(code)) {
@@ -73,4 +75,7 @@ public class ResponseCodes {
         return "Unexpected code [" + code + "]";
     }
 
+    private ResponseCodes() {
+        throw new NotInstantiableException("Do not instantiate this!");
+    }
 }

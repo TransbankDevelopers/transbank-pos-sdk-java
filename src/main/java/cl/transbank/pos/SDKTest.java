@@ -7,82 +7,89 @@ import cl.transbank.pos.responses.RefundResponse;
 import cl.transbank.pos.responses.KeysResponse;
 import cl.transbank.pos.responses.SaleResponse;
 import cl.transbank.pos.responses.TotalsResponse;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
 import static cl.transbank.pos.helper.StringUtils.*;
 
 public class SDKTest {
+    private static final Logger logger = Logger.getLogger(SDKTest.class);
 
-    private static final boolean doGetTotals = false;
-    private static final boolean doGetKeys = false;
-    private static final boolean doLastSale = false;
-    private static final boolean doSell = false;
-    private static final boolean doRefund = false;
-    private static final boolean doDetails = false;
-    private static final boolean doClose = false;
-    private static final boolean doNormalMode = false;
+    private static final boolean DO_GET_TOTALS = false;
+    private static final boolean DO_GET_KEYS = false;
+    private static final boolean DO_LAST_SALE = false;
+    private static final boolean DO_SELL = false;
+    private static final boolean DO_REFUND = false;
+    private static final boolean DO_DETAILS = false;
+    private static final boolean DO_CLOSE = false;
+    private static final boolean DO_NORMAL_MODE = false;
 
     public static void main(String [] args) throws TransbankException {
         POS pos = POS.getInstance();
         List<String> ports = pos.listPorts();
-        System.out.println("ports: " + ports);
+        logger.info("ports: " + ports);
 
         String port = selectPort(ports);
         if (isEmpty(port)) {
-            System.out.println("+ Puerto nulo o vacio");
+            logger.info("+ Puerto nulo o vacio");
         }
-        System.out.println("+ abriendo puerto");
+        logger.info("+ abriendo puerto");
         pos.openPort(port);
-        System.out.println("+ puerto abierto. Chequeando que este conectado.");
+        logger.info("+ puerto abierto. Chequeando que este conectado.");
         String openPort = pos.getOpenPort();
-        System.out.println("+ puerto que esta abierto: " + openPort);
+        logger.info("+ puerto que esta abierto: " + openPort);
         boolean pollResult = pos.poll();
-        System.out.println("+ poll? " + pollResult);
-        if (pollResult && doGetTotals) {
-            System.out.println("+ puerto abierto. Cargando totales.");
+        logger.info("+ poll? " + pollResult);
+        if (pollResult) {
+            logger.info("+ no se pudo hacer poll. Cerrando puerto y terminando.");
+            pos.closePort();
+            return;
+        }
+        if (DO_GET_TOTALS) {
+            logger.info("+ puerto abierto. Cargando totales.");
             TotalsResponse tr = pos.getTotals();
-            System.out.println("totals: " + tr.toString());
+            logger.info("totals: " + tr.toString());
         }
-        if (pollResult && doGetKeys) {
-            System.out.println("+ puerto abierto y conectado. Cargando llaves.");
+        if (DO_GET_KEYS) {
+            logger.info("+ puerto abierto y conectado. Cargando llaves.");
             KeysResponse kr = pos.loadKeys();
-            System.out.println("+ llaves: " + kr);
+            logger.info("+ llaves: " + kr);
         }
-        if (pollResult && doSell) {
-            System.out.println("+ puerto abierto y conectado. Realizando una venta.");
+        if (DO_SELL) {
+            logger.info("+ puerto abierto y conectado. Realizando una venta.");
             SaleResponse sr = pos.sale(2600, 2);
-            System.out.println("sale response: " + sr);
+            logger.info("sale response: " + sr);
         }
-        if (pollResult && doLastSale) {
-            System.out.println("+ puerto abierto. Obteniendo ultima venta.");
+        if (DO_LAST_SALE) {
+            logger.info("+ puerto abierto. Obteniendo ultima venta.");
             SaleResponse lsr = pos.getLastSale();
-            System.out.println("+ last sale: " + lsr);
-            System.out.println("+ lsr map: " + SaleResponse.map);
+            logger.info("+ last sale: " + lsr);
+            logger.info("+ lsr map: " + SaleResponse.map);
         }
-        if (pollResult && doRefund) {
-            System.out.println("+ puerto abierto. Devolviendo plata.");
+        if (DO_REFUND) {
+            logger.info("+ puerto abierto. Devolviendo plata.");
             RefundResponse rr = pos.refund(87);
-            System.out.println("+ refund: " + rr);
+            logger.info("+ refund: " + rr);
         }
-        if (pollResult && doDetails) {
-            System.out.println("+ puerto abierto. Obteniendo detalles.");
-            List<DetailResponse> ldr = pos.details(false);
-            System.out.println("+ details: " + ldr);
+        if (DO_DETAILS) {
+            logger.info("+ puerto abierto. Obteniendo detalles.");
+            List<DetailResponse> ldr = POS.getInstance().details(false);
+            logger.info("+ details: " + ldr);
         }
-        if (pollResult && doClose) {
-            System.out.println("+ puerto abierto. Cierre Caja.");
+        if (DO_CLOSE) {
+            logger.info("+ puerto abierto. Cierre Caja.");
             CloseResponse cr = pos.close();
-            System.out.println("+ refund: " + cr);
+            logger.info("+ refund: " + cr);
         }
-        if (pollResult && doNormalMode) {
-            System.out.println("+ puerto abierto. Modo normal (quitar POS de modo integrado)");
+        if (DO_NORMAL_MODE) {
+            logger.info("+ puerto abierto. Modo normal (quitar POS de modo integrado)");
             boolean normal = pos.setNormalMode();
-            System.out.println("+ normal mode? " + normal);
+            logger.info("+ normal mode? " + normal);
         }
-        System.out.println("+ cerrando puerto");
+        logger.info("+ cerrando puerto");
         pos.closePort();
-        System.out.println("+ puerto cerrado");
+        logger.info("+ puerto cerrado");
 
     }
 

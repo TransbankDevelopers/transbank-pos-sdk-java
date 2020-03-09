@@ -1,16 +1,22 @@
 package cl.transbank.pos.helper;
 
+import cl.transbank.pos.exceptions.NotInstantiableException;
+import org.apache.log4j.Logger;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class StringUtils {
 
+    private static final Logger logger = Logger.getLogger(StringUtils.class);
+
+    private StringUtils() {
+        throw new NotInstantiableException("Do not instantiate this!");
+    }
+
     public static boolean isEmpty(String data) {
-        if (data == null || data.trim().equals("")) {
-            return true;
-        }
-        return false;
+        return data == null || data.trim().equals("");
     }
 
     public static boolean notEmpty(String data) {
@@ -41,40 +47,38 @@ public class StringUtils {
         }
     }
 
-    private static final String pad = "000000";
+    private static final String PAD = "000000";
 
     public static String pad(int ticket, int padding) {
-        String padded = pad + String.valueOf(ticket);
+        String padded = PAD + String.valueOf(ticket);
         int length = padded.length();
         return padded.substring(length - padding, length);
     }
 
-    private final static DateTimeFormatter realDateTimeformatter = DateTimeFormatter.ofPattern("ddMMyyyy HHmmss");
+    private static final DateTimeFormatter realDateTimeformatter = DateTimeFormatter.ofPattern("ddMMyyyy HHmmss");
 
-    public final static LocalDateTime parseLocalDateTime(String date, String time) {
+    public static final LocalDateTime parseLocalDateTime(String date, String time) {
         if ("00-00-00".equals(date) || isEmpty(date)) {
             return null;
         }
         try {
-            LocalDateTime result = LocalDateTime.parse(date + " " + time, realDateTimeformatter);
-            return result;
+            return LocalDateTime.parse(date + " " + time, realDateTimeformatter);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error when parsing date (" + date + ") + time (" + time + ") message: " + e, e);
             return null;
         }
     }
 
-    private final static DateTimeFormatter accountingDateTimeformatter = DateTimeFormatter.ofPattern("ddMMyyyy");
+    private static final DateTimeFormatter accountingDateTimeformatter = DateTimeFormatter.ofPattern("ddMMyyyy");
 
-    public final static LocalDate parseLocalDate(String date) {
+    public static final LocalDate parseLocalDate(String date) {
         if ("00-00-00".equals(date) || isEmpty(date)) {
             return null;
         }
         try {
-            LocalDate result = LocalDate.parse(date + " " + date, accountingDateTimeformatter);
-            return result;
+            return LocalDate.parse(date + " " + date, accountingDateTimeformatter);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error when parsing date (" + date + ") message: " + e, e);
             return null;
         }
     }

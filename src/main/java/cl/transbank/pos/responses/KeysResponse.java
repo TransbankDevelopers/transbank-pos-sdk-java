@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 
 public class KeysResponse {
 
-    final static Logger logger = Logger.getLogger(TotalsResponse.class);
+    private static final Logger logger = Logger.getLogger(TotalsResponse.class);
 
     private final int functionCode;
     private final int responseCode;

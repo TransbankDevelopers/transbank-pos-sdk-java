@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -14,7 +13,7 @@ import static cl.transbank.pos.helper.StringUtils.*;
 
 public class SaleResponse {
 
-    final static Logger logger = Logger.getLogger(SaleResponse.class);
+    private static final Logger logger = Logger.getLogger(SaleResponse.class);
 
     public static final Map<String, Integer> map;
 
