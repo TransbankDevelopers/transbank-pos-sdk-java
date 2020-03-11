@@ -19,7 +19,7 @@ public class SDKTest {
     private static final boolean DO_GET_TOTALS = false;
     private static final boolean DO_GET_KEYS = false;
     private static final boolean DO_LAST_SALE = false;
-    private static final boolean DO_SELL = false;
+    private static final boolean DO_SELL = true;
     private static final boolean DO_REFUND = false;
     private static final boolean DO_DETAILS = false;
     private static final boolean DO_CLOSE = false;
@@ -41,7 +41,7 @@ public class SDKTest {
         logger.info("+ puerto que esta abierto: " + openPort);
         boolean pollResult = pos.poll();
         logger.info("+ poll? " + pollResult);
-        if (pollResult) {
+        if (!pollResult) {
             logger.info("+ no se pudo hacer poll. Cerrando puerto y terminando.");
             pos.closePort();
             return;

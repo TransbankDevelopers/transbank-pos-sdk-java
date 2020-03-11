@@ -253,14 +253,24 @@ public class POS {
     }
 
     /**
+     * Facade method that receives an int. The ticket value can actually be anything, but some places assume an int
+     * @param amount
+     * @param ticket
+     * @return
+     * @throws TransbankPortNotConfiguredException
+     */
+    public SaleResponse sale(int amount, int ticket) throws TransbankPortNotConfiguredException {
+        return sale(amount, String.valueOf(ticket));
+    }
+    /**
      * Starts the sale process on the POS. Upon calling this, the final user must use the POS to sell something to a client.
      * @param amount the amount sold, in whatever currency configured. Probably CLP.
      * @param ticket the number of the Boleta. it's a number, but in practice it will be padded / cut to six characters (padded with leftward 0s)
      * @return the data of the sale, including whether it succeeded at all
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
-    public SaleResponse sale(int amount, int ticket) throws TransbankPortNotConfiguredException {
-        String strTicket = pad(ticket, 6);
+    public SaleResponse sale(int amount, String ticket) throws TransbankPortNotConfiguredException {
+        String strTicket = StringUtils.padStr(ticket, 6);
         if (port.isConfigured()) {
             SaleResponse sr = null;
             try {

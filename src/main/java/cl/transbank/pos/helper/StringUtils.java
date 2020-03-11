@@ -50,10 +50,15 @@ public class StringUtils {
     private static final String PAD = "000000";
 
     public static String pad(int ticket, int padding) {
-        String padded = PAD + String.valueOf(ticket);
+        return padStr(String.valueOf(ticket), padding);
+    }
+
+    public static String padStr(String ticket, int padding) {
+        String padded = PAD + ticket;
         int length = padded.length();
         return padded.substring(length - padding, length);
     }
+
 
     private static final DateTimeFormatter realDateTimeformatter = DateTimeFormatter.ofPattern("ddMMyyyy HHmmss");
 
