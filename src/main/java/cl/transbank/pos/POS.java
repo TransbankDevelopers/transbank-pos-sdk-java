@@ -55,8 +55,8 @@ public class POS {
     /**
      * The Constructor of the POS.
      * It's private so the user is supposed to use getInstance instead
-     * @param libraryPath the path of the dll (Windows) or .so (Linux) or dylib (Mac OS) with the native C Transbank library
      *
+     * @param libraryPath the path of the dll (Windows) or .so (Linux) or dylib (Mac OS) with the native C Transbank library
      */
     private POS(String libraryPath) {
         port = new Port(null); //by setting the portname to null, we ensue the POS cannot be used just yet
@@ -65,6 +65,7 @@ public class POS {
 
     /**
      * Factory method. It returns a POS instance. There should only be a single instance, so it returns a singleton.
+     *
      * @return the POS singleton instance
      * @throws TransbankLinkException if it cannot find the native C Transbank library
      */
@@ -88,6 +89,7 @@ public class POS {
 
     /**
      * It makes the POS load the keys from the Transbank servers. It does not actually return the keys to the caller.
+     *
      * @return Whether the keys were loaded. Also the terminal id, function and commerce id
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
@@ -108,6 +110,7 @@ public class POS {
 
     /**
      * This list the serial ports connected to the computer. The user should choose one to call open port.
+     *
      * @return a list of port names
      * @throws TransbankLinkException if there are problems calling the native library
      */
@@ -133,6 +136,7 @@ public class POS {
 
     /**
      * Just get the port that is opened right now.
+     *
      * @return the portname currently opened
      * @throws TransbankLinkException in case it has to create the instance and the library load fails
      */
@@ -143,8 +147,9 @@ public class POS {
     /**
      * Opens a serial port with the default baud rate. Will silently succeed, not returning anything on success,
      * and throwing an exception on failure.
+     *
      * @param portname the name of the port
-     * @throws TransbankInvalidPortException the port specified is empty or otherwise found invalid before trying to actually open
+     * @throws TransbankInvalidPortException    the port specified is empty or otherwise found invalid before trying to actually open
      * @throws TransbankCannotOpenPortException when there's a problem opening the port
      */
     public void openPort(String portname) throws TransbankInvalidPortException, TransbankCannotOpenPortException {
@@ -154,9 +159,10 @@ public class POS {
     /**
      * Opens a serial port with the default baud rate. Will silently succeed, not returning anything on success,
      * and throwing an exception on failure.
+     *
      * @param portname the name of the port
      * @param baudRate baud rate to use with the port
-     * @throws TransbankInvalidPortException the port specified is empty or otherwise found invalid before trying to actually open it
+     * @throws TransbankInvalidPortException    the port specified is empty or otherwise found invalid before trying to actually open it
      * @throws TransbankCannotOpenPortException when there's a problem opening the port
      */
     public void openPort(String portname, TbkBaudRate baudRate) throws TransbankInvalidPortException, TransbankCannotOpenPortException {
@@ -188,7 +194,8 @@ public class POS {
     }
 
     /**
-     * Checks whether the POS is connected.
+     * Checks whether the POS is nnected.
+     *
      * @return boolean whether the POS is connected or not
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
@@ -211,6 +218,7 @@ public class POS {
     /**
      * Returns the total of the sales done with this POS.
      * As a side effect it will print it on the POS.
+     *
      * @return Whether the operation succeeded, the amount of transactions, the total money transacted, the terminal and commerce id
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
@@ -233,6 +241,7 @@ public class POS {
     /**
      * Returns the last sale done.
      * As a side effect, it prints it on the POS.
+     *
      * @return the data of the last sale.
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
@@ -254,6 +263,7 @@ public class POS {
 
     /**
      * Facade method that receives an int. The ticket value can actually be anything, but some places assume an int
+     *
      * @param amount
      * @param ticket
      * @return
@@ -262,8 +272,10 @@ public class POS {
     public SaleResponse sale(int amount, int ticket) throws TransbankPortNotConfiguredException {
         return sale(amount, String.valueOf(ticket));
     }
+
     /**
      * Starts the sale process on the POS. Upon calling this, the final user must use the POS to sell something to a client.
+     *
      * @param amount the amount sold, in whatever currency configured. Probably CLP.
      * @param ticket the number of the Boleta. it's a number, but in practice it will be padded / cut to six characters (padded with leftward 0s)
      * @return the data of the sale, including whether it succeeded at all
@@ -288,6 +300,7 @@ public class POS {
 
     /**
      * Does a refund of a sale. It needs the final user to swipe the client's card through the POS and insert an authorization PIN.
+     *
      * @param operationId the operation id of the sale. This was returned when the sale was done,
      *                    or it can be seen in the last sale result, or the details result
      * @return The data of the refund, including whether it succeeded, and some other data like the terminal id, the commerce id, etc.
@@ -313,6 +326,7 @@ public class POS {
      * Obtains the data of the last few sales. If the printOnPos param is true, it will use the POS's printer to print them
      * but it will return an empty list to the user. If the param is false, it won't print on the POS but it will actually
      * return the data in the List to the user.
+     *
      * @param printOnPos whether to print the list on the POS or not. Printing on the POS and receiving the data electronically
      *                   are mutually exclusive.
      * @return a list of the sales done this (logical) day, but only if the printOnPos param is false. Otherwise, an empty list.
@@ -328,17 +342,18 @@ public class POS {
                 throw new TransbankUnexpectedError("Unexpected error while obtaining the details of all the sales: " + e.getMessage(), e);
             }
             logger.debug("details: raw line " + data + "\n;");
-            String[] lines = (data == null)? new String [] {} : data.split("\n");
-            logger.debug("details: lines: " + (lines == null ? -1 : lines.length));
+            String[] lines = (data == null) ? new String[]{} : data.split("\n");
             List<DetailResponse> ldr = new ArrayList<>();
             for (String line : lines) {
-                try {
-                    DetailResponse dr = new DetailResponse(line);
-                    logger.debug("refund: response: " + dr);
-                    ldr.add(dr);
-                } catch (TransbankParseException e) {
-                    //if the parsing of the line fails, let's just skip it and go to the next one. Still, we log it
-                    logger.debug("Parse error: " + line, e);
+                if (StringUtils.notEmpty(line)) {
+                    try {
+                        DetailResponse dr = new DetailResponse(line);
+                        logger.debug("refund: response: " + dr);
+                        ldr.add(dr);
+                    } catch (TransbankParseException e) {
+                        //if the parsing of the line fails, let's just skip it and go to the next one. Still, we log it
+                        logger.debug("Non fatal: parse error when parsing '" + line + "'", e);
+                    }
                 }
             }
             return ldr;
@@ -349,6 +364,7 @@ public class POS {
 
     /**
      * Closes the day, wiping the sales done from the POS memory (so List and Last Sale will return empty) and loading the keys
+     *
      * @return The same data as the load_keys operation
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
@@ -371,6 +387,7 @@ public class POS {
     /**
      * Takes the POS out of integrated mode, thus making impossible to keep using it through the SDK without going
      * through the "Comercio" menu on the physical POS
+     *
      * @return whether it succeeded. It probably did unless it was disconnected already.
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */

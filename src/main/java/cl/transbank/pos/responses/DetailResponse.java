@@ -45,7 +45,7 @@ public class DetailResponse {
                 {"feeAmount", 17},
                 {"feeNumber", 18}
         };
-        Map<String, Integer> values = Stream.of(codePosition).collect(Collectors.toMap(data -> (String)data[0], data -> (Integer) data[1]));
+        Map<String, Integer> values = Stream.of(codePosition).collect(Collectors.toMap(data -> (String) data[0], data -> (Integer) data[1]));
         map = Collections.unmodifiableMap(values);
     }
 
@@ -72,7 +72,8 @@ public class DetailResponse {
         if (saleData == null || saleData.indexOf('|') < 0) {
             logger.debug("linea invalida: " + saleData);
             throw new TransbankParseException("Could not parse into a DetailResponse the line " + saleData);
-        } try {
+        }
+        try {
             logger.debug("DetailsResponse: string: " + saleData);
             saleData = saleData.trim(); //the first character is a space
 
@@ -130,6 +131,10 @@ public class DetailResponse {
                 ", feeAmount=" + feeAmount +
                 ", feeNumber=" + feeNumber +
                 " }\n";
+    }
+
+    public String getResponseMessage() {
+        return ResponseCodes.getMessage(this.getResponseCode());
     }
 
     public int getFunctionCode() {

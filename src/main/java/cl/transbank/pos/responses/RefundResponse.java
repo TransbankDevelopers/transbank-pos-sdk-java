@@ -26,6 +26,10 @@ public class RefundResponse {
         return responseCode == 0;
     }
 
+    public String getResponseMessage() {
+        return ResponseCodes.getMessage(this.getResponseCode());
+    }
+
     public int getFunctionCode() {
         return functionCode;
     }

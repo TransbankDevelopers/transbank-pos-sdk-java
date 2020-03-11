@@ -41,11 +41,15 @@ public class KeysResponse {
         return this.getResponseCode() == 0;
     }
 
+    public String getResponseMessage() {
+        return ResponseCodes.getMessage(this.getResponseCode());
+    }
+
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" + //close response extends this class. so we print the right class name
                 "isSuccesful=" + isSuccessful() +
-                "functionCode=" + functionCode +
+                ", functionCode=" + functionCode +
                 ", responseCode=" + responseCode +
                 ", commerceCode=" + commerceCode +
                 ", terminalId='" + terminalId + '\'' +

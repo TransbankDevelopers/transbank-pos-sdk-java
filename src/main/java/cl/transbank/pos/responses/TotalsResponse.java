@@ -25,6 +25,10 @@ public class TotalsResponse {
         return this.getResponseCode() == 0;
     }
 
+    public String getResponseMessage() {
+        return ResponseCodes.getMessage(this.getResponseCode());
+    }
+
     public int getTxCount() {
         return txCount;
     }

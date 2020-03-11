@@ -34,7 +34,7 @@ public class ResponseCodes {
                 {18, "Menú invalido"},
                 {19, "ERROR_TARJ_DIST"},
                 {20, "Tarjeta Invalida"},
-                {21, "Anulación. No Permitida"},
+                {21, "Anulación no Permitida"},
                 {22, "TIMEOUT"},
                 {24, "Impresora Sin Papel"},
                 {25, "Fecha Invalida"},

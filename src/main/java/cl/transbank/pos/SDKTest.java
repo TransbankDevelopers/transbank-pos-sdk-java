@@ -19,7 +19,7 @@ public class SDKTest {
     private static final boolean DO_GET_TOTALS = false;
     private static final boolean DO_GET_KEYS = false;
     private static final boolean DO_LAST_SALE = false;
-    private static final boolean DO_SELL = true;
+    private static final boolean DO_SELL = false;
     private static final boolean DO_REFUND = false;
     private static final boolean DO_DETAILS = false;
     private static final boolean DO_CLOSE = false;
