@@ -24,7 +24,7 @@ en Windows, se debe correr este comando en la ventana de Command.com antes de ej
 
 <code>set NATIVE_TRANSBANK_WRAP=/usr/local/lib/libTransbankWrap.dylib</code>
 
-Mas probablemente, se incluya esta variable en algun script que lanzará el programa.
+Mas adelante probablemente, se incluya esta variable en algun script que lanzará el programa.
 
 
 
@@ -35,12 +35,9 @@ Puedes encontrar toda la documentación de cómo usar este SDK en el sitio https
 La documentación relevante para usar este SDK es:
 
 - Documentación general sobre los productos y sus diferencias:
-  [Webpay](https://www.transbankdevelopers.cl/producto/webpay) y
-  [Onepay](https://www.transbankdevelopers.cl/producto/onepay).
-- Documentación sobre [ambientes, deberes del comercio, puesta en producción,
-  etc](https://www.transbankdevelopers.cl/documentacion/como_empezar#ambientes).
-- Primeros pasos con [Webpay](https://www.transbankdevelopers.cl/documentacion/webpay) y [Onepay](https://www.transbankdevelopers.cl/documentacion/onepay).
-- Referencia detallada sobre [Webpay](https://www.transbankdevelopers.cl/referencia/webpay) y [Onepay](https://www.transbankdevelopers.cl/referencia/onepay).
+  [POSIntegrado](https://www.transbankdevelopers.cl/producto/posintegrado)
+- Primeros pasos con [POSIntegrado](https://www.transbankdevelopers.cl/documentacion/posintegrado).
+- Referencia detallada sobre [POSIntegrado](https://www.transbankdevelopers.cl/referencia/posintegrado).
 
 ## Información para contribuir y desarrollar este SDK
 
@@ -66,7 +63,7 @@ La documentación relevante para usar este SDK es:
 
 ### Todas las mezclas a master se hacen mediante Pull Request.
 
-## Generar una nueva versión (con deploy automático a NuGet)
+## Generar una nueva versión (con deploy automático a Maven)
 
 Para generar una nueva versión, se debe crear un PR (con un título "Prepare release X.Y.Z" con los valores que correspondan para `X`, `Y` y `Z`). Se debe seguir el estándar semver para determinar si se incrementa el valor de `X` (si hay cambios no retrocompatibles), `Y` (para mejoras retrocompatibles) o `Z` (si sólo hubo correcciones a bugs).
 
@@ -76,4 +73,3 @@ En ese PR deben incluirse los siguientes cambios:
 2. Modificar `pom.xml` para que <`Version`> sea `X.Y.{Z+1}` (de manera que los pre-releases que se generen después del release sean de la siguiente versión).
 
 Luego de obtener aprobación del pull request, debe mezclarse a master e inmediatamente generar un release en GitHub con el tag `vX.Y.Z`. En la descripción del release debes poner lo mismo que agregaste al changelog.
-
