@@ -63,7 +63,7 @@ La documentación relevante para usar este SDK es:
 
 ### Todas las mezclas a master se hacen mediante Pull Request.
 
-## Generar una nueva versión (con deploy automático a NuGet)
+## Generar una nueva versión (con deploy automático a Maven)
 
 Para generar una nueva versión, se debe crear un PR (con un título "Prepare release X.Y.Z" con los valores que correspondan para `X`, `Y` y `Z`). Se debe seguir el estándar semver para determinar si se incrementa el valor de `X` (si hay cambios no retrocompatibles), `Y` (para mejoras retrocompatibles) o `Z` (si sólo hubo correcciones a bugs).
 
