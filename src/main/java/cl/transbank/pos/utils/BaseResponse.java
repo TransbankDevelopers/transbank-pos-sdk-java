@@ -12,6 +12,14 @@ public class BaseResponse {
   private transient long swigCPtr;
   protected transient boolean swigCMemOwn;
 
+  @Override
+  public String toString() {
+    return "BaseResponse{" +
+            "swigCPtr=" + swigCPtr +
+            ", swigCMemOwn=" + swigCMemOwn +
+            '}';
+  }
+
   protected BaseResponse(long cPtr, boolean cMemoryOwn) {
     swigCMemOwn = cMemoryOwn;
     swigCPtr = cPtr;

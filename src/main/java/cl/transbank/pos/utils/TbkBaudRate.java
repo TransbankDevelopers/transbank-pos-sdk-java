@@ -8,37 +8,41 @@
 
 package cl.transbank.pos.utils;
 
-public enum TbkReturn {
-  TBK_OK(0),
-  TBK_NOK(-1);
+public enum TbkBaudRate {
+  TBK_1200(1200),
+  TBK_2400(2400),
+  TBK_4800(4800),
+  TBK_9600(9600),
+  TBK_19200(19200),
+  TBK_115200(115200);
 
   public final int swigValue() {
     return swigValue;
   }
 
-  public static TbkReturn swigToEnum(int swigValue) {
-    TbkReturn[] swigValues = TbkReturn.class.getEnumConstants();
+  public static TbkBaudRate swigToEnum(int swigValue) {
+    TbkBaudRate[] swigValues = TbkBaudRate.class.getEnumConstants();
     if (swigValue < swigValues.length && swigValue >= 0 && swigValues[swigValue].swigValue == swigValue)
       return swigValues[swigValue];
-    for (TbkReturn swigEnum : swigValues)
+    for (TbkBaudRate swigEnum : swigValues)
       if (swigEnum.swigValue == swigValue)
         return swigEnum;
-    throw new IllegalArgumentException("No enum " + TbkReturn.class + " with value " + swigValue);
+    throw new IllegalArgumentException("No enum " + TbkBaudRate.class + " with value " + swigValue);
   }
 
   @SuppressWarnings("unused")
-  private TbkReturn() {
+  private TbkBaudRate() {
     this.swigValue = SwigNext.next++;
   }
 
   @SuppressWarnings("unused")
-  private TbkReturn(int swigValue) {
+  private TbkBaudRate(int swigValue) {
     this.swigValue = swigValue;
     SwigNext.next = swigValue+1;
   }
 
   @SuppressWarnings("unused")
-  private TbkReturn(TbkReturn swigEnum) {
+  private TbkBaudRate(TbkBaudRate swigEnum) {
     this.swigValue = swigEnum.swigValue;
     SwigNext.next = this.swigValue+1;
   }
