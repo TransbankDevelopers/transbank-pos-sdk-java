@@ -22,7 +22,7 @@ Por ejemplo en MacOS se debe correr el comando export en el mismo Shell en que s
 
 en Windows, se debe correr este comando en la ventana de Command.com antes de ejecutar el programa que utiliza la librería.
 
-<code>set NATIVE_TRANSBANK_WRAP=/usr/local/lib/libTransbankWrap.dylib</code>
+<code>setx NATIVE_TRANSBANK_WRAP=c:\TransbankLib\TransbankWrap.dll</code>
 
 Mas adelante probablemente, se incluya esta variable en algun script que lanzará el programa.
 
