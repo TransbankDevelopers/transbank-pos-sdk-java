@@ -24,7 +24,7 @@ en Windows, se debe correr este comando en la ventana de Command.com antes de ej
 
 <code>set NATIVE_TRANSBANK_WRAP=/usr/local/lib/libTransbankWrap.dylib</code>
 
-Mas probablemente, se incluya esta variable en algun script que lanzará el programa.
+Mas adelante probablemente, se incluya esta variable en algun script que lanzará el programa.
 
 
 
@@ -76,4 +76,3 @@ En ese PR deben incluirse los siguientes cambios:
 2. Modificar `pom.xml` para que <`Version`> sea `X.Y.{Z+1}` (de manera que los pre-releases que se generen después del release sean de la siguiente versión).
 
 Luego de obtener aprobación del pull request, debe mezclarse a master e inmediatamente generar un release en GitHub con el tag `vX.Y.Z`. En la descripción del release debes poner lo mismo que agregaste al changelog.
-
