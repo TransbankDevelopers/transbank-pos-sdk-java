@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 public class StringUtils {
 
-    private static final Logger logger = LogManager.getLogger(SDKTest.class);
+    private static final Logger logger = LogManager.getLogger(StringUtils.class);
 
     private StringUtils() {
         throw new NotInstantiableException("Do not instantiate this!");

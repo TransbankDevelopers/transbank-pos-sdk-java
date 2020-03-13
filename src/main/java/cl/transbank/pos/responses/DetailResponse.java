@@ -19,7 +19,7 @@ import static cl.transbank.pos.helper.StringUtils.parseLong;
 
 public class DetailResponse {
 
-    private static final Logger logger = LogManager.getLogger(SDKTest.class);
+    private static final Logger logger = LogManager.getLogger(DetailResponse.class);
 
     public static final Map<String, Integer> map;
 

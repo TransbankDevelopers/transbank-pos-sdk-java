@@ -27,7 +27,7 @@ import static cl.transbank.pos.helper.StringUtils.pad;
 
 public class POS {
 
-    private static final Logger logger = LogManager.getLogger(SDKTest.class);
+    private static final Logger logger = LogManager.getLogger(POS.class);
 
     public static final String NATIVE_TRANSBANK_WRAP = "NATIVE_TRANSBANK_WRAP";
 

@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 public class KeysResponse {
 
-    private static final Logger logger = LogManager.getLogger(SDKTest.class);
+    private static final Logger logger = LogManager.getLogger(KeysResponse.class);
 
     private final int functionCode;
     private final int responseCode;

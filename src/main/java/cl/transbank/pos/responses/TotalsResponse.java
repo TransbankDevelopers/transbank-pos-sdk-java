@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 public class TotalsResponse {
 
-    private static final Logger logger = LogManager.getLogger(SDKTest.class);
+    private static final Logger logger = LogManager.getLogger(TotalsResponse.class);
 
     private final int txCount;
     private final int txTotal;

@@ -15,7 +15,7 @@ import static cl.transbank.pos.helper.StringUtils.*;
 
 public class SaleResponse {
 
-    private static final Logger logger = LogManager.getLogger(SDKTest.class);
+    private static final Logger logger = LogManager.getLogger(SaleResponse.class);
 
     public static final Map<String, Integer> map;
 
