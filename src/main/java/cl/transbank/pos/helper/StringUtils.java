@@ -1,7 +1,9 @@
 package cl.transbank.pos.helper;
 
+import cl.transbank.pos.SDKTest;
 import cl.transbank.pos.exceptions.NotInstantiableException;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 public class StringUtils {
 
-    private static final Logger logger = Logger.getLogger(StringUtils.class);
+    private static final Logger logger = LogManager.getLogger(StringUtils.class);
 
     private StringUtils() {
         throw new NotInstantiableException("Do not instantiate this!");

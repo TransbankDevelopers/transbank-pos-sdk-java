@@ -1,6 +1,8 @@
 package cl.transbank.pos.responses;
 
-import org.apache.log4j.Logger;
+import cl.transbank.pos.SDKTest;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,7 +15,7 @@ import static cl.transbank.pos.helper.StringUtils.*;
 
 public class SaleResponse {
 
-    private static final Logger logger = Logger.getLogger(SaleResponse.class);
+    private static final Logger logger = LogManager.getLogger(SaleResponse.class);
 
     public static final Map<String, Integer> map;
 

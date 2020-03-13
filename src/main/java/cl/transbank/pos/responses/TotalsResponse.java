@@ -1,11 +1,13 @@
 package cl.transbank.pos.responses;
 
+import cl.transbank.pos.SDKTest;
 import cl.transbank.pos.utils.TotalsCResponse;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TotalsResponse {
 
-    private static final Logger logger = Logger.getLogger(TotalsResponse.class);
+    private static final Logger logger = LogManager.getLogger(TotalsResponse.class);
 
     private final int txCount;
     private final int txTotal;
