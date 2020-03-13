@@ -16,7 +16,8 @@ import cl.transbank.pos.responses.TotalsResponse;
 import cl.transbank.pos.utils.TbkBaudRate;
 import cl.transbank.pos.utils.TbkReturn;
 import cl.transbank.pos.utils.TransbankWrap;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +27,7 @@ import static cl.transbank.pos.helper.StringUtils.pad;
 
 public class POS {
 
-    private static final Logger logger = Logger.getLogger(POS.class);
+    private static final Logger logger = LogManager.getLogger(SDKTest.class);
 
     public static final String NATIVE_TRANSBANK_WRAP = "NATIVE_TRANSBANK_WRAP";
 

@@ -1,7 +1,9 @@
 package cl.transbank.pos.responses;
 
+import cl.transbank.pos.SDKTest;
 import cl.transbank.pos.exceptions.TransbankParseException;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,7 +19,7 @@ import static cl.transbank.pos.helper.StringUtils.parseLong;
 
 public class DetailResponse {
 
-    private static final Logger logger = Logger.getLogger(DetailResponse.class);
+    private static final Logger logger = LogManager.getLogger(SDKTest.class);
 
     public static final Map<String, Integer> map;
 

@@ -1,11 +1,13 @@
 package cl.transbank.pos.responses;
 
+import cl.transbank.pos.SDKTest;
 import cl.transbank.pos.utils.BaseResponse;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class KeysResponse {
 
-    private static final Logger logger = Logger.getLogger(TotalsResponse.class);
+    private static final Logger logger = LogManager.getLogger(SDKTest.class);
 
     private final int functionCode;
     private final int responseCode;
