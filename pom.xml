@@ -6,7 +6,7 @@
 
     <groupId>com.github.transbankdevelopers</groupId>
     <artifactId>transbank-sdk-pos-java</artifactId>
-    <version>1.0.1c-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
