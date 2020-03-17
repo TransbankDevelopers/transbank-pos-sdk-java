@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/TransbankDevelopers/transbank-pos-sdk-java.svg?branch=master)](https://travis-ci.org/TransbankDevelopers/transbank-pos-sdk-java)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.github.transbankdevelopers%3Atransbank-sdk-pos-java&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.github.transbankdevelopers%3Atransbank-sdk-pos-java)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.transbankdevelopers/transbank-sdk-pos-java/badge.svg?style=plastic)](https://search.maven.org/artifact/com.github.transbankdevelopers/transbank-sdk-pos-java/1.0.0/jar)
+
 #	Transbank POS SDK Java
 
 ## Requisitos para compilar
