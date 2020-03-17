@@ -1,6 +1,5 @@
 package cl.transbank.pos.helper;
 
-import cl.transbank.pos.SDKTest;
 import cl.transbank.pos.exceptions.NotInstantiableException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

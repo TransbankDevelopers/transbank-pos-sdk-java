@@ -1,6 +1,5 @@
 package cl.transbank.pos.responses;
 
-import cl.transbank.pos.SDKTest;
 import cl.transbank.pos.utils.TotalsCResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
