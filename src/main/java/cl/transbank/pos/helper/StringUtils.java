@@ -83,7 +83,7 @@ public class StringUtils {
             return null;
         }
         try {
-            return LocalDate.parse(date + " " + date, accountingDateTimeformatter);
+            return LocalDate.parse(date, accountingDateTimeformatter);
         } catch (Exception e) {
             logger.error("Error when parsing date (" + date + ") message: " + e, e);
             return null;
