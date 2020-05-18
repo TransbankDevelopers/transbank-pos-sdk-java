@@ -16,8 +16,8 @@ import cl.transbank.pos.responses.TotalsResponse;
 import cl.transbank.pos.utils.TbkBaudRate;
 import cl.transbank.pos.utils.TbkReturn;
 import cl.transbank.pos.utils.TransbankWrap;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,7 +27,7 @@ import static cl.transbank.pos.helper.StringUtils.pad;
 
 public class POS {
 
-    private static final Logger logger = LogManager.getLogger(POS.class);
+    final static Logger logger = Logger.getLogger(POS.class);
 
     public static final String NATIVE_TRANSBANK_WRAP = "NATIVE_TRANSBANK_WRAP";
 
@@ -71,6 +71,7 @@ public class POS {
      * @throws TransbankLinkException if it cannot find the native C Transbank library
      */
     public static POS getInstance() throws TransbankLinkException {
+        BasicConfigurator.configure();
         if (instance == null) {
             String nativeTransbankWrapper = System.getenv(NATIVE_TRANSBANK_WRAP);
             logger.info("environment variable " + NATIVE_TRANSBANK_WRAP + " : " + nativeTransbankWrapper);
@@ -95,6 +96,7 @@ public class POS {
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
     public KeysResponse loadKeys() throws TransbankPortNotConfiguredException {
+        BasicConfigurator.configure();
         if (port.isConfigured()) {
             try {
                 KeysResponse response = new KeysResponse(TransbankWrap.load_keys());
@@ -116,6 +118,7 @@ public class POS {
      * @throws TransbankLinkException if there are problems calling the native library
      */
     public List<String> listPorts() throws TransbankLinkException {
+        BasicConfigurator.configure();
         List<String> result = new ArrayList<>();
 
         String list = null;
@@ -167,6 +170,7 @@ public class POS {
      * @throws TransbankCannotOpenPortException when there's a problem opening the port
      */
     public void openPort(String portname, TbkBaudRate baudRate) throws TransbankInvalidPortException, TransbankCannotOpenPortException {
+        BasicConfigurator.configure();
         port.usePortname(portname);
         TbkReturn result = null;
         try {
@@ -185,6 +189,7 @@ public class POS {
      * This method just closes the port. The port name will be set null too.
      */
     public void closePort() {
+        BasicConfigurator.configure();
         port.clearPortname();
         try {
             TransbankWrap.close_port();
@@ -201,6 +206,7 @@ public class POS {
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
     public boolean poll() throws TransbankPortNotConfiguredException {
+        BasicConfigurator.configure();
         if (port.isConfigured()) {
             TbkReturn response = null;
             try {
@@ -224,6 +230,7 @@ public class POS {
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
     public TotalsResponse getTotals() throws TransbankPortNotConfiguredException {
+        BasicConfigurator.configure();
         if (port.isConfigured()) {
             TotalsResponse tresponse = null;
             try {
@@ -247,6 +254,7 @@ public class POS {
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
     public SaleResponse getLastSale() throws TransbankPortNotConfiguredException {
+        BasicConfigurator.configure();
         if (port.isConfigured()) {
             SaleResponse lsresponse = null;
             try {
@@ -283,6 +291,7 @@ public class POS {
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
     public SaleResponse sale(int amount, String ticket) throws TransbankPortNotConfiguredException {
+        BasicConfigurator.configure();
         String strTicket = StringUtils.padStr(ticket, 6);
         if (port.isConfigured()) {
             SaleResponse sr = null;
@@ -308,6 +317,7 @@ public class POS {
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
     public RefundResponse refund(int operationId) throws TransbankPortNotConfiguredException {
+        BasicConfigurator.configure();
         if (port.isConfigured()) {
             RefundResponse rr = null;
             try {
@@ -334,6 +344,7 @@ public class POS {
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
     public List<DetailResponse> details(boolean printOnPos) throws TransbankPortNotConfiguredException {
+        BasicConfigurator.configure();
         if (port.isConfigured()) {
             String data = null;
             try {
@@ -370,6 +381,7 @@ public class POS {
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
     public CloseResponse close() throws TransbankPortNotConfiguredException {
+        BasicConfigurator.configure();
         if (port.isConfigured()) {
             CloseResponse cr = null;
             try {
@@ -393,6 +405,7 @@ public class POS {
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
     public boolean setNormalMode() throws TransbankPortNotConfiguredException {
+        BasicConfigurator.configure();
         if (port.isConfigured()) {
             TbkReturn result = null;
             try {

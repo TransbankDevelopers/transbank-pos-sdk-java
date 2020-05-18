@@ -1,12 +1,12 @@
 package cl.transbank.pos.responses;
 
 import cl.transbank.pos.utils.TotalsCResponse;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 public class TotalsResponse {
 
-    private static final Logger logger = LogManager.getLogger(TotalsResponse.class);
+    final static Logger logger = Logger.getLogger(TotalsResponse.class);
 
     private final int txCount;
     private final int txTotal;
@@ -14,6 +14,7 @@ public class TotalsResponse {
     private final int  responseCode;
 
     public TotalsResponse(TotalsCResponse cresponse) {
+        BasicConfigurator.configure();
         logger.debug("constructor ctotals: " + cresponse);
         //we get everything at once so we don't keep making JNI calls later on.
         this.responseCode = cresponse.getResponseCode();

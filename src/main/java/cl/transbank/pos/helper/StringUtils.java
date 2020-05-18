@@ -1,8 +1,8 @@
 package cl.transbank.pos.helper;
 
 import cl.transbank.pos.exceptions.NotInstantiableException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 
 public class StringUtils {
 
-    private static final Logger logger = LogManager.getLogger(StringUtils.class);
+    final static Logger logger = Logger.getLogger(StringUtils.class);
 
     private StringUtils() {
         throw new NotInstantiableException("Do not instantiate this!");
@@ -64,6 +64,7 @@ public class StringUtils {
     private static final DateTimeFormatter realDateTimeformatter = DateTimeFormatter.ofPattern("ddMMyyyy HHmmss");
 
     public static final LocalDateTime parseLocalDateTime(String date, String time) {
+        BasicConfigurator.configure();
         if ("00-00-00".equals(date) || isEmpty(date)) {
             return null;
         }
@@ -78,6 +79,7 @@ public class StringUtils {
     private static final DateTimeFormatter accountingDateTimeformatter = DateTimeFormatter.ofPattern("ddMMyyyy");
 
     public static final LocalDate parseLocalDate(String date) {
+        BasicConfigurator.configure();
         if ("00-00-00".equals(date) || isEmpty(date)) {
             return null;
         }
