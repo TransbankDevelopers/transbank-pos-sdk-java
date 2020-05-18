@@ -29,6 +29,13 @@ public class KeysResponse {
         return terminalId;
     }
 
+    public KeysResponse( int functionCode, int responseCode, long commerceCode, String terminalId) {
+        this.functionCode = functionCode;
+        this.responseCode = responseCode;
+        this.commerceCode = commerceCode;
+        this.terminalId = terminalId;
+    }
+
     public KeysResponse(BaseResponse cresponse) {
         logger.debug("constructor ctotals: " + cresponse);
         //we get everything at once so we don't keep making JNI calls later on.
