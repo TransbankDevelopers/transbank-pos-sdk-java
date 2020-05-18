@@ -1,7 +1,7 @@
 package cl.transbank.pos.responses;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,7 +14,7 @@ import static cl.transbank.pos.helper.StringUtils.*;
 
 public class SaleResponse {
 
-    private static final Logger logger = LogManager.getLogger(SaleResponse.class);
+    final static Logger logger = Logger.getLogger(SaleResponse.class);
 
     public static final Map<String, Integer> map;
 
@@ -91,6 +91,7 @@ public class SaleResponse {
     }
 
     public SaleResponse(String saledata) {
+        BasicConfigurator.configure();
         logger.debug("SaleResponse: string: " + saledata);
         saledata = saledata.substring(1); //the first character is a space
 

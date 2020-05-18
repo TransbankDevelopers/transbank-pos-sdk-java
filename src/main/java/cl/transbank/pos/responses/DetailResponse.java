@@ -1,8 +1,8 @@
 package cl.transbank.pos.responses;
 
 import cl.transbank.pos.exceptions.TransbankParseException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,7 +18,7 @@ import static cl.transbank.pos.helper.StringUtils.parseLong;
 
 public class DetailResponse {
 
-    private static final Logger logger = LogManager.getLogger(DetailResponse.class);
+    final static Logger logger = Logger.getLogger(DetailResponse.class);
 
     public static final Map<String, Integer> map;
 
@@ -70,6 +70,7 @@ public class DetailResponse {
     private final int feeNumber;
 
     public DetailResponse(String saleData) throws TransbankParseException {
+        BasicConfigurator.configure();
         if (saleData == null || saleData.indexOf('|') < 0) {
             logger.debug("linea invalida: " + saleData);
             throw new TransbankParseException("Could not parse into a DetailResponse the line " + saleData);

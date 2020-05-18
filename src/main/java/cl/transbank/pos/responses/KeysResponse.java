@@ -1,12 +1,12 @@
 package cl.transbank.pos.responses;
 
 import cl.transbank.pos.utils.BaseResponse;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 public class KeysResponse {
 
-    private static final Logger logger = LogManager.getLogger(KeysResponse.class);
+    final static Logger logger = Logger.getLogger(KeysResponse.class);
 
     private final int functionCode;
     private final int responseCode;
@@ -37,6 +37,7 @@ public class KeysResponse {
     }
 
     public KeysResponse(BaseResponse cresponse) {
+        BasicConfigurator.configure();
         logger.debug("constructor ctotals: " + cresponse);
         //we get everything at once so we don't keep making JNI calls later on.
         this.responseCode = cresponse.getResponseCode();
