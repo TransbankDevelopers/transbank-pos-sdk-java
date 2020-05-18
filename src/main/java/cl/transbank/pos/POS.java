@@ -80,7 +80,6 @@ public class POS {
             }
             try {
                 System.load(nativeTransbankWrapper);
-                // TransbankWrap.list_ports();
                 logger.debug("Native library loaded!");
             } catch (UnsatisfiedLinkError e) {
                 throw new TransbankLinkException(LIBRARY_LOAD_ERROR + nativeTransbankWrapper, e);
