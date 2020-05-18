@@ -29,11 +29,11 @@ public class KeysResponse {
         return terminalId;
     }
 
-    public KeysResponse( int fc, int rc, long cc, String ti) {
-        this.functionCode = fc;
-        this.responseCode = rc;
-        this.commerceCode = cc;
-        this.terminalId = ti;
+    public KeysResponse( int functionCode, int responseCode, long commerceCode, String terminalId) {
+        this.functionCode = functionCode;
+        this.responseCode = responseCode;
+        this.commerceCode = commerceCode;
+        this.terminalId = terminalId;
     }
 
     public KeysResponse(BaseResponse cresponse) {
