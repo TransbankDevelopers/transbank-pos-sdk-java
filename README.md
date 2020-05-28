@@ -30,7 +30,20 @@ en Windows, se debe correr este comando en la ventana de Command.com antes de ej
 
 Mas adelante probablemente, se incluya esta variable en algun script que lanzará el programa.
 
+### Desarrollo
 
+Para ejecutar localmente el proyecto y probarlo junto al [repositorio de ejemplo](https://github.com/TransbankDevelopers/transbank-pos-sdk-java-example) debe ejecutar las siguientes lineas (
+Remplace <DIR> por el directorio donde clono el repositorio y <VERSION> por el que corresponda a la versión clonada según sea el caso, donde <VERSION> dependera de lo especificado en la etiqueta version del archivo pom.xml, busque la linea con el código similar a <version>X.X.X-SNAPSHOT</version>).
+
+```sh
+mvn compile && mvn package && mvn install:install-file \
+   -Dfile=/<DIR>/transbank-pos-sdk-java/target/transbank-sdk-pos-java-<VERSION>.jar \
+   -DgroupId=com.github.transbankdevelopers \
+   -DartifactId=transbank-sdk-pos-java \
+   -Dversion=<VERSION> \
+   -Dpackaging=jar \
+   -DgeneratePom=true
+```
 
 ## Documentación 
 
