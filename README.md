@@ -33,11 +33,11 @@ Mas adelante probablemente, se incluya esta variable en algun script que lanzar�
 ### Desarrollo
 
 Para ejecutar localmente el proyecto y probarlo junto al [repositorio de ejemplo](https://github.com/TransbankDevelopers/transbank-pos-sdk-java-example) debe ejecutar las siguientes lineas (
-Remplace <USERNAME> y <VERSION> por el que corresponda según el caso, donde <VERSION> dependera de lo especificado en la etiqueta version del archivo pom.xml, busque la linea con el código similar a <version>X.X.X-SNAPSHOT</version>).
+Remplace <DIR> por el directorio donde clono el repositorio y <VERSION> por el que corresponda a la versión clonada según sea el caso, donde <VERSION> dependera de lo especificado en la etiqueta version del archivo pom.xml, busque la linea con el código similar a <version>X.X.X-SNAPSHOT</version>).
 
 ```sh
 mvn compile && mvn package && mvn install:install-file \
-   -Dfile=/Users/<USERNAME>/transbank-pos-sdk-java/target/transbank-sdk-pos-java-<VERSION>.jar \
+   -Dfile=/<DIR>/transbank-pos-sdk-java/target/transbank-sdk-pos-java-<VERSION>.jar \
    -DgroupId=com.github.transbankdevelopers \
    -DartifactId=transbank-sdk-pos-java \
    -Dversion=<VERSION> \
