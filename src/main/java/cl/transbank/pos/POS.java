@@ -16,9 +16,12 @@ import cl.transbank.pos.responses.TotalsResponse;
 import cl.transbank.pos.utils.TbkBaudRate;
 import cl.transbank.pos.utils.TbkReturn;
 import cl.transbank.pos.utils.TransbankWrap;
+import cl.transbank.pos.utils.OSValidator;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -60,7 +63,7 @@ public class POS {
      * @param libraryPath the path of the dll (Windows) or .so (Linux) or dylib (Mac OS) with the native C Transbank library
      */
     private POS(String libraryPath) {
-        port = new Port(null); //by setting the portname to null, we ensue the POS cannot be used just yet
+        port = new Port(null); //by setting the portname to null, we ensure the POS cannot be used just yet
         this.libraryPath = libraryPath;
     }
 
@@ -73,21 +76,49 @@ public class POS {
     public static POS getInstance() throws TransbankLinkException {
         BasicConfigurator.configure();
         if (instance == null) {
-            String nativeTransbankWrapper = System.getenv(NATIVE_TRANSBANK_WRAP);
-            logger.info("environment variable " + NATIVE_TRANSBANK_WRAP + " : " + nativeTransbankWrapper);
-            if (StringUtils.isEmpty(nativeTransbankWrapper)) {
-                throw new TransbankLinkException(EMPTY_VARIABLE_ERROR);
-            }
-            try {
-                System.load(nativeTransbankWrapper);
-                logger.debug("Native library loaded!");
-            } catch (UnsatisfiedLinkError e) {
-                throw new TransbankLinkException(LIBRARY_LOAD_ERROR + nativeTransbankWrapper, e);
-            }
+            String nativeTransbankWrapper = POS.getTransbankWrapper();
             instance = new POS(nativeTransbankWrapper);
         }
         return instance;
     }
+
+    protected static String getTransbankWrapper () throws TransbankLinkException {
+        String nativeTransbankWrapper = System.getenv(NATIVE_TRANSBANK_WRAP);
+        logger.info("Environment variable " + NATIVE_TRANSBANK_WRAP + " : " + nativeTransbankWrapper);
+
+        if (StringUtils.isEmpty(nativeTransbankWrapper)) {
+            String currentPath = POS.getJarPath();
+            File wrapperDll = null;
+            logger.info("Current path: " + currentPath);
+            if (OSValidator.isWindows()) {
+                wrapperDll = new File(currentPath + "/TransbankWrap.dll");
+                nativeTransbankWrapper = wrapperDll.getPath().replace("\\", "\\\\");
+            } else {
+                wrapperDll = new File(currentPath + "/libTransbankWrap.dylib");
+                nativeTransbankWrapper = wrapperDll.getPath();
+            }
+
+            logger.info("file path to search for: " + wrapperDll.getPath());
+            if (!wrapperDll.exists()) {
+                throw new TransbankLinkException(EMPTY_VARIABLE_ERROR);
+            }
+
+        }
+
+        try {
+            System.load(nativeTransbankWrapper);
+            logger.debug("Native library loaded!");
+        } catch (UnsatisfiedLinkError e) {
+            throw new TransbankLinkException(LIBRARY_LOAD_ERROR + nativeTransbankWrapper, e);
+        }
+
+        return nativeTransbankWrapper;
+    }
+
+    protected static String getJarPath() {
+        return System.getProperty("user.dir");
+    }
+
 
     /**
      * It makes the POS load the keys from the Transbank servers. It does not actually return the keys to the caller.
