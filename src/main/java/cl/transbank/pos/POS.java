@@ -231,7 +231,7 @@ public class POS {
     }
 
     /**
-     * Checks whether the POS is nnected.
+     * Checks whether the POS is connected.
      *
      * @return boolean whether the POS is connected or not
      * @throws TransbankPortNotConfiguredException if called before opening a port.
