@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 import static cl.transbank.pos.helper.StringUtils.*;
 
-public class SaleResponse {
+public class SaleResponse implements Response {
 
     final static Logger logger = Logger.getLogger(SaleResponse.class);
 
@@ -91,7 +91,6 @@ public class SaleResponse {
     }
 
     public SaleResponse(String saledata) {
-        BasicConfigurator.configure();
         logger.debug("SaleResponse: string: " + saledata);
         saledata = saledata.substring(1); //the first character is a space
 
@@ -119,18 +118,22 @@ public class SaleResponse {
         tip = parseInt( fields[map.get("tip")] );
     }
 
+    @Override
     public boolean isSuccessful() {
         return responseCode == 0;
     }
 
+    @Override
     public String getResponseMessage() {
         return ResponseCodes.getMessage(this.getResponseCode());
     }
 
+    @Override
     public int getFunctionCode() {
         return functionCode;
     }
 
+    @Override
     public int getResponseCode() {
         return responseCode;
     }

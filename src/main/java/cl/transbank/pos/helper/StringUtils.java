@@ -64,7 +64,6 @@ public class StringUtils {
     private static final DateTimeFormatter realDateTimeformatter = DateTimeFormatter.ofPattern("ddMMyyyy HHmmss");
 
     public static final LocalDateTime parseLocalDateTime(String date, String time) {
-        BasicConfigurator.configure();
         if ("00-00-00".equals(date) || isEmpty(date)) {
             return null;
         }
@@ -79,8 +78,7 @@ public class StringUtils {
     private static final DateTimeFormatter accountingDateTimeformatter = DateTimeFormatter.ofPattern("ddMMyyyy");
 
     public static final LocalDate parseLocalDate(String date) {
-        BasicConfigurator.configure();
-        if ("00-00-00".equals(date) || isEmpty(date)) {
+        if ("00-00-00".equals(date) ||"000000".equals(date) || isEmpty(date)) {
             return null;
         }
         try {
