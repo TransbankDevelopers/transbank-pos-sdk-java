@@ -317,8 +317,12 @@ public class POS {
         String strTicket = StringUtils.padStr(ticket, 6);
         if (port.isConfigured()) {
             SaleResponse sr = null;
+                String sale = TransbankWrap.sale(amount, strTicket, false);
+                if (sale.contains("Unable")) {
+                    throw new TransbankUnexpectedError("Unexpected error while selling: " + sale);
+                }
             try {
-                sr = new SaleResponse(TransbankWrap.sale(amount, strTicket, false));
+                sr = new SaleResponse(sale);
             } catch (Throwable e) {
                 logger.error("Unexpected error while selling: " + e.getMessage(), e);
                 throw new TransbankUnexpectedError("Unexpected error while selling: " + e.getMessage(), e);

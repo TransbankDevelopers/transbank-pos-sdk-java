@@ -1,6 +1,5 @@
 package cl.transbank.pos.responses;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import java.time.LocalDate;
@@ -103,7 +102,7 @@ public class SaleResponse implements Response {
         commerceCode = parseInt( fields[map.get("commerceCode")] );
         terminalId = fields[map.get("terminalId")];
         ticket = fields[map.get("ticket")];
-        authorizationCode = fields[map.get("autorizationCode")];
+        authorizationCode = fields[map.get("autorizationCode")].trim();
         amount = parseInt( fields[map.get("amount")] );
         sharesNumber = parseInt( fields[map.get("sharesNumber")] );
         sharesAmount = parseInt( fields[map.get("sharesAmount")] );

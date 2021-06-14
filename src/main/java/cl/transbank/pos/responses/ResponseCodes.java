@@ -16,7 +16,7 @@ public class ResponseCodes {
                 {0, "Aprobado"},
                 {1, "Rechazado"},
                 {2, "Host no responde"},
-                {3, "Conexión falló. Verifique cable de red."},
+                {3, "Conexión falló. Verifique conexión a internet."},
                 {4, "Transacción ya fue anulada"},
                 {5, "No existe transacción para anular"},
                 {6, "Tarjeta no soportada"},

@@ -78,7 +78,7 @@ public class StringUtils {
     private static final DateTimeFormatter accountingDateTimeformatter = DateTimeFormatter.ofPattern("ddMMyyyy");
 
     public static final LocalDate parseLocalDate(String date) {
-        if ("00-00-00".equals(date) ||"000000".equals(date) || isEmpty(date)) {
+        if ("00-00-00".equals(date) ||"000000".equals(date) || "--".equals(date) || isEmpty(date)) {
             return null;
         }
         try {
