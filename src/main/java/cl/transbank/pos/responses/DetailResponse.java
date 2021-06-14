@@ -16,7 +16,7 @@ import static cl.transbank.pos.helper.StringUtils.parseLocalDate;
 import static cl.transbank.pos.helper.StringUtils.parseLocalDateTime;
 import static cl.transbank.pos.helper.StringUtils.parseLong;
 
-public class DetailResponse {
+public class DetailResponse implements Response {
 
     final static Logger logger = Logger.getLogger(DetailResponse.class);
 
@@ -70,7 +70,6 @@ public class DetailResponse {
     private final int feeNumber;
 
     public DetailResponse(String saleData) throws TransbankParseException {
-        BasicConfigurator.configure();
         if (saleData == null || saleData.indexOf('|') < 0) {
             logger.debug("linea invalida: " + saleData);
             throw new TransbankParseException("Could not parse into a DetailResponse the line " + saleData);
@@ -107,6 +106,7 @@ public class DetailResponse {
         }
     }
 
+    @Override
     public boolean isSuccessful() {
         return responseCode == 0;
     }
@@ -135,14 +135,17 @@ public class DetailResponse {
                 " }\n";
     }
 
+    @Override
     public String getResponseMessage() {
         return ResponseCodes.getMessage(this.getResponseCode());
     }
 
+    @Override
     public int getFunctionCode() {
         return functionCode;
     }
 
+    @Override
     public int getResponseCode() {
         return responseCode;
     }

@@ -1,6 +1,5 @@
 package cl.transbank.pos.responses;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import java.time.LocalDate;
@@ -12,7 +11,7 @@ import java.util.stream.Stream;
 
 import static cl.transbank.pos.helper.StringUtils.*;
 
-public class SaleResponse {
+public class SaleResponse implements Response {
 
     final static Logger logger = Logger.getLogger(SaleResponse.class);
 
@@ -91,7 +90,6 @@ public class SaleResponse {
     }
 
     public SaleResponse(String saledata) {
-        BasicConfigurator.configure();
         logger.debug("SaleResponse: string: " + saledata);
         saledata = saledata.substring(1); //the first character is a space
 
@@ -104,7 +102,7 @@ public class SaleResponse {
         commerceCode = parseInt( fields[map.get("commerceCode")] );
         terminalId = fields[map.get("terminalId")];
         ticket = fields[map.get("ticket")];
-        authorizationCode = fields[map.get("autorizationCode")];
+        authorizationCode = fields[map.get("autorizationCode")].trim();
         amount = parseInt( fields[map.get("amount")] );
         sharesNumber = parseInt( fields[map.get("sharesNumber")] );
         sharesAmount = parseInt( fields[map.get("sharesAmount")] );
@@ -119,18 +117,22 @@ public class SaleResponse {
         tip = parseInt( fields[map.get("tip")] );
     }
 
+    @Override
     public boolean isSuccessful() {
         return responseCode == 0;
     }
 
+    @Override
     public String getResponseMessage() {
         return ResponseCodes.getMessage(this.getResponseCode());
     }
 
+    @Override
     public int getFunctionCode() {
         return functionCode;
     }
 
+    @Override
     public int getResponseCode() {
         return responseCode;
     }

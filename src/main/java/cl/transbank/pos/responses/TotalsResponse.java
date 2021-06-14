@@ -4,17 +4,16 @@ import cl.transbank.pos.utils.TotalsCResponse;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
-public class TotalsResponse {
+public class TotalsResponse implements Response {
 
     final static Logger logger = Logger.getLogger(TotalsResponse.class);
 
     private final int txCount;
     private final int txTotal;
     private final int functionCode;
-    private final int  responseCode;
+    private final int responseCode;
 
     public TotalsResponse(TotalsCResponse cresponse) {
-        BasicConfigurator.configure();
         logger.debug("constructor ctotals: " + cresponse);
         //we get everything at once so we don't keep making JNI calls later on.
         this.responseCode = cresponse.getResponseCode();
@@ -23,10 +22,12 @@ public class TotalsResponse {
         this.functionCode = cresponse.getFunction();
     }
 
+    @Override
     public boolean isSuccessful() {
         return this.getResponseCode() == 0;
     }
 
+    @Override
     public String getResponseMessage() {
         return ResponseCodes.getMessage(this.getResponseCode());
     }
@@ -39,22 +40,24 @@ public class TotalsResponse {
         return txTotal;
     }
 
+    @Override
     public int getFunctionCode() {
         return functionCode;
     }
 
+    @Override
     public int getResponseCode() {
         return responseCode;
     }
 
     @Override
     public String toString() {
-        return "TotalsResponse{ " +
-                "isSuccesful=" + isSuccessful() +
-                ", txCount=" + txCount +
-                ", txTotal=" + txTotal +
-                ", functionCode=" + functionCode +
-                ", responseCode=" + responseCode +
-                " }\n";
+        return "TotalsResponse{ "
+                + "isSuccesful=" + isSuccessful()
+                + ", txCount=" + txCount
+                + ", txTotal=" + txTotal
+                + ", functionCode=" + functionCode
+                + ", responseCode=" + responseCode
+                + " }\n";
     }
 }

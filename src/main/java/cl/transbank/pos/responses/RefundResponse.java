@@ -2,7 +2,7 @@ package cl.transbank.pos.responses;
 
 import cl.transbank.pos.utils.RefundCResponse;
 
-public class RefundResponse {
+public class RefundResponse implements Response {
 
     private final int functionCode;
     private final int responseCode;
@@ -22,32 +22,22 @@ public class RefundResponse {
         this.initialized = cresponse.getInitilized();
     }
 
+    @Override
     public boolean isSuccessful() {
         return responseCode == 0;
     }
 
+    @Override
     public String getResponseMessage() {
         return ResponseCodes.getMessage(this.getResponseCode());
     }
 
+    @Override
     public int getFunctionCode() {
         return functionCode;
     }
 
     @Override
-    public String toString() {
-        return "RefundResponse{" +
-                "isSuccesful=" + isSuccessful() +
-                ", functionCode=" + functionCode +
-                ", responseCode=" + responseCode +
-                ", commerceCode=" + commerceCode +
-                ", terminalId=" + terminalId +
-                ", authorizationCode=" + authorizationCode +
-                ", operationID=" + operationID +
-                ", initialized=" + initialized +
-                " }\n";
-    }
-
     public int getResponseCode() {
         return responseCode;
     }
@@ -70,5 +60,19 @@ public class RefundResponse {
 
     public int getInitialized() {
         return initialized;
+    }
+
+    @Override
+    public String toString() {
+        return "RefundResponse{"
+                + "isSuccesful=" + isSuccessful()
+                + ", functionCode=" + functionCode
+                + ", responseCode=" + responseCode
+                + ", commerceCode=" + commerceCode
+                + ", terminalId=" + terminalId
+                + ", authorizationCode=" + authorizationCode
+                + ", operationID=" + operationID
+                + ", initialized=" + initialized
+                + " }\n";
     }
 }
