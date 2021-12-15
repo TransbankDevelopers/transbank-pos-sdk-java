@@ -1,16 +1,14 @@
 package cl.transbank.pos.helper;
 
 import cl.transbank.pos.exceptions.NotInstantiableException;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Log4j2
 public class StringUtils {
-
-    final static Logger logger = Logger.getLogger(StringUtils.class);
 
     private StringUtils() {
         throw new NotInstantiableException("Do not instantiate this!");
@@ -64,14 +62,13 @@ public class StringUtils {
     private static final DateTimeFormatter realDateTimeformatter = DateTimeFormatter.ofPattern("ddMMyyyy HHmmss");
 
     public static final LocalDateTime parseLocalDateTime(String date, String time) {
-        BasicConfigurator.configure();
         if ("00-00-00".equals(date) || isEmpty(date)) {
             return null;
         }
         try {
             return LocalDateTime.parse(date + " " + time, realDateTimeformatter);
         } catch (Exception e) {
-            logger.error("Error when parsing date (" + date + ") + time (" + time + ") message: " + e, e);
+            log.error("Error when parsing date (" + date + ") + time (" + time + ") message: " + e, e);
             return null;
         }
     }
@@ -79,14 +76,13 @@ public class StringUtils {
     private static final DateTimeFormatter accountingDateTimeformatter = DateTimeFormatter.ofPattern("ddMMyyyy");
 
     public static final LocalDate parseLocalDate(String date) {
-        BasicConfigurator.configure();
         if ("00-00-00".equals(date) || isEmpty(date)) {
             return null;
         }
         try {
             return LocalDate.parse(date, accountingDateTimeformatter);
         } catch (Exception e) {
-            logger.error("Error when parsing date (" + date + ") message: " + e, e);
+            log.error("Error when parsing date (" + date + ") message: " + e, e);
             return null;
         }
     }

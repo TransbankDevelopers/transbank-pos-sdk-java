@@ -1,8 +1,7 @@
 package cl.transbank.pos.responses;
 
 import cl.transbank.pos.exceptions.TransbankParseException;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,9 +15,8 @@ import static cl.transbank.pos.helper.StringUtils.parseLocalDate;
 import static cl.transbank.pos.helper.StringUtils.parseLocalDateTime;
 import static cl.transbank.pos.helper.StringUtils.parseLong;
 
+@Log4j2
 public class DetailResponse {
-
-    final static Logger logger = Logger.getLogger(DetailResponse.class);
 
     public static final Map<String, Integer> map;
 
@@ -70,18 +68,17 @@ public class DetailResponse {
     private final int feeNumber;
 
     public DetailResponse(String saleData) throws TransbankParseException {
-        BasicConfigurator.configure();
         if (saleData == null || saleData.indexOf('|') < 0) {
-            logger.debug("linea invalida: " + saleData);
+            log.debug("linea invalida: " + saleData);
             throw new TransbankParseException("Could not parse into a DetailResponse the line " + saleData);
         }
         try {
-            logger.debug("DetailsResponse: string: " + saleData);
+            log.debug("DetailsResponse: string: " + saleData);
             saleData = saleData.trim(); //the first character is a space
 
             String[] fields = saleData.split("\\|");
             for (int index = 0; index < fields.length; index++) {
-                logger.debug("fields[ " + index + " ] = " + fields[index]);
+                log.debug("fields[ " + index + " ] = " + fields[index]);
             }
             functionCode = parseInt(fields[map.get("functionCode")]);
             responseCode = parseInt(fields[map.get("responseCode")]);
@@ -102,7 +99,7 @@ public class DetailResponse {
             feeAmount = parseInt(fields[map.get("feeAmount")]);
             feeNumber = parseInt(fields[map.get("feeNumber")]);
         } catch (Exception e) {
-            logger.debug("Error al parsear: " + saleData);
+            log.debug("Error al parsear: " + saleData);
             throw new TransbankParseException("Error when parsing into a DetailResponse the line " + saleData, e);
         }
     }
