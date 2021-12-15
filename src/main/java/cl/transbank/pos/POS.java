@@ -16,8 +16,7 @@ import cl.transbank.pos.responses.TotalsResponse;
 import cl.transbank.pos.utils.TbkBaudRate;
 import cl.transbank.pos.utils.TbkReturn;
 import cl.transbank.pos.utils.TransbankWrap;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,10 +24,9 @@ import java.util.List;
 
 import static cl.transbank.pos.helper.StringUtils.pad;
 
+@Log4j2
 public class POS {
-
-    final static Logger logger = Logger.getLogger(POS.class);
-
+    
     public static final String NATIVE_TRANSBANK_WRAP = "NATIVE_TRANSBANK_WRAP";
 
     public static final String EMPTY_VARIABLE_ERROR = "The environment variable " + NATIVE_TRANSBANK_WRAP + " is empty. Please configure it correctly.";
@@ -71,16 +69,15 @@ public class POS {
      * @throws TransbankLinkException if it cannot find the native C Transbank library
      */
     public static POS getInstance() throws TransbankLinkException {
-        BasicConfigurator.configure();
         if (instance == null) {
             String nativeTransbankWrapper = System.getenv(NATIVE_TRANSBANK_WRAP);
-            logger.info("environment variable " + NATIVE_TRANSBANK_WRAP + " : " + nativeTransbankWrapper);
+            log.info("environment variable " + NATIVE_TRANSBANK_WRAP + " : " + nativeTransbankWrapper);
             if (StringUtils.isEmpty(nativeTransbankWrapper)) {
                 throw new TransbankLinkException(EMPTY_VARIABLE_ERROR);
             }
             try {
                 System.load(nativeTransbankWrapper);
-                logger.debug("Native library loaded!");
+                log.debug("Native library loaded!");
             } catch (UnsatisfiedLinkError e) {
                 throw new TransbankLinkException(LIBRARY_LOAD_ERROR + nativeTransbankWrapper, e);
             }
@@ -96,14 +93,13 @@ public class POS {
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
     public KeysResponse loadKeys() throws TransbankPortNotConfiguredException {
-        BasicConfigurator.configure();
         if (port.isConfigured()) {
             try {
                 KeysResponse response = new KeysResponse(TransbankWrap.load_keys());
-                logger.debug("load keys response: " + response);
+                log.debug("load keys response: " + response);
                 return response;
             } catch (Throwable e) {
-                logger.error("Unexpected error when loading keys: " + e.getMessage(), e);
+                log.error("Unexpected error when loading keys: " + e.getMessage(), e);
                 throw new TransbankUnexpectedError("Unexpected error when loading keys: " + e.getMessage(), e);
             }
         } else {
@@ -118,17 +114,16 @@ public class POS {
      * @throws TransbankLinkException if there are problems calling the native library
      */
     public List<String> listPorts() throws TransbankLinkException {
-        BasicConfigurator.configure();
         List<String> result = new ArrayList<>();
 
         String list = null;
         try {
             list = TransbankWrap.list_ports();
         } catch (UnsatisfiedLinkError e) {
-            logger.error(LIBRARY_LOAD_ERROR + libraryPath, e);
+            log.error(LIBRARY_LOAD_ERROR + libraryPath, e);
             throw new TransbankLinkException(LIBRARY_LOAD_ERROR + libraryPath, e);
         } catch (Throwable e) {
-            logger.error("Unexpected error when listing ports: " + e.getMessage(), e);
+            log.error("Unexpected error when listing ports: " + e.getMessage(), e);
             throw new TransbankUnexpectedError("Unexpected error when listing ports: " + e.getMessage(), e);
         }
         if (list != null) {
@@ -170,13 +165,12 @@ public class POS {
      * @throws TransbankCannotOpenPortException when there's a problem opening the port
      */
     public void openPort(String portname, TbkBaudRate baudRate) throws TransbankInvalidPortException, TransbankCannotOpenPortException {
-        BasicConfigurator.configure();
         port.usePortname(portname);
         TbkReturn result = null;
         try {
             result = TransbankWrap.open_port(portname, baudRate.swigValue());
         } catch (Throwable e) {
-            logger.error("Unexpected error when opening port: " + portname + ". Error message: " + e.getMessage(), e);
+            log.error("Unexpected error when opening port: " + portname + ". Error message: " + e.getMessage(), e);
             throw new TransbankUnexpectedError("Unexpected error when opening port: " + portname + ". Error message: " + e.getMessage(), e);
         }
         if (result != TbkReturn.TBK_OK) {
@@ -189,12 +183,11 @@ public class POS {
      * This method just closes the port. The port name will be set null too.
      */
     public void closePort() {
-        BasicConfigurator.configure();
         port.clearPortname();
         try {
             TransbankWrap.close_port();
         } catch (Throwable e) {
-            logger.error("Unexpected error when closing port: " + e.getMessage(), e);
+            log.error("Unexpected error when closing port: " + e.getMessage(), e);
             throw new TransbankUnexpectedError("Unexpected error when closing port: " + e.getMessage(), e);
         }
     }
@@ -206,16 +199,15 @@ public class POS {
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
     public boolean poll() throws TransbankPortNotConfiguredException {
-        BasicConfigurator.configure();
         if (port.isConfigured()) {
             TbkReturn response = null;
             try {
                 response = TransbankWrap.poll();
             } catch (Throwable e) {
-                logger.error("Unexpected error when polling the POS: " + e.getMessage(), e);
+                log.error("Unexpected error when polling the POS: " + e.getMessage(), e);
                 throw new TransbankUnexpectedError("Unexpected error when polling the POS: " + e.getMessage(), e);
             }
-            logger.debug("poll: response: " + response);
+            log.debug("poll: response: " + response);
             return TbkReturn.TBK_OK.equals(response);
         } else {
             throw new TransbankPortNotConfiguredException(CONFIGURE_BEFORE_POLL);
@@ -230,16 +222,15 @@ public class POS {
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
     public TotalsResponse getTotals() throws TransbankPortNotConfiguredException {
-        BasicConfigurator.configure();
         if (port.isConfigured()) {
             TotalsResponse tresponse = null;
             try {
                 tresponse = new TotalsResponse(TransbankWrap.get_totals());
             } catch (Throwable e) {
-                logger.error("Unexpected error when obtaining the totals of the day: " + e.getMessage(), e);
+                log.error("Unexpected error when obtaining the totals of the day: " + e.getMessage(), e);
                 throw new TransbankUnexpectedError("Unexpected error when obtaining the totals of the day: " + e.getMessage(), e);
             }
-            logger.debug("totals: response: " + tresponse);
+            log.debug("totals: response: " + tresponse);
             return tresponse;
         } else {
             throw new TransbankPortNotConfiguredException(CONFIGURE_BEFORE_TOTALS);
@@ -254,16 +245,15 @@ public class POS {
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
     public SaleResponse getLastSale() throws TransbankPortNotConfiguredException {
-        BasicConfigurator.configure();
         if (port.isConfigured()) {
             SaleResponse lsresponse = null;
             try {
                 lsresponse = new SaleResponse(TransbankWrap.last_sale());
             } catch (Throwable e) {
-                logger.error("Unexpected error when obtaining the last sale: " + e.getMessage(), e);
+                log.error("Unexpected error when obtaining the last sale: " + e.getMessage(), e);
                 throw new TransbankUnexpectedError("Unexpected error when obtaining the last sale: " + e.getMessage(), e);
             }
-            logger.debug("last sale: response: " + lsresponse);
+            log.debug("last sale: response: " + lsresponse);
             return lsresponse;
         } else {
             throw new TransbankPortNotConfiguredException(CONFIGURE_BEFORE_LAST_SALE);
@@ -291,17 +281,16 @@ public class POS {
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
     public SaleResponse sale(int amount, String ticket) throws TransbankPortNotConfiguredException {
-        BasicConfigurator.configure();
         String strTicket = StringUtils.padStr(ticket, 6);
         if (port.isConfigured()) {
             SaleResponse sr = null;
             try {
                 sr = new SaleResponse(TransbankWrap.sale(amount, strTicket, false));
             } catch (Throwable e) {
-                logger.error("Unexpected error while selling: " + e.getMessage(), e);
+                log.error("Unexpected error while selling: " + e.getMessage(), e);
                 throw new TransbankUnexpectedError("Unexpected error while selling: " + e.getMessage(), e);
             }
-            logger.debug("sale: response: " + sr);
+            log.debug("sale: response: " + sr);
             return sr;
         } else {
             throw new TransbankPortNotConfiguredException(CONFIGURE_BEFORE_SENDING_SALE);
@@ -317,16 +306,15 @@ public class POS {
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
     public RefundResponse refund(int operationId) throws TransbankPortNotConfiguredException {
-        BasicConfigurator.configure();
         if (port.isConfigured()) {
             RefundResponse rr = null;
             try {
                 rr = new RefundResponse(TransbankWrap.refund(operationId));
             } catch (Throwable e) {
-                logger.error("Unexpected error while refunding a sale: " + e.getMessage(), e);
+                log.error("Unexpected error while refunding a sale: " + e.getMessage(), e);
                 throw new TransbankUnexpectedError("Unexpected error while refunding a sale: " + e.getMessage(), e);
             }
-            logger.debug("refund: response: " + rr);
+            log.debug("refund: response: " + rr);
             return rr;
         } else {
             throw new TransbankPortNotConfiguredException(CONFIGURE_BEFORE_REFUND_SALE);
@@ -344,27 +332,26 @@ public class POS {
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
     public List<DetailResponse> details(boolean printOnPos) throws TransbankPortNotConfiguredException {
-        BasicConfigurator.configure();
         if (port.isConfigured()) {
             String data = null;
             try {
                 data = TransbankWrap.sales_detail(printOnPos);
             } catch (Throwable e) {
-                logger.error("Unexpected error while obtaining the details of all the sales: " + e.getMessage(), e);
+                log.error("Unexpected error while obtaining the details of all the sales: " + e.getMessage(), e);
                 throw new TransbankUnexpectedError("Unexpected error while obtaining the details of all the sales: " + e.getMessage(), e);
             }
-            logger.debug("details: raw line " + data + "\n;");
+            log.debug("details: raw line " + data + "\n;");
             String[] lines = (data == null) ? new String[]{} : data.split("\n");
             List<DetailResponse> ldr = new ArrayList<>();
             for (String line : lines) {
                 if (StringUtils.notEmpty(line)) {
                     try {
                         DetailResponse dr = new DetailResponse(line);
-                        logger.debug("refund: response: " + dr);
+                        log.debug("refund: response: " + dr);
                         ldr.add(dr);
                     } catch (TransbankParseException e) {
                         //if the parsing of the line fails, let's just skip it and go to the next one. Still, we log it
-                        logger.debug("Non fatal: parse error when parsing '" + line + "'", e);
+                        log.debug("Non fatal: parse error when parsing '" + line + "'", e);
                     }
                 }
             }
@@ -381,16 +368,15 @@ public class POS {
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
     public CloseResponse close() throws TransbankPortNotConfiguredException {
-        BasicConfigurator.configure();
         if (port.isConfigured()) {
             CloseResponse cr = null;
             try {
                 cr = new CloseResponse(TransbankWrap.close());
             } catch (Throwable e) {
-                logger.error("Unexpected error while closing the day: " + e.getMessage(), e);
+                log.error("Unexpected error while closing the day: " + e.getMessage(), e);
                 throw new TransbankUnexpectedError("Unexpected error while closing the day: " + e.getMessage(), e);
             }
-            logger.debug("sale: response: " + cr);
+            log.debug("sale: response: " + cr);
             return cr;
         } else {
             throw new TransbankPortNotConfiguredException(CONFIGURE_BEFORE_CLOSING);
@@ -405,16 +391,15 @@ public class POS {
      * @throws TransbankPortNotConfiguredException if called before opening a port.
      */
     public boolean setNormalMode() throws TransbankPortNotConfiguredException {
-        BasicConfigurator.configure();
         if (port.isConfigured()) {
             TbkReturn result = null;
             try {
                 result = TransbankWrap.set_normal_mode();
             } catch (Throwable e) {
-                logger.error("Unexpected error while disconnecting the POS and setting it to normal mode: " + e.getMessage(), e);
+                log.error("Unexpected error while disconnecting the POS and setting it to normal mode: " + e.getMessage(), e);
                 throw new TransbankUnexpectedError("Unexpected error while disconnecting the POS and setting it to normal mode: " + e.getMessage(), e);
             }
-            logger.debug("normal mode: response: " + result);
+            log.debug("normal mode: response: " + result);
             return TbkReturn.TBK_OK.equals(result);
         } else {
             throw new TransbankPortNotConfiguredException(CONFIGURE_BEFORE_NORMAL);
@@ -422,6 +407,7 @@ public class POS {
     }
 }
 
+@Log4j2
 class Port {
     public static final String EMPTY_PORT_NAME = "Empty port name specified";
     private String portName = null;

@@ -1,7 +1,6 @@
 package cl.transbank.pos.responses;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,9 +11,8 @@ import java.util.stream.Stream;
 
 import static cl.transbank.pos.helper.StringUtils.*;
 
+@Log4j2
 public class SaleResponse {
-
-    final static Logger logger = Logger.getLogger(SaleResponse.class);
 
     public static final Map<String, Integer> map;
 
@@ -91,13 +89,12 @@ public class SaleResponse {
     }
 
     public SaleResponse(String saledata) {
-        BasicConfigurator.configure();
-        logger.debug("SaleResponse: string: " + saledata);
+        log.debug("SaleResponse: string: " + saledata);
         saledata = saledata.substring(1); //the first character is a space
 
         String[] fields = saledata.split( "\\|");
         for(int index = 0; index < fields.length; index++) {
-            logger.debug("fields[ " + index + " ] = " + fields[index] );
+            log.debug("fields[ " + index + " ] = " + fields[index] );
         }
         functionCode = parseInt( fields[map.get("functionCode")] );
         responseCode = parseInt( fields[map.get("responseCode")] );
