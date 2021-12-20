@@ -10,6 +10,50 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class POSIntegrado extends Serial {
+    public boolean poll() throws TransbankSaleException {
+        if(cantWrite()) {
+            String exceptionMessage = String.format("Unable to Poll, can't write to port %s", port.getSystemPortName());
+            throw new TransbankSaleException(exceptionMessage);
+        }
+
+        try {
+            String command = createCommand("0100");
+            byte[] hexCommand = command.getBytes();
+
+            log.debug(String.format("Request [Hex]: %s", toHexString(hexCommand)));
+            log.debug(String.format("Request [ASCII]: %s", command));
+
+            port.writeBytes(hexCommand, hexCommand.length);
+            return checkAck();
+
+        } catch (TransbankException e) {
+            String exceptionMessage = String.format("Unable to send Poll command on port %s", port.getSystemPortName());
+            throw new TransbankSaleException(exceptionMessage);
+        }
+    }
+
+    public boolean setNormalMode() throws TransbankSaleException {
+        if(cantWrite()) {
+            String exceptionMessage = String.format("Unable to set Normal Mode, can't write to port %s", port.getSystemPortName());
+            throw new TransbankSaleException(exceptionMessage);
+        }
+
+        try {
+            String command = createCommand("0300");
+            byte[] hexCommand = command.getBytes();
+
+            log.debug(String.format("Request [Hex]: %s", toHexString(hexCommand)));
+            log.debug(String.format("Request [ASCII]: %s", command));
+
+            port.writeBytes(hexCommand, hexCommand.length);
+            return checkAck();
+
+        } catch (TransbankException e) {
+            String exceptionMessage = String.format("Unable to send Normal Mode command on port %s", port.getSystemPortName());
+            throw new TransbankSaleException(exceptionMessage);
+        }
+    }
+
     public LoadKeysResponse loadKeys() throws TransbankLoadKeysException {
         try {
             write("0800");
