@@ -39,8 +39,8 @@ public class BasicResponse {
     @Override
     public String toString() {
         return "\nFunction: " + functionCode + "\n" +
-                "Response code: " + responseCode + "\n" +
-                "Response message: " + responseMessage + "\n" +
-                "Success?: " + success;
+            "Response code: " + responseCode + "\n" +
+            "Response message: " + responseMessage + "\n" +
+            "Success?: " + success;
     }
 }

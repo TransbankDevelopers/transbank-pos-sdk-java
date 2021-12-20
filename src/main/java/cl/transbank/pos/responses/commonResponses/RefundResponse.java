@@ -32,8 +32,8 @@ public class RefundResponse extends LoadKeysResponse {
     public String toString()
     {
         return super.toString() + "\n" +
-                "AuthorizationCode: " + authorizationCode + "\n" +
-                "OperationID: " + operationID;
+            "AuthorizationCode: " + authorizationCode + "\n" +
+            "OperationID: " + operationID;
     }
 }
 

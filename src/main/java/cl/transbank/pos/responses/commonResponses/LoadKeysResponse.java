@@ -32,7 +32,7 @@ public class LoadKeysResponse extends BasicResponse {
     public String toString()
     {
         return super.toString() + "\n" +
-                "Commerce Code: " + commerceCode + "\n" +
-                "Terminal Id: " + terminalId;
+            "Commerce Code: " + commerceCode + "\n" +
+            "Terminal Id: " + terminalId;
     }
 }

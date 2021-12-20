@@ -74,19 +74,19 @@ public class SaleResponse extends LoadKeysResponse {
         String formatedAccountingDate = accountingDate != null ? dateFormat.format(accountingDate) : "";
         String formatedRealDate = realDate != null ? dateFormat.format(realDate) : "";
         return super.toString() + "\n" +
-                "Ticket: " + ticket + "\n" +
-                "AuthorizationCode Code: " + authorizationCode + "\n" +
-                "Amount: " + amount + "\n" +
-                "Shares Number: " + sharesNumber + "\n" +
-                "Shares Amount: " + sharesAmount + "\n" +
-                "Last 4 Digits: " + last4Digits + "\n" +
-                "Operation Number: " + operationNumber + "\n" +
-                "Card Type: " + cardType + "\n" +
-                "Accounting Date: " + formatedAccountingDate + "\n" +
-                "Account Number: " + accountNumber + "\n" +
-                "Card Brand: " + cardBrand + "\n" +
-                "Real Date: " + formatedRealDate + "\n" +
-                "Employee Id: " + employeeId + "\n" +
-                "Tip: " + tip;
+            "Ticket: " + ticket + "\n" +
+            "AuthorizationCode Code: " + authorizationCode + "\n" +
+            "Amount: " + amount + "\n" +
+            "Shares Number: " + sharesNumber + "\n" +
+            "Shares Amount: " + sharesAmount + "\n" +
+            "Last 4 Digits: " + last4Digits + "\n" +
+            "Operation Number: " + operationNumber + "\n" +
+            "Card Type: " + cardType + "\n" +
+            "Accounting Date: " + formatedAccountingDate + "\n" +
+            "Account Number: " + accountNumber + "\n" +
+            "Card Brand: " + cardBrand + "\n" +
+            "Real Date: " + formatedRealDate + "\n" +
+            "Employee Id: " + employeeId + "\n" +
+            "Tip: " + tip;
     }
 }
