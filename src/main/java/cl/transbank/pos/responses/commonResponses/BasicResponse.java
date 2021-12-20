@@ -1,4 +1,4 @@
-package cl.transbank.pos.responses.commonResponse;
+package cl.transbank.pos.responses.commonResponses;
 
 import java.util.HashMap;
 import java.util.Map;
