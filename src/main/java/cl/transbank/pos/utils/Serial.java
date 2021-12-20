@@ -1,6 +1,7 @@
 package cl.transbank.pos.utils;
 
-import cl.transbank.pos.exceptions.TransbankException;
+import cl.transbank.pos.exceptions.commonExceptions.TransbankException;
+import cl.transbank.pos.responses.commonResponses.IntermediateResponse;
 import com.fazecast.jSerialComm.SerialPort;
 
 import lombok.Getter;
@@ -8,17 +9,13 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 @Log4j2
 public class Serial {
     protected static final byte ACK = 0x06;
     protected static final int DEFAULT_TIMEOUT = 150000;
     protected static final int DEFAULT_BAUDRATE = 115200;
-    private static final int DEFAULT_WRITE_TIMEOUT = 200;
     private static final char STX = '\u0002';
     private static final char ETX = '\u0003';
 
@@ -26,6 +23,20 @@ public class Serial {
     private int timeout = DEFAULT_TIMEOUT;
     protected String currentResponse;
     private SerialPort port;
+
+    private Serial.OnIntermediateMessageReceivedListener onIntermediateMessageReceivedListener;
+
+    public void setOnIntermediateMessageReceivedListener(OnIntermediateMessageReceivedListener listener) {
+        onIntermediateMessageReceivedListener = listener;
+    }
+
+    private void setCurrentResponse(String response) {
+        currentResponse = response;
+
+        if(currentResponse.length() >= 1 && getFunctionCode().equals("0900")) {
+            onIntermediateMessageReceivedListener.onReceived(new IntermediateResponse(currentResponse));
+        }
+    }
 
     public List<String> listPorts() {
         List<String> serialPorts = new ArrayList<>();
@@ -46,7 +57,6 @@ public class Serial {
     public boolean openPort(String portName, int baudRate) {
         port = SerialPort.getCommPort(portName);
         port.setBaudRate(baudRate);
-        port.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, DEFAULT_TIMEOUT, DEFAULT_WRITE_TIMEOUT);
         return port.openPort();
     }
 
@@ -54,12 +64,7 @@ public class Serial {
         return port.closePort();
     }
 
-/*    public boolean setTimeout(int timeOut) {
-        this.timeout = timeOut;
-        return port.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, this.timeout, DEFAULT_WRITE_TIMEOUT);
-    }*/
-
-    private boolean canWrite() { return port == null || !port.isOpen(); }
+    private boolean cantWrite() { return port == null || !port.isOpen(); }
 
     private String createCommand(String payload) {
         String fullCommand = STX+payload+ETX;
@@ -76,7 +81,14 @@ public class Serial {
         return lrc;
     }
 
-    public void write(String payload) throws TransbankException {
+    public void write(String payload) throws TransbankException { write(payload, false); }
+
+    public void write(String payload, boolean intermediateMessages) throws TransbankException {
+        currentResponse = "";
+
+        if(cantWrite())
+            throw new TransbankException(String.format("Unable to send message to %s", port.getSystemPortName()));
+
         String command = createCommand(payload);
         byte[] hexCommand = command.getBytes();
 
@@ -85,19 +97,28 @@ public class Serial {
 
         port.writeBytes(hexCommand, hexCommand.length);
 
-        if(checkAck()) {
-            read();
+        if(!checkAck()) throw new TransbankException("NACK received, check the message sent to the POS");
+        log.debug("Read ACK Ok");
+
+        readResponse();
+
+        if(intermediateMessages) {
+            String responseCode = getResponseCode();
+            while(CheckIntermediateMessage(responseCode)) {
+                readResponse();
+                responseCode = getResponseCode();
+            }
+            return;
         }
     }
 
-    private void read() throws TransbankException {
-
+    private void readResponse() throws TransbankException {
         waitResponse();
 
         int bytesAvailable = port.bytesAvailable();
         byte[] response = new byte[bytesAvailable];
         port.readBytes(response, bytesAvailable);
-        currentResponse = new String(response, StandardCharsets.UTF_8);
+        setCurrentResponse(new String(response, StandardCharsets.UTF_8));
 
         log.debug(String.format("Response [Hex]: %s", toHexString(response)));
         log.debug(String.format("Response [ASCII]: %s", currentResponse));
@@ -146,5 +167,26 @@ public class Serial {
         }
 
         return sb.toString();
+    }
+
+    private String getResponseCode() {
+        return currentResponse.substring(1, currentResponse.length()-2).split("\\|")[1];
+    }
+
+    private String getFunctionCode() {
+        return currentResponse.substring(1, currentResponse.length()-2).split("\\|")[0];
+    }
+
+    private boolean CheckIntermediateMessage(String responseCode)
+    {
+        List<String> intermediateMsg = new ArrayList<>(
+                Arrays.asList("78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89")
+        );
+
+        return intermediateMsg.contains(responseCode);
+    }
+
+    public interface OnIntermediateMessageReceivedListener {
+        void onReceived(IntermediateResponse intermediateMessage);
     }
 }
