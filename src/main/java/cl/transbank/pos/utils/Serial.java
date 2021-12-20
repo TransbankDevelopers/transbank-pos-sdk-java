@@ -22,7 +22,7 @@ public class Serial {
     @Getter @Setter
     private int timeout = DEFAULT_TIMEOUT;
     protected String currentResponse;
-    private SerialPort port;
+    protected SerialPort port;
 
     private Serial.OnIntermediateMessageReceivedListener onIntermediateMessageReceivedListener;
 
@@ -64,9 +64,9 @@ public class Serial {
         return port.closePort();
     }
 
-    private boolean cantWrite() { return port == null || !port.isOpen(); }
+    protected boolean cantWrite() { return port == null || !port.isOpen(); }
 
-    private String createCommand(String payload) {
+    protected String createCommand(String payload) {
         String fullCommand = STX+payload+ETX;
         return fullCommand + lrc(fullCommand);
     }
@@ -126,7 +126,7 @@ public class Serial {
         writeAck();
     }
 
-    private boolean checkAck() throws TransbankException {
+    protected boolean checkAck() throws TransbankException {
         byte[] response = new byte[1];
 
         waitResponse();
@@ -159,7 +159,7 @@ public class Serial {
         port.writeBytes(ack, ack.length);
     }
 
-    private String toHexString(byte[] data) {
+    protected String toHexString(byte[] data) {
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < data.length; i++) {
