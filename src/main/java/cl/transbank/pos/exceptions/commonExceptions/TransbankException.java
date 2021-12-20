@@ -1,6 +1,6 @@
-package cl.transbank.pos.exceptions;
+package cl.transbank.pos.exceptions.commonExceptions;
 
-public class TransbankException extends Exception{
+public class TransbankException extends Exception {
     public TransbankException(String message, Throwable cause) {
         super(message, cause);
     }
