@@ -93,7 +93,7 @@ public class POSIntegrado extends Serial {
         if (amount > 999999999) throw new TransbankMultiCodeSaleException("Amount must be less than 999999999.");
         if (ticket.trim().length() > 6) throw new TransbankMultiCodeSaleException("Ticket must be up to 6 in length");
 
-        String command = String.format("0200|%s|%s|||%s|%s|", amount, ticket, sendStatus ? 1 : 0, commerceCode);
+        String command = String.format("0270|%s|%s|||%s|%s|", amount, ticket, sendStatus ? 1 : 0, commerceCode);
 
         try {
             write(command, sendStatus);
@@ -187,7 +187,7 @@ public class POSIntegrado extends Serial {
 
     public CloseResponse close() throws TransbankCloseException {
         try {
-            write("0800");
+            write("0500||");
             CloseResponse response = new CloseResponse(currentResponse);
             log.debug(response.toString());
             return response;
