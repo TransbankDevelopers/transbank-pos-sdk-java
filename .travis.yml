@@ -23,7 +23,7 @@ after_success:
 before_deploy:
   - java -version
   - jdk_switcher use oraclejdk8
-  - java -versiondeploy:
+  - java -version
 deploy:
   -
     provider: script
