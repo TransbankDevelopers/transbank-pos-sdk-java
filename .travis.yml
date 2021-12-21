@@ -24,6 +24,7 @@ before_deploy:
   - java -version
   - jdk_switcher use oraclejdk8
   - java -versiondeploy:
+deploy:
   -
     provider: script
     script: bash .travis/deploy.sh
