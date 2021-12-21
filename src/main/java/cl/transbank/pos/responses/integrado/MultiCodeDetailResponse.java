@@ -10,6 +10,7 @@ import static cl.transbank.pos.utils.ParameterParser.*;
 
 @Getter
 public class MultiCodeDetailResponse extends SaleResponse {
+
     @Getter(AccessLevel.NONE)
     private final Map<String, Integer> m_parameterMap = new HashMap<String, Integer>()
     {

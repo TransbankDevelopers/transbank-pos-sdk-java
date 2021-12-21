@@ -1,6 +1,8 @@
 package cl.transbank.pos.responses.autoservicio;
 
 import cl.transbank.pos.responses.common.BasicResponse;
+import lombok.AccessLevel;
+import lombok.Getter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -10,8 +12,10 @@ import java.util.Map;
 
 import static cl.transbank.pos.utils.ParameterParser.parseRealDate;
 
+@Getter
 public class InitializationResponse extends BasicResponse {
 
+    @Getter(AccessLevel.NONE)
     private final Map<String, Integer> m_parameterMap = new HashMap<String, Integer>()
     {
         {

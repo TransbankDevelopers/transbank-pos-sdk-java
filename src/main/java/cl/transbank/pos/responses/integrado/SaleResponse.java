@@ -1,6 +1,8 @@
 package cl.transbank.pos.responses.integrado;
 
 import cl.transbank.pos.responses.common.LoadKeysResponse;
+import lombok.AccessLevel;
+import lombok.Getter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -10,8 +12,10 @@ import java.util.Map;
 
 import static cl.transbank.pos.utils.ParameterParser.*;
 
+@Getter
 public class SaleResponse extends LoadKeysResponse {
 
+    @Getter(AccessLevel.NONE)
     private final Map<String, Integer> m_parameterMap = new HashMap<String, Integer>()
     {
         {

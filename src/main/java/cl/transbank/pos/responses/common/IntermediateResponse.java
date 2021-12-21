@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class IntermediateResponse {
+
     @Getter(AccessLevel.NONE)
     private final BasicResponse basicResponse;
 

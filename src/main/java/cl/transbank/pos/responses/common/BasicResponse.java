@@ -11,6 +11,7 @@ import static cl.transbank.pos.utils.ParameterParser.parseIntParameter;
 
 @Getter
 public class BasicResponse {
+
     @Getter(AccessLevel.NONE)
     private final Map<String, Integer> m_parameterMap = new HashMap<String, Integer>()
     {
