@@ -2,7 +2,9 @@ package cl.transbank.pos.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 public class ParameterParser {
@@ -43,5 +45,31 @@ public class ParameterParser {
             return new SimpleDateFormat("ddMMyyyyHHmmss").parse(date+hour);
         }
         catch (ArrayIndexOutOfBoundsException | ParseException ex) { return null; }
+    }
+
+    public static List<String> parsePrintingField(String response, Map<String, Integer> parameterMap) {
+        List<String> printingField = new ArrayList<>();
+
+        try {
+            String[] arrayResponse = response.split("\\|");
+            if (arrayResponse.length < 5) {
+                printingField.add("");
+                return printingField;
+            }
+
+            String fullPrintingField = arrayResponse[parameterMap.get("PrintingField")].trim();
+
+            if (fullPrintingField.length() % 40 != 0)
+            {
+                printingField.add(fullPrintingField);
+                return printingField;
+            }
+
+            for (int i = 0; i < fullPrintingField.length(); i += 40)
+                printingField.add(fullPrintingField.substring(i, 40));
+
+            return printingField;
+
+        } catch (IndexOutOfBoundsException e) { return printingField; }
     }
 }
