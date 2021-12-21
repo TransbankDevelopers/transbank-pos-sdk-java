@@ -16,10 +16,10 @@ import java.util.List;
 @Log4j2
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class POSIntegrado extends Serial {
-    public boolean poll() throws TransbankSaleException {
+    public boolean poll() throws TransbankException {
         if(cantWrite()) {
             String exceptionMessage = String.format("Unable to Poll, can't write to port %s", port.getSystemPortName());
-            throw new TransbankSaleException(exceptionMessage);
+            throw new TransbankException(exceptionMessage);
         }
 
         try {
@@ -34,14 +34,14 @@ public class POSIntegrado extends Serial {
 
         } catch (TransbankException e) {
             String exceptionMessage = String.format("Unable to send Poll command on port %s", port.getSystemPortName());
-            throw new TransbankSaleException(exceptionMessage);
+            throw new TransbankException(exceptionMessage);
         }
     }
 
-    public boolean setNormalMode() throws TransbankSaleException {
+    public boolean setNormalMode() throws TransbankException {
         if(cantWrite()) {
             String exceptionMessage = String.format("Unable to set Normal Mode, can't write to port %s", port.getSystemPortName());
-            throw new TransbankSaleException(exceptionMessage);
+            throw new TransbankException(exceptionMessage);
         }
 
         try {
@@ -56,7 +56,7 @@ public class POSIntegrado extends Serial {
 
         } catch (TransbankException e) {
             String exceptionMessage = String.format("Unable to send Normal Mode command on port %s", port.getSystemPortName());
-            throw new TransbankSaleException(exceptionMessage);
+            throw new TransbankException(exceptionMessage);
         }
     }
 
