@@ -1,6 +1,6 @@
-package cl.transbank.pos.exceptions.commonExceptions;
+package cl.transbank.pos.exceptions.common;
 
-import cl.transbank.pos.responses.commonResponses.RefundResponse;
+import cl.transbank.pos.responses.common.RefundResponse;
 
 public class TransbankRefundException extends TransbankException {
     private RefundResponse refundResponse;

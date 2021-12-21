@@ -1,4 +1,4 @@
-package cl.transbank.pos.exceptions.commonExceptions;
+package cl.transbank.pos.exceptions.common;
 
 public class TransbankException extends Exception {
     public TransbankException(String message, Throwable cause) {

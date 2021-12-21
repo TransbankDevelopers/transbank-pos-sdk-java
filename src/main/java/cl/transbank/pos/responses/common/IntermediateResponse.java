@@ -1,4 +1,4 @@
-package cl.transbank.pos.responses.commonResponses;
+package cl.transbank.pos.responses.common;
 
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package cl.transbank.pos.responses.integradoResponses;
+package cl.transbank.pos.responses.integrado;
 
 public class LastSaleResponse extends SaleResponse {
 

@@ -1,7 +1,7 @@
 package cl.transbank.pos.utils;
 
-import cl.transbank.pos.exceptions.commonExceptions.TransbankException;
-import cl.transbank.pos.responses.commonResponses.IntermediateResponse;
+import cl.transbank.pos.exceptions.common.TransbankException;
+import cl.transbank.pos.responses.common.IntermediateResponse;
 import com.fazecast.jSerialComm.SerialPort;
 
 import lombok.Getter;

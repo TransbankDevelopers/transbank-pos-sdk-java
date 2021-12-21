@@ -1,6 +1,6 @@
-package cl.transbank.pos.exceptions.integradoExceptions;
+package cl.transbank.pos.exceptions.integrado;
 
-import cl.transbank.pos.responses.integradoResponses.MultiCodeSaleResponse;
+import cl.transbank.pos.responses.integrado.MultiCodeSaleResponse;
 
 public class TransbankMultiCodeSaleException extends TransbankSaleException {
     MultiCodeSaleResponse multiCodeSaleResponse;

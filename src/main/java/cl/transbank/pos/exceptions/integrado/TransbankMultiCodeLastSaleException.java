@@ -1,6 +1,6 @@
-package cl.transbank.pos.exceptions.integradoExceptions;
+package cl.transbank.pos.exceptions.integrado;
 
-import cl.transbank.pos.responses.integradoResponses.MultiCodeLastSaleResponse;
+import cl.transbank.pos.responses.integrado.MultiCodeLastSaleResponse;
 
 public class TransbankMultiCodeLastSaleException extends TransbankLastSaleException {
     public TransbankMultiCodeLastSaleException(String message, MultiCodeLastSaleResponse response) {super(message, response);}

@@ -1,6 +1,6 @@
-package cl.transbank.pos.responses.integradoResponses;
+package cl.transbank.pos.responses.integrado;
 
-import cl.transbank.pos.responses.commonResponses.LoadKeysResponse;
+import cl.transbank.pos.responses.common.LoadKeysResponse;
 
 public class CloseResponse extends LoadKeysResponse {
 

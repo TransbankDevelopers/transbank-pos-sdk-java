@@ -1,6 +1,6 @@
-package cl.transbank.pos.exceptions.commonExceptions;
+package cl.transbank.pos.exceptions.common;
 
-import cl.transbank.pos.responses.commonResponses.LoadKeysResponse;
+import cl.transbank.pos.responses.common.LoadKeysResponse;
 
 public class TransbankLoadKeysException extends TransbankException{
     private LoadKeysResponse loadKeysResponse;

@@ -1,12 +1,12 @@
 package cl.transbank.pos;
 
-import cl.transbank.pos.exceptions.commonExceptions.TransbankException;
-import cl.transbank.pos.exceptions.commonExceptions.TransbankLoadKeysException;
-import cl.transbank.pos.exceptions.commonExceptions.TransbankRefundException;
-import cl.transbank.pos.exceptions.integradoExceptions.*;
-import cl.transbank.pos.responses.commonResponses.LoadKeysResponse;
-import cl.transbank.pos.responses.commonResponses.RefundResponse;
-import cl.transbank.pos.responses.integradoResponses.*;
+import cl.transbank.pos.exceptions.common.TransbankException;
+import cl.transbank.pos.exceptions.common.TransbankLoadKeysException;
+import cl.transbank.pos.exceptions.common.TransbankRefundException;
+import cl.transbank.pos.exceptions.integrado.*;
+import cl.transbank.pos.responses.common.LoadKeysResponse;
+import cl.transbank.pos.responses.common.RefundResponse;
+import cl.transbank.pos.responses.integrado.*;
 import cl.transbank.pos.utils.Serial;
 import lombok.extern.log4j.Log4j2;
 

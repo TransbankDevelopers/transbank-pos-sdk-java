@@ -1,9 +1,9 @@
-package cl.transbank.pos.responses.integradoResponses;
+package cl.transbank.pos.responses.integrado;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import cl.transbank.pos.responses.commonResponses.BasicResponse;
+import cl.transbank.pos.responses.common.BasicResponse;
 import lombok.Getter;
 
 import static cl.transbank.pos.utils.ParameterParser.parseIntParameter;

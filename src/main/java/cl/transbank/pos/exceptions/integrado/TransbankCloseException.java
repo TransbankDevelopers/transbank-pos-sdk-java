@@ -1,7 +1,7 @@
-package cl.transbank.pos.exceptions.integradoExceptions;
+package cl.transbank.pos.exceptions.integrado;
 
-import cl.transbank.pos.exceptions.commonExceptions.TransbankException;
-import cl.transbank.pos.responses.integradoResponses.CloseResponse;
+import cl.transbank.pos.exceptions.common.TransbankException;
+import cl.transbank.pos.responses.integrado.CloseResponse;
 
 public class TransbankCloseException extends TransbankException {
     private CloseResponse closeResponse;
