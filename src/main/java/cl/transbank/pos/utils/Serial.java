@@ -27,6 +27,7 @@ public class Serial {
 
     private Serial.OnIntermediateMessageReceivedListener onIntermediateMessageReceivedListener;
 
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
     public void setOnIntermediateMessageReceivedListener(OnIntermediateMessageReceivedListener listener) {
         onIntermediateMessageReceivedListener = listener;
     }
@@ -39,6 +40,7 @@ public class Serial {
         }
     }
 
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
     public List<String> listPorts() {
         List<String> serialPorts = new ArrayList<>();
         SerialPort[] ports =  SerialPort.getCommPorts();
@@ -50,17 +52,20 @@ public class Serial {
         return serialPorts;
     }
 
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean openPort(String portName) {
         log.debug(String.format("Opening port %s", portName));
         return openPort(portName, DEFAULT_BAUDRATE);
     }
 
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean openPort(String portName, int baudRate) {
         port = SerialPort.getCommPort(portName);
         port.setBaudRate(baudRate);
         return port.openPort();
     }
 
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
     public boolean closePort() {
         return port.closePort();
     }
