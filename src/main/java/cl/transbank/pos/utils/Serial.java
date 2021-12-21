@@ -23,6 +23,7 @@ public class Serial {
     private int timeout = DEFAULT_TIMEOUT;
     protected String currentResponse;
     protected SerialPort port;
+    protected List<String> saleDetailResponse;
 
     private Serial.OnIntermediateMessageReceivedListener onIntermediateMessageReceivedListener;
 
@@ -83,7 +84,9 @@ public class Serial {
 
     public void write(String payload) throws TransbankException { write(payload, false); }
 
-    public void write(String payload, boolean intermediateMessages) throws TransbankException {
+    public void write(String payload, boolean intermediateMessages) throws TransbankException { write(payload, intermediateMessages, false, false); }
+
+    public void write(String payload, boolean intermediateMessages, boolean saleDetail, boolean printOnPOS) throws TransbankException {
         currentResponse = "";
 
         if(cantWrite())
@@ -100,9 +103,8 @@ public class Serial {
         if(!checkAck()) throw new TransbankException("NACK received, check the message sent to the POS");
         log.debug("Read ACK Ok");
 
-        readResponse();
-
         if(intermediateMessages) {
+            readResponse();
             String responseCode = getResponseCode();
             while(CheckIntermediateMessage(responseCode)) {
                 readResponse();
@@ -110,6 +112,29 @@ public class Serial {
             }
             return;
         }
+
+        if(saleDetail) {
+            saleDetailResponse = new ArrayList<>();
+
+            if(!printOnPOS) {
+                String authorizationCode = "Start";
+
+                while (authorizationCode != null && !authorizationCode.equals("") && !authorizationCode.equals(" ")) {
+                    readResponse();
+                    try {
+                        authorizationCode = getAuthorizationCode();
+                        if (!authorizationCode.equals("") && !authorizationCode.equals(" ")) {
+                            saleDetailResponse.add(currentResponse);
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        authorizationCode = null;
+                    }
+                }
+            }
+            return;
+        }
+
+        readResponse();
     }
 
     private void readResponse() throws TransbankException {
@@ -118,6 +143,16 @@ public class Serial {
         int bytesAvailable = port.bytesAvailable();
         byte[] response = new byte[bytesAvailable];
         port.readBytes(response, bytesAvailable);
+
+        if(response[response.length-2] != ETX) {
+            int fullResponseLength = bytesAvailable;
+            bytesAvailable = port.bytesAvailable();
+            fullResponseLength += bytesAvailable;
+            byte[] fullResponse = Arrays.copyOf(response, fullResponseLength);
+            port.readBytes(fullResponse, bytesAvailable, response.length);
+            response = fullResponse;
+        }
+
         setCurrentResponse(new String(response, StandardCharsets.UTF_8));
 
         log.debug(String.format("Response [Hex]: %s", toHexString(response)));
@@ -146,6 +181,7 @@ public class Serial {
 
         timer.schedule(timerTask, timeout);
 
+        //noinspection StatementWithEmptyBody
         while (port.bytesAvailable() <= 0 && !isTimeoutCompleted[0]) {}
 
         if(isTimeoutCompleted[0])
@@ -175,6 +211,10 @@ public class Serial {
 
     private String getFunctionCode() {
         return currentResponse.substring(1, currentResponse.length()-2).split("\\|")[0];
+    }
+
+    private String getAuthorizationCode() {
+        return currentResponse.substring(1, currentResponse.length()-2).split("\\|")[5];
     }
 
     private boolean CheckIntermediateMessage(String responseCode)
