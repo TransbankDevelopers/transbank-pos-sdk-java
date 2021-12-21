@@ -71,8 +71,8 @@ public class SaleResponse extends LoadKeysResponse {
     public String toString()
     {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-        String formatedAccountingDate = accountingDate != null ? dateFormat.format(accountingDate) : "";
-        String formatedRealDate = realDate != null ? dateFormat.format(realDate) : "";
+        String formattedAccountingDate = accountingDate != null ? dateFormat.format(accountingDate) : "";
+        String formattedRealDate = realDate != null ? dateFormat.format(realDate) : "";
         return super.toString() + "\n" +
             "Ticket: " + ticket + "\n" +
             "AuthorizationCode Code: " + authorizationCode + "\n" +
@@ -82,10 +82,10 @@ public class SaleResponse extends LoadKeysResponse {
             "Last 4 Digits: " + last4Digits + "\n" +
             "Operation Number: " + operationNumber + "\n" +
             "Card Type: " + cardType + "\n" +
-            "Accounting Date: " + formatedAccountingDate + "\n" +
+            "Accounting Date: " + formattedAccountingDate + "\n" +
             "Account Number: " + accountNumber + "\n" +
             "Card Brand: " + cardBrand + "\n" +
-            "Real Date: " + formatedRealDate + "\n" +
+            "Real Date: " + formattedRealDate + "\n" +
             "Employee Id: " + employeeId + "\n" +
             "Tip: " + tip;
     }
