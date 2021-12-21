@@ -12,28 +12,13 @@ Para compilar basta con el target package:
 
 <code>mvn package</code> 
 
-Esto generará un jar bajo el directorio target con el codigo de la librería.
-
-### Variable de ambiente
-
-Para utilizar el SDK del POS es necesario el archivo Transbank.dll, o Transbank.dylib del SDK de C. Esta es la librería nativa del POS integrado de Transbank, y la versión de Java la utiliza.
-
-Para que la libreria de Java pueda encontrar la librería nativa, utiliza una variable de ambiente llamada **NATIVE_TRANSBANK_WRAP** que debe apuntar al archivo de esta variable.
-
-Por ejemplo en MacOS se debe correr el comando export en el mismo Shell en que se ejecutará el programa que utiliza la librería.
-
-<code>export NATIVE_TRANSBANK_WRAP=/usr/local/lib/libTransbankWrap.dylib</code>
-
-en Windows, se debe correr este comando en la ventana de Command.com antes de ejecutar el programa que utiliza la librería.
-
-<code>setx NATIVE_TRANSBANK_WRAP=c:\TransbankLib\TransbankWrap.dll</code>
-
-Mas adelante probablemente, se incluya esta variable en algun script que lanzará el programa.
+Esto generará un jar bajo el directorio target con el código de la librería.
 
 ### Desarrollo
 
-Para ejecutar localmente el proyecto y probarlo junto al [repositorio de ejemplo](https://github.com/TransbankDevelopers/transbank-pos-sdk-java-example) debe ejecutar las siguientes lineas (
-Remplace <DIR> por el directorio donde clono el repositorio y <VERSION> por el que corresponda a la versión clonada según sea el caso, donde <VERSION> dependera de lo especificado en la etiqueta version del archivo pom.xml, busque la linea con el código similar a <version>X.X.X-SNAPSHOT</version>).
+Para ejecutar localmente el proyecto y probarlo junto al [repositorio de ejemplo](https://github.com/TransbankDevelopers/transbank-pos-sdk-java-example) debe ejecutar las siguientes líneas.
+
+Remplace &lt;DIR&gt; por el directorio donde clono el repositorio y &lt;VERSION&gt; por el que corresponda a la versión clonada según sea el caso, donde &lt;VERSION&gt; dependerá de lo especificado en la etiqueta version del archivo pom.xml, busque la línea con el código similar a &lt;version&gt;X.X.X-SNAPSHOT&lt;/version&gt;.
 
 ```sh
 mvn compile && mvn package && mvn install:install-file \
@@ -54,6 +39,7 @@ La documentación relevante para usar este SDK es:
 - Documentación general sobre los productos y sus diferencias:
   [POSIntegrado](https://www.transbankdevelopers.cl/producto/posintegrado)
 - Primeros pasos con [POSIntegrado](https://www.transbankdevelopers.cl/documentacion/posintegrado).
+- Primeros pasos con [POSAutoservicio](https://transbankdevelopers.cl/documentacion/pos-autoservicio).
 - Referencia detallada sobre [POSIntegrado](https://www.transbankdevelopers.cl/referencia/posintegrado).
 
 ## Información para contribuir y desarrollar este SDK
