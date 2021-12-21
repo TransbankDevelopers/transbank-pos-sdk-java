@@ -127,7 +127,7 @@ public class POSIntegrado extends Serial {
         }
     }
 
-    public RefundResponse Refund(int operationId) throws TransbankRefundException {
+    public RefundResponse refund(int operationId) throws TransbankRefundException {
         String command = String.format("1200|%s|", operationId);
 
         try {

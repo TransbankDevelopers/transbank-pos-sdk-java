@@ -135,7 +135,7 @@ public class POSAutoservicio extends Serial {
         }
     }
 
-    public RefundResponse Refund() throws TransbankRefundException {
+    public RefundResponse refund() throws TransbankRefundException {
         try {
             write("1200");
             RefundResponse response = new RefundResponse(currentResponse);
