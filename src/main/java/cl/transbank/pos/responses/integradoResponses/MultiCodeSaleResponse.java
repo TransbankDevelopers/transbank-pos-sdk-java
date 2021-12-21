@@ -22,13 +22,13 @@ public class MultiCodeSaleResponse extends SaleResponse {
 
     private final String filler;
     private final int change;
-    private final long commerceCode;
+    private final long commerceProviderCode;
 
     public MultiCodeSaleResponse(String response) {
         super(response);
         filler = parseStringParameter(m_response, m_parameterMap, "Filler");
         change = parseIntParameter(m_response, m_parameterMap, "Change");
-        commerceCode = parseLongParameter(m_response, m_parameterMap, "CommerceCode");
+        commerceProviderCode = parseLongParameter(m_response, m_parameterMap, "CommerceCode");
     }
 
     @Override
@@ -37,6 +37,6 @@ public class MultiCodeSaleResponse extends SaleResponse {
         return super.toString() + "\n" +
             "Filler: " + filler + "\n" +
             "Change: " + change + "\n" +
-            "Commerce Provider Code: " + commerceCode;
+            "Commerce Provider Code: " + commerceProviderCode;
     }
 }
