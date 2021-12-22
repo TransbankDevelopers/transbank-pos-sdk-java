@@ -1,5 +1,6 @@
 package cl.transbank.pos.responses.integrado;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,21 +14,17 @@ import static cl.transbank.pos.utils.ParameterParser.parseIntParameter;
 public class TotalsResponse extends BasicResponse {
 
     @Getter(AccessLevel.NONE)
-    private final Map<String, Integer> m_parameterMap = new HashMap<String, Integer>()
-    {
-        {
-            put("TxCount", 2);
-            put("TxTotal", 3);
-        }
-    };
+    private final Map<String, Integer> parameterMap;
 
     private final int txCount;
     private final int txTotal;
 
     public TotalsResponse(String response) {
         super(response);
-        txCount = parseIntParameter(m_response, m_parameterMap, "TxCount");
-        txTotal = parseIntParameter(m_response, m_parameterMap, "TxTotal");
+        parameterMap = initializeParameterMap();
+
+        txCount = parseIntParameter(baseResponse, parameterMap, "TxCount");
+        txTotal = parseIntParameter(baseResponse, parameterMap, "TxTotal");
     }
 
     @Override
@@ -36,5 +33,12 @@ public class TotalsResponse extends BasicResponse {
         return super.toString() + "\n" +
             "TX Count: " + txCount + "\n" +
             "TX Total: " + txTotal;
+    }
+
+    private Map<String, Integer> initializeParameterMap() {
+        Map<String, Integer> baseMap = new HashMap<>();
+        baseMap.put("TxCount", 2);
+        baseMap.put("TxTotal", 3);
+        return Collections.unmodifiableMap(baseMap);
     }
 }
