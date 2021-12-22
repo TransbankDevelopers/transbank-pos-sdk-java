@@ -151,6 +151,7 @@ public class Serial {
         port.readBytes(response, bytesAvailable);
 
         if(response[response.length-2] != ETX) {
+            waitResponse();
             int fullResponseLength = bytesAvailable;
             bytesAvailable = port.bytesAvailable();
             fullResponseLength += bytesAvailable;
