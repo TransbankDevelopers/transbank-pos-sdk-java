@@ -35,7 +35,8 @@ public class Serial {
     private void setCurrentResponse(String response) {
         currentResponse = response;
 
-        if(currentResponse.length() >= 1 && getFunctionCode().equals("0900")) {
+        if(currentResponse.length() >= 1 && getFunctionCode().equals("0900")
+                && onIntermediateMessageReceivedListener != null) {
             onIntermediateMessageReceivedListener.onReceived(new IntermediateResponse(currentResponse));
         }
     }
@@ -45,8 +46,8 @@ public class Serial {
         List<String> serialPorts = new ArrayList<>();
         SerialPort[] ports =  SerialPort.getCommPorts();
 
-        for (SerialPort port : ports) {
-            serialPorts.add(port.getSystemPortName());
+        for (SerialPort serialPort : ports) {
+            serialPorts.add(serialPort.getSystemPortName());
         }
 
         return serialPorts;
@@ -150,6 +151,7 @@ public class Serial {
         port.readBytes(response, bytesAvailable);
 
         if(response[response.length-2] != ETX) {
+            waitResponse();
             int fullResponseLength = bytesAvailable;
             bytesAvailable = port.bytesAvailable();
             fullResponseLength += bytesAvailable;
