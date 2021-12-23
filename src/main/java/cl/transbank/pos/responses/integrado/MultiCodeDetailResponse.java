@@ -3,6 +3,7 @@ package cl.transbank.pos.responses.integrado;
 import lombok.AccessLevel;
 import lombok.Getter;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,21 +13,17 @@ import static cl.transbank.pos.utils.ParameterParser.*;
 public class MultiCodeDetailResponse extends SaleResponse {
 
     @Getter(AccessLevel.NONE)
-    private final Map<String, Integer> m_parameterMap = new HashMap<String, Integer>()
-    {
-        {
-            put("Change", 19);
-            put("CommerceProviderCode", 20);
-        }
-    };
+    private final Map<String, Integer> parameterMap;
 
     private final int change;
     private final long commerceProviderCode;
 
     public MultiCodeDetailResponse(String response) {
         super(response);
-        change = parseIntParameter(m_response, m_parameterMap, "Change");
-        commerceProviderCode = parseLongParameter(m_response, m_parameterMap, "CommerceCode");
+        parameterMap = initializeParameterMap();
+
+        change = parseIntParameter(baseResponse, parameterMap, "Change");
+        commerceProviderCode = parseLongParameter(baseResponse, parameterMap, "CommerceCode");
     }
 
     @Override
@@ -35,5 +32,12 @@ public class MultiCodeDetailResponse extends SaleResponse {
         return super.toString() + "\n" +
             "Change: " + change + "\n" +
             "Commerce Provider Code: " + commerceProviderCode;
+    }
+
+    private static Map<String, Integer> initializeParameterMap() {
+        Map<String, Integer> baseMap = new HashMap<>();
+        baseMap.put("Change", 19);
+        baseMap.put("CommerceProviderCode", 20);
+        return Collections.unmodifiableMap(baseMap);
     }
 }

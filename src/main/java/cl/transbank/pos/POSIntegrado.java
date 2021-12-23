@@ -17,12 +17,8 @@ import java.util.List;
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class POSIntegrado extends Serial {
     public boolean poll() throws TransbankException {
-        if(cantWrite()) {
-            String exceptionMessage = String.format("Unable to Poll, can't write to port %s", port.getSystemPortName());
-            throw new TransbankException(exceptionMessage);
-        }
-
         try {
+            checkCanWrite();
             String command = createCommand("0100");
             byte[] hexCommand = command.getBytes();
 
@@ -33,17 +29,11 @@ public class POSIntegrado extends Serial {
             return checkAck();
 
         } catch (TransbankException e) {
-            String exceptionMessage = String.format("Unable to send Poll command on port %s", port.getSystemPortName());
-            throw new TransbankException(exceptionMessage);
+            throw new TransbankException("Unable to send Poll command on port", e);
         }
     }
 
     public boolean setNormalMode() throws TransbankException {
-        if(cantWrite()) {
-            String exceptionMessage = String.format("Unable to set Normal Mode, can't write to port %s", port.getSystemPortName());
-            throw new TransbankException(exceptionMessage);
-        }
-
         try {
             String command = createCommand("0300");
             byte[] hexCommand = command.getBytes();
@@ -55,8 +45,7 @@ public class POSIntegrado extends Serial {
             return checkAck();
 
         } catch (TransbankException e) {
-            String exceptionMessage = String.format("Unable to send Normal Mode command on port %s", port.getSystemPortName());
-            throw new TransbankException(exceptionMessage);
+            throw new TransbankException("Unable to send Normal Mode command on port", e);
         }
     }
 

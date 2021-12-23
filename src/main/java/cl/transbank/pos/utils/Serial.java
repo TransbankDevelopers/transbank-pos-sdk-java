@@ -71,7 +71,11 @@ public class Serial {
         return port.closePort();
     }
 
-    protected boolean cantWrite() { return port == null || !port.isOpen(); }
+    protected void checkCanWrite() throws TransbankException {
+        if(port == null || !port.isOpen()) {
+            throw new TransbankException("Can't write to port, the port is null or not open");
+        }
+    }
 
     protected String createCommand(String payload) {
         String fullCommand = STX+payload+ETX;
@@ -95,8 +99,7 @@ public class Serial {
     public void write(String payload, boolean intermediateMessages, boolean saleDetail, boolean printOnPOS) throws TransbankException {
         currentResponse = "";
 
-        if(cantWrite())
-            throw new TransbankException(String.format("Unable to send message to %s", port.getSystemPortName()));
+        checkCanWrite();
 
         String command = createCommand(payload);
         byte[] hexCommand = command.getBytes();
@@ -106,13 +109,15 @@ public class Serial {
 
         port.writeBytes(hexCommand, hexCommand.length);
 
-        if(!checkAck()) throw new TransbankException("NACK received, check the message sent to the POS");
+        if(!checkAck()) {
+            throw new TransbankException("NACK received, check the message sent to the POS");
+        }
         log.debug("Read ACK Ok");
 
         if(intermediateMessages) {
             readResponse();
             String responseCode = getResponseCode();
-            while(CheckIntermediateMessage(responseCode)) {
+            while(checkIntermediateMessage(responseCode)) {
                 readResponse();
                 responseCode = getResponseCode();
             }
@@ -121,20 +126,17 @@ public class Serial {
 
         if(saleDetail) {
             saleDetailResponse = new ArrayList<>();
+            String authorizationCode = "Start";
 
-            if(!printOnPOS) {
-                String authorizationCode = "Start";
-
-                while (authorizationCode != null && !authorizationCode.equals("") && !authorizationCode.equals(" ")) {
-                    readResponse();
-                    try {
-                        authorizationCode = getAuthorizationCode();
-                        if (!authorizationCode.equals("") && !authorizationCode.equals(" ")) {
-                            saleDetailResponse.add(currentResponse);
-                        }
-                    } catch (IndexOutOfBoundsException e) {
-                        authorizationCode = null;
+            while (!authorizationCode.trim().isEmpty() && !printOnPOS) {
+                readResponse();
+                try {
+                    authorizationCode = getAuthorizationCode();
+                    if (!authorizationCode.trim().isEmpty()) {
+                        saleDetailResponse.add(currentResponse);
                     }
+                } catch (IndexOutOfBoundsException e) {
+                    authorizationCode = "";
                 }
             }
             return;
@@ -189,10 +191,13 @@ public class Serial {
         timer.schedule(timerTask, timeout);
 
         //noinspection StatementWithEmptyBody
-        while (port.bytesAvailable() <= 0 && !isTimeoutCompleted[0]) {}
+        while (port.bytesAvailable() <= 0 && !isTimeoutCompleted[0]) {
+            //waiting for response
+        }
 
-        if(isTimeoutCompleted[0])
+        if(isTimeoutCompleted[0]) {
             throw new TransbankException("Read operation Timeout");
+        }
         timer.cancel();
     }
 
@@ -224,7 +229,7 @@ public class Serial {
         return currentResponse.substring(1, currentResponse.length()-2).split("\\|")[5];
     }
 
-    private boolean CheckIntermediateMessage(String responseCode)
+    private boolean checkIntermediateMessage(String responseCode)
     {
         List<String> intermediateMsg = new ArrayList<>(
                 Arrays.asList("78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89")

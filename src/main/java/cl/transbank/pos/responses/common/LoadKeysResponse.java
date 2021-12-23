@@ -1,5 +1,6 @@
 package cl.transbank.pos.responses.common;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,21 +14,17 @@ import static cl.transbank.pos.utils.ParameterParser.parseStringParameter;
 public class LoadKeysResponse extends BasicResponse {
 
     @Getter(AccessLevel.NONE)
-    private final Map<String, Integer> m_parameterMap = new HashMap<String, Integer>()
-    {
-        {
-            put("CommerceCode", 2);
-            put("TerminalId", 3);
-        }
-    };
+    private final Map<String, Integer> parameterMap;
 
     private final long commerceCode;
     private final String terminalId;
 
     public LoadKeysResponse(String response) {
         super(response);
-        commerceCode = parseLongParameter(m_response, m_parameterMap, "CommerceCode");
-        terminalId = parseStringParameter(m_response, m_parameterMap, "TerminalId");
+        parameterMap = initializeParameterMap();
+
+        commerceCode = parseLongParameter(baseResponse, parameterMap, "CommerceCode");
+        terminalId = parseStringParameter(baseResponse, parameterMap, "TerminalId");
     }
 
     @Override
@@ -36,5 +33,12 @@ public class LoadKeysResponse extends BasicResponse {
         return super.toString() + "\n" +
             "Commerce Code: " + commerceCode + "\n" +
             "Terminal Id: " + terminalId;
+    }
+
+    private static Map<String, Integer> initializeParameterMap() {
+        Map<String, Integer> baseMap = new HashMap<>();
+        baseMap.put("CommerceCode", 2);
+        baseMap.put("TerminalId", 3);
+        return Collections.unmodifiableMap(baseMap);
     }
 }

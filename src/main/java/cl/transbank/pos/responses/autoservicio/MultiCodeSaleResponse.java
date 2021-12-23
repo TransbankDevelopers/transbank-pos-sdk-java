@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,17 +16,7 @@ import static cl.transbank.pos.utils.ParameterParser.*;
 public class MultiCodeSaleResponse extends SaleResponse {
 
     @Getter(AccessLevel.NONE)
-    private final Map<String, Integer> m_parameterMap = new HashMap<String, Integer>()
-    {
-        {
-            put("CommerceProviderCode", 14);
-            put("PrintingField", 16);
-            put("SharesType", 17);
-            put("SharesNumber", 18);
-            put("SharesAmount", 19);
-            put("SharesTypeComment", 20);
-        }
-    };
+    private final Map<String, Integer> parameterMap;
 
     private final long commerceProviderCode;
     private final List<String> printingField;
@@ -36,12 +27,14 @@ public class MultiCodeSaleResponse extends SaleResponse {
 
     public MultiCodeSaleResponse(String response) {
         super(response);
-        commerceProviderCode = parseLongParameter(m_response, m_parameterMap, "CommerceCode");
-        printingField = parsePrintingField(m_response, m_parameterMap);
-        sharesType = parseIntParameter(m_response, m_parameterMap, "SharesType");
-        sharesNumber = parseIntParameter(m_response, m_parameterMap, "SharesNumber");
-        sharesAmount = parseIntParameter(m_response, m_parameterMap, "SharesAmount");
-        sharesTypeComment = parseStringParameter(m_response, m_parameterMap, "SharesTypeComment");
+        parameterMap = initializeParameterMap();
+
+        commerceProviderCode = parseLongParameter(baseResponse, parameterMap, "CommerceCode");
+        printingField = parsePrintingField(baseResponse, parameterMap);
+        sharesType = parseIntParameter(baseResponse, parameterMap, "SharesType");
+        sharesNumber = parseIntParameter(baseResponse, parameterMap, "SharesNumber");
+        sharesAmount = parseIntParameter(baseResponse, parameterMap, "SharesAmount");
+        sharesTypeComment = parseStringParameter(baseResponse, parameterMap, "SharesTypeComment");
     }
 
     @Override
@@ -70,5 +63,16 @@ public class MultiCodeSaleResponse extends SaleResponse {
                 "Shares Number: " + sharesNumber + "\n" +
                 "Shares Amount: " + sharesAmount + "\n" +
                 "Shares Type Comment: " + sharesTypeComment;
+    }
+
+    private static Map<String, Integer> initializeParameterMap() {
+        Map<String, Integer> baseMap = new HashMap<>();
+        baseMap.put("CommerceProviderCode", 14);
+        baseMap.put("PrintingField", 16);
+        baseMap.put("SharesType", 17);
+        baseMap.put("SharesNumber", 18);
+        baseMap.put("SharesAmount", 19);
+        baseMap.put("SharesTypeComment", 20);
+        return Collections.unmodifiableMap(baseMap);
     }
 }

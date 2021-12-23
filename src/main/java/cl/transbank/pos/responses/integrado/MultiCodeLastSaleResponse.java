@@ -3,6 +3,7 @@ package cl.transbank.pos.responses.integrado;
 import lombok.AccessLevel;
 import lombok.Getter;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,14 +13,7 @@ import static cl.transbank.pos.utils.ParameterParser.*;
 public class MultiCodeLastSaleResponse extends LastSaleResponse {
 
     @Getter(AccessLevel.NONE)
-    private final Map<String, Integer> m_parameterMap = new HashMap<String, Integer>()
-    {
-        {
-            put("Voucher", 19);
-            put("Change", 20);
-            put("CommerceProviderCode", 21);
-        }
-    };
+    private final Map<String, Integer> parameterMap;
 
     private final String voucher;
     private final int change;
@@ -27,9 +21,11 @@ public class MultiCodeLastSaleResponse extends LastSaleResponse {
 
     public MultiCodeLastSaleResponse(String response) {
         super(response);
-        voucher = parseStringParameter(m_response, m_parameterMap, "Voucher");
-        change = parseIntParameter(m_response, m_parameterMap, "Change");
-        commerceProviderCode = parseLongParameter(m_response, m_parameterMap, "CommerceCode");
+        parameterMap = initializeParameterMap();
+
+        voucher = parseStringParameter(baseResponse, parameterMap, "Voucher");
+        change = parseIntParameter(baseResponse, parameterMap, "Change");
+        commerceProviderCode = parseLongParameter(baseResponse, parameterMap, "CommerceCode");
     }
 
     @Override
@@ -39,5 +35,13 @@ public class MultiCodeLastSaleResponse extends LastSaleResponse {
             "Voucher: " + voucher + "\n" +
             "Change: " + change + "\n" +
             "Commerce Provider Code: " + commerceProviderCode;
+    }
+
+    private static Map<String, Integer> initializeParameterMap() {
+        Map<String, Integer> baseMap = new HashMap<>();
+        baseMap.put("Voucher", 19);
+        baseMap.put("Change", 20);
+        baseMap.put("CommerceProviderCode", 21);
+        return Collections.unmodifiableMap(baseMap);
     }
 }

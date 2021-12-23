@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,27 +17,7 @@ import static cl.transbank.pos.utils.ParameterParser.*;
 public class SaleResponse extends LoadKeysResponse {
 
     @Getter(AccessLevel.NONE)
-    private final Map<String, Integer> m_parameterMap = new HashMap<String, Integer>()
-    {
-        {
-            put("Ticket", 4);
-            put("AuthorizationCode", 5);
-            put("Amount", 6);
-            put("SharesNumber", 7);
-            put("SharesAmount", 8);
-            put("Last4Digits", 9);
-            put("OperationNumber", 10);
-            put("CardType", 11);
-            put("AccountingDate", 12);
-            put("AccountNumber", 13);
-            put("CardBrand", 14);
-            put("RealDate", 15);
-            put("RealTime", 16);
-            put("EmployeeId", 17);
-            put("Tip", 18);
-
-        }
-    };
+    private final Map<String, Integer> parameterMap;
 
     private final String ticket;
     private final String authorizationCode;
@@ -55,20 +36,22 @@ public class SaleResponse extends LoadKeysResponse {
 
     public SaleResponse(String response) {
         super(response);
-        ticket = parseStringParameter(m_response, m_parameterMap, "Ticket");
-        authorizationCode = parseStringParameter(m_response, m_parameterMap, "AuthorizationCode");
-        amount = parseIntParameter(m_response, m_parameterMap, "Amount");
-        sharesNumber = parseIntParameter(m_response, m_parameterMap, "SharesNumber");
-        sharesAmount = parseIntParameter(m_response, m_parameterMap, "SharesAmount");
-        last4Digits = parseIntParameter(m_response, m_parameterMap, "Last4Digits");
-        operationNumber = parseIntParameter(m_response, m_parameterMap, "OperationNumber");
-        cardType = parseStringParameter(m_response, m_parameterMap, "CardType");
-        accountingDate = parseAccountingDate(m_response, m_parameterMap);
-        accountNumber = parseStringParameter(m_response, m_parameterMap, "AccountNumber");
-        cardBrand = parseStringParameter(m_response, m_parameterMap, "CardBrand");
-        realDate = parseRealDate(m_response, m_parameterMap);
-        employeeId = parseIntParameter(m_response, m_parameterMap, "EmployeeId");
-        tip = parseIntParameter(m_response, m_parameterMap, "Tip");
+        parameterMap = initializeParameterMap();
+
+        ticket = parseStringParameter(baseResponse, parameterMap, "Ticket");
+        authorizationCode = parseStringParameter(baseResponse, parameterMap, "AuthorizationCode");
+        amount = parseIntParameter(baseResponse, parameterMap, "Amount");
+        sharesNumber = parseIntParameter(baseResponse, parameterMap, "SharesNumber");
+        sharesAmount = parseIntParameter(baseResponse, parameterMap, "SharesAmount");
+        last4Digits = parseIntParameter(baseResponse, parameterMap, "Last4Digits");
+        operationNumber = parseIntParameter(baseResponse, parameterMap, "OperationNumber");
+        cardType = parseStringParameter(baseResponse, parameterMap, "CardType");
+        accountingDate = parseAccountingDate(baseResponse, parameterMap);
+        accountNumber = parseStringParameter(baseResponse, parameterMap, "AccountNumber");
+        cardBrand = parseStringParameter(baseResponse, parameterMap, "CardBrand");
+        realDate = parseRealDate(baseResponse, parameterMap);
+        employeeId = parseIntParameter(baseResponse, parameterMap, "EmployeeId");
+        tip = parseIntParameter(baseResponse, parameterMap, "Tip");
     }
 
     @Override
@@ -92,5 +75,25 @@ public class SaleResponse extends LoadKeysResponse {
             "Real Date: " + formattedRealDate + "\n" +
             "Employee Id: " + employeeId + "\n" +
             "Tip: " + tip;
+    }
+
+    private static Map<String, Integer> initializeParameterMap() {
+        Map<String, Integer> baseMap = new HashMap<>();
+        baseMap.put("Ticket", 4);
+        baseMap.put("AuthorizationCode", 5);
+        baseMap.put("Amount", 6);
+        baseMap.put("SharesNumber", 7);
+        baseMap.put("SharesAmount", 8);
+        baseMap.put("Last4Digits", 9);
+        baseMap.put("OperationNumber", 10);
+        baseMap.put("CardType", 11);
+        baseMap.put("AccountingDate", 12);
+        baseMap.put("AccountNumber", 13);
+        baseMap.put("CardBrand", 14);
+        baseMap.put("RealDate", 15);
+        baseMap.put("RealTime", 16);
+        baseMap.put("EmployeeId", 17);
+        baseMap.put("Tip", 18);
+        return Collections.unmodifiableMap(baseMap);
     }
 }
