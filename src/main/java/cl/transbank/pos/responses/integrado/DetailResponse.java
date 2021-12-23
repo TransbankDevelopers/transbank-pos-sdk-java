@@ -53,7 +53,15 @@ public class DetailResponse extends SaleResponse {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         String formattedAccountingDate = accountingDate != null ? dateFormat.format(accountingDate) : "";
         String formattedRealDate = realDate != null ? dateFormat.format(realDate) : "";
-        return super.toString() + "\n" +
+        return "\nFunction: " + getFunctionCode() + "\n" +
+            "Response code: " + getResponseCode() + "\n" +
+            "Response message: " + getResponseMessage() + "\n" +
+            "Success?: " + getSuccess() + "\n" +
+            "Commerce Code: " + getCommerceCode() + "\n" +
+            "Terminal Id: " + getTerminalId() + "\n" +
+            "Ticket: " + getTicket() + "\n" +
+            "AuthorizationCode Code: " + getAuthorizationCode() + "\n" +
+            "Amount: " + getAmount() + "\n" +
             "Last 4 Digits: " + last4Digits + "\n" +
             "Operation Number: " + operationNumber + "\n" +
             "Card Type: " + cardType + "\n" +

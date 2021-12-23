@@ -44,7 +44,9 @@ public class MultiCodeSaleResponse extends SaleResponse {
         String formattedAccountingDate = getAccountingDate() != null ? dateFormat.format(getAccountingDate()) : "";
         String formattedRealDate = getRealDate() != null ? dateFormat.format(getRealDate()) : "";
         return  "Function:" + getFunctionCode() + "\n" +
-                "Response: " + getResponseMessage() + "\n" +
+                "Response code: " + getResponseCode() + "\n" +
+                "Response message: " + getResponseMessage() + "\n" +
+                "Success?: " + getSuccess() + "\n" +
                 "Commerce Code: " + getCommerceCode() + "\n" +
                 "Terminal Id: " + getTerminalId() + "\n" +
                 "Ticket: " + getTicket() + "\n" +
