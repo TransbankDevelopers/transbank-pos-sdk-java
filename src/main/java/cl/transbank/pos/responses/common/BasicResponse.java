@@ -21,7 +21,7 @@ public class BasicResponse {
     private final int functionCode;
     private final String responseMessage;
     private final int responseCode;
-    private final boolean success;
+    private final Boolean success;
 
     public BasicResponse(String response)
     {
