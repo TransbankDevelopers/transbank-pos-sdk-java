@@ -21,7 +21,7 @@ public class BasicResponse {
     private final int functionCode;
     private final String responseMessage;
     private final int responseCode;
-    private final boolean success;
+    private final Boolean success;
 
     public BasicResponse(String response)
     {
@@ -31,7 +31,7 @@ public class BasicResponse {
         functionCode = parseIntParameter(baseResponse, parameterMap, "FunctionCode");
         responseCode = parseIntParameter(baseResponse, parameterMap, "ResponseCode");
         responseMessage = ResponseCodes.getResponseMessage(responseCode);
-        success = ResponseCodes.getResponseMessage(0).equals(responseMessage);
+        success = isSuccess();
     }
 
     @Override
@@ -47,5 +47,10 @@ public class BasicResponse {
         baseMap.put("FunctionCode", 0);
         baseMap.put("ResponseCode", 1);
         return Collections.unmodifiableMap(baseMap);
+    }
+
+    private boolean isSuccess() {
+        return ResponseCodes.getResponseMessage(0).equals(responseMessage)
+                || ResponseCodes.getResponseMessage(90).equals(responseMessage);
     }
 }

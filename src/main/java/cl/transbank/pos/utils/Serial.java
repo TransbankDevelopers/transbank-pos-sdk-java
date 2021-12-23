@@ -14,8 +14,8 @@ import java.util.*;
 @Log4j2
 public class Serial {
     protected static final byte ACK = 0x06;
-    protected static final int DEFAULT_TIMEOUT = 150000;
-    protected static final int DEFAULT_BAUDRATE = 115200;
+    public static final int DEFAULT_TIMEOUT = 150000;
+    public static final int DEFAULT_BAUDRATE = 115200;
     private static final char STX = '\u0002';
     private static final char ETX = '\u0003';
 
@@ -185,7 +185,7 @@ public class Serial {
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
-            public void run() { isTimeoutCompleted[0] = true; }
+            public void run() {isTimeoutCompleted[0] = true;}
         };
 
         timer.schedule(timerTask, timeout);
@@ -196,6 +196,7 @@ public class Serial {
         }
 
         if(isTimeoutCompleted[0]) {
+            timer.cancel();
             throw new TransbankException("Read operation Timeout");
         }
         timer.cancel();

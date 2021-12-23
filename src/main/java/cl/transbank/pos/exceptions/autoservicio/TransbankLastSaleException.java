@@ -1,7 +1,6 @@
 package cl.transbank.pos.exceptions.autoservicio;
 
 import cl.transbank.pos.exceptions.common.TransbankException;
-import cl.transbank.pos.responses.autoservicio.LastSaleResponse;
 
 public class TransbankLastSaleException extends TransbankException {
 
