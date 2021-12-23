@@ -4,6 +4,15 @@ Todos los cambios notables a este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 y este proyecto adhiere a [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2021-23-12
+### Fixed
+- Se soluciona problema que impedía finalizar el hilo principal cuando se producía una excepción por timeout.
+- Se soluciona problema con el método `toString()` de algunas respuestas que mostraba valores incorrectos en los campos.
+- Se arregla error al utilizar mensajes intermedios y no asignar el evento para escucharlos.
+- Se soluciona problema con respuestas incompletas.
+- Se arregla problema que marcaba la propiedad `success` en `false` cuando se ejecutaba el comando de respuesta de inicialización del POS Autoservicio.
+- Se añade parámetro faltante en el método `multiCodeLastSale` de la clase `POSIntegrado`.
+
 ## [2.0.0] - 2021-21-12
 Se reimplementa el SDK para que utilice la librería jSerialComm para el manejo del puerto serial.
 
