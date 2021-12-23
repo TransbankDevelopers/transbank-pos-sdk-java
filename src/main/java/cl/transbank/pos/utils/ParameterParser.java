@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class ParameterParser {
 
+    private ParameterParser() {}
+
     public static String parseStringParameter(String response, Map<String, Integer> parameterMap, String parameterKey) {
         try {
             return response.split("\\|")[parameterMap.get(parameterKey)].trim();
