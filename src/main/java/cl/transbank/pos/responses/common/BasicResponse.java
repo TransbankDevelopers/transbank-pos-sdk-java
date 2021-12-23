@@ -30,8 +30,8 @@ public class BasicResponse {
 
         functionCode = parseIntParameter(baseResponse, parameterMap, "FunctionCode");
         responseCode = parseIntParameter(baseResponse, parameterMap, "ResponseCode");
-        responseMessage = ResponseCodes.map.getOrDefault(responseCode, "Mensaje no encontrado");
-        success = ResponseCodes.map.get(0).equals(responseMessage);
+        responseMessage = ResponseCodes.getResponseMessage(responseCode);
+        success = ResponseCodes.getResponseMessage(0).equals(responseMessage);
     }
 
     @Override

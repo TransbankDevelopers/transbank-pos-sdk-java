@@ -189,7 +189,9 @@ public class Serial {
         timer.schedule(timerTask, timeout);
 
         //noinspection StatementWithEmptyBody
-        while (port.bytesAvailable() <= 0 && !isTimeoutCompleted[0]) {}
+        while (port.bytesAvailable() <= 0 && !isTimeoutCompleted[0]) {
+            //waiting for response
+        }
 
         if(isTimeoutCompleted[0])
             throw new TransbankException("Read operation Timeout");
