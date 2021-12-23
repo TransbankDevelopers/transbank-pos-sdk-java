@@ -11,12 +11,8 @@ import lombok.extern.log4j.Log4j2;
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class POSAutoservicio extends Serial {
     public boolean poll() throws TransbankException {
-        if(cantWrite()) {
-            String exceptionMessage = String.format("Unable to Poll, can't write to port %s", port.getSystemPortName());
-            throw new TransbankException(exceptionMessage);
-        }
-
         try {
+            checkCanWrite();
             String command = createCommand("0100");
             byte[] hexCommand = command.getBytes();
 
@@ -27,8 +23,7 @@ public class POSAutoservicio extends Serial {
             return checkAck();
 
         } catch (TransbankException e) {
-            String exceptionMessage = String.format("Unable to send Poll command on port %s", port.getSystemPortName());
-            throw new TransbankException(exceptionMessage);
+            throw new TransbankException("Unable to send Poll command on port", e);
         }
     }
 
@@ -44,12 +39,8 @@ public class POSAutoservicio extends Serial {
     }
 
     public boolean initialization() throws TransbankException {
-        if(cantWrite()) {
-            String exceptionMessage = String.format("Unable to initialization, can't write to port %s", port.getSystemPortName());
-            throw new TransbankException(exceptionMessage);
-        }
-
         try {
+            checkCanWrite();
             String command = createCommand("0070");
             byte[] hexCommand = command.getBytes();
 
@@ -60,8 +51,7 @@ public class POSAutoservicio extends Serial {
             return checkAck();
 
         } catch (TransbankException e) {
-            String exceptionMessage = String.format("Unable to send initialization command on port %s", port.getSystemPortName());
-            throw new TransbankException(exceptionMessage);
+            throw new TransbankException("Unable to send initialization command on port", e);
         }
     }
 
