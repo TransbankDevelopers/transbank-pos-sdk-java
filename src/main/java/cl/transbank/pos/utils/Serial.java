@@ -112,7 +112,7 @@ public class Serial {
         if(intermediateMessages) {
             readResponse();
             String responseCode = getResponseCode();
-            while(CheckIntermediateMessage(responseCode)) {
+            while(checkIntermediateMessage(responseCode)) {
                 readResponse();
                 responseCode = getResponseCode();
             }
@@ -224,7 +224,7 @@ public class Serial {
         return currentResponse.substring(1, currentResponse.length()-2).split("\\|")[5];
     }
 
-    private boolean CheckIntermediateMessage(String responseCode)
+    private boolean checkIntermediateMessage(String responseCode)
     {
         List<String> intermediateMsg = new ArrayList<>(
                 Arrays.asList("78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89")
