@@ -105,9 +105,11 @@ public class POSIntegrado extends Serial {
         }
     }
 
-    public MultiCodeLastSaleResponse multiCodeLastSale() throws TransbankMultiCodeLastSaleException {
+    public MultiCodeLastSaleResponse multiCodeLastSale(boolean sendVoucher) throws TransbankMultiCodeLastSaleException {
+        String command = String.format("0280|%s", sendVoucher ? 1 : 0);
+
         try {
-            write("0280|");
+            write(command);
             MultiCodeLastSaleResponse response = new MultiCodeLastSaleResponse(currentResponse);
             log.debug(response.toString());
             return response;
