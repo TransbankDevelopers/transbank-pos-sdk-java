@@ -37,7 +37,7 @@ public class MultiCodeLastSaleResponse extends LastSaleResponse {
             "Commerce Provider Code: " + commerceProviderCode;
     }
 
-    private Map<String, Integer> initializeParameterMap() {
+    private static Map<String, Integer> initializeParameterMap() {
         Map<String, Integer> baseMap = new HashMap<>();
         baseMap.put("Voucher", 19);
         baseMap.put("Change", 20);

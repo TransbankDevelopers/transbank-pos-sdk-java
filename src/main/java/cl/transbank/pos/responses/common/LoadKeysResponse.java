@@ -35,7 +35,7 @@ public class LoadKeysResponse extends BasicResponse {
             "Terminal Id: " + terminalId;
     }
 
-    private Map<String, Integer> initializeParameterMap() {
+    private static Map<String, Integer> initializeParameterMap() {
         Map<String, Integer> baseMap = new HashMap<>();
         baseMap.put("CommerceCode", 2);
         baseMap.put("TerminalId", 3);

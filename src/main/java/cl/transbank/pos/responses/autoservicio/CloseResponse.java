@@ -32,7 +32,7 @@ public class CloseResponse extends LoadKeysResponse {
             "Printing Field: " + ((printingField.size() > 1) ? "\r\n" + String.join("\r\n", printingField) : printingField.get(0));
     }
 
-    private Map<String, Integer> initializeParameterMap() {
+    private static Map<String, Integer> initializeParameterMap() {
         Map<String, Integer> baseMap = new HashMap<>();
         baseMap.put("PrintingField", 4);
         return Collections.unmodifiableMap(baseMap);

@@ -42,7 +42,7 @@ public class BasicResponse {
             "Success?: " + success;
     }
 
-    private Map<String, Integer> initializeParameterMap() {
+    private static Map<String, Integer> initializeParameterMap() {
         Map<String, Integer> baseMap = new HashMap<>();
         baseMap.put("FunctionCode", 0);
         baseMap.put("ResponseCode", 1);

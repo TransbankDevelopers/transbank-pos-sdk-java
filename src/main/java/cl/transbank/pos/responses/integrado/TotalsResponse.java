@@ -35,7 +35,7 @@ public class TotalsResponse extends BasicResponse {
             "TX Total: " + txTotal;
     }
 
-    private Map<String, Integer> initializeParameterMap() {
+    private static Map<String, Integer> initializeParameterMap() {
         Map<String, Integer> baseMap = new HashMap<>();
         baseMap.put("TxCount", 2);
         baseMap.put("TxTotal", 3);

@@ -37,7 +37,7 @@ public class InitializationResponse extends BasicResponse {
                 "Real Date: " + formattedRealDate;
     }
 
-    private Map<String, Integer> initializeParameterMap() {
+    private static Map<String, Integer> initializeParameterMap() {
         Map<String, Integer> baseMap = new HashMap<>();
         baseMap.put("RealDate", 2);
         baseMap.put("RealTime", 3);

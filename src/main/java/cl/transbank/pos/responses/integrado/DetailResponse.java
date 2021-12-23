@@ -67,7 +67,7 @@ public class DetailResponse extends SaleResponse {
             "Shares Number: " + sharesNumber;
     }
 
-    private Map<String, Integer> initializeParameterMap() {
+    private static Map<String, Integer> initializeParameterMap() {
         Map<String, Integer> baseMap = new HashMap<>();
         baseMap.put("Last4Digits", 7);
         baseMap.put("OperationNumber", 8);

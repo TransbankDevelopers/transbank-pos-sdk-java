@@ -35,7 +35,7 @@ public class RefundResponse extends LoadKeysResponse {
             "OperationID: " + operationID;
     }
 
-    private Map<String, Integer> initializeParameterMap() {
+    private static Map<String, Integer> initializeParameterMap() {
         Map<String, Integer> baseMap = new HashMap<>();
         baseMap.put("AuthorizationCode", 4);
         baseMap.put("OperationID", 5);

@@ -77,7 +77,7 @@ public class SaleResponse extends LoadKeysResponse {
             "Shares Type Comment: " + sharesTypeComment;
     }
 
-    private Map<String, Integer> initializeParameterMap() {
+    private static Map<String, Integer> initializeParameterMap() {
         Map<String, Integer> baseMap = new HashMap<>();
         baseMap.put("Ticket", 4);
         baseMap.put("AuthorizationCode", 5);

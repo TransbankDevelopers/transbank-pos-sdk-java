@@ -34,7 +34,7 @@ public class MultiCodeDetailResponse extends SaleResponse {
             "Commerce Provider Code: " + commerceProviderCode;
     }
 
-    private Map<String, Integer> initializeParameterMap() {
+    private static Map<String, Integer> initializeParameterMap() {
         Map<String, Integer> baseMap = new HashMap<>();
         baseMap.put("Change", 19);
         baseMap.put("CommerceProviderCode", 20);

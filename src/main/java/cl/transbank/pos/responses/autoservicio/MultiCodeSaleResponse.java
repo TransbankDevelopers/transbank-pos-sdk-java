@@ -65,7 +65,7 @@ public class MultiCodeSaleResponse extends SaleResponse {
                 "Shares Type Comment: " + sharesTypeComment;
     }
 
-    private Map<String, Integer> initializeParameterMap() {
+    private static Map<String, Integer> initializeParameterMap() {
         Map<String, Integer> baseMap = new HashMap<>();
         baseMap.put("CommerceProviderCode", 14);
         baseMap.put("PrintingField", 16);
