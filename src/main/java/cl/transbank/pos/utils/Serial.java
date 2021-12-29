@@ -92,11 +92,11 @@ public class Serial {
         return lrc;
     }
 
-    public void write(String payload) throws TransbankException { write(payload, false); }
+    protected void write(String payload) throws TransbankException { write(payload, false); }
 
-    public void write(String payload, boolean intermediateMessages) throws TransbankException { write(payload, intermediateMessages, false, false); }
+    protected void write(String payload, boolean intermediateMessages) throws TransbankException { write(payload, intermediateMessages, false, false); }
 
-    public void write(String payload, boolean intermediateMessages, boolean saleDetail, boolean printOnPOS) throws TransbankException {
+    protected void write(String payload, boolean intermediateMessages, boolean saleDetail, boolean printOnPOS) throws TransbankException {
         currentResponse = "";
 
         checkCanWrite();
@@ -241,5 +241,10 @@ public class Serial {
 
     public interface OnIntermediateMessageReceivedListener {
         void onReceived(IntermediateResponse intermediateMessage);
+    }
+
+    @SuppressWarnings({"unused", "UnusedReturnValue"})
+    public boolean isPortOpen() {
+        return port.isOpen();
     }
 }
