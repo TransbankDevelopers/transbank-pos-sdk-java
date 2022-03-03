@@ -35,7 +35,7 @@ public class Serial {
     private void setCurrentResponse(String response) {
         currentResponse = response;
 
-        if(currentResponse.length() >= 1 && getFunctionCode().equals("0900")
+        if(checkIntermediateMessage(currentResponse)
                 && onIntermediateMessageReceivedListener != null) {
             onIntermediateMessageReceivedListener.onReceived(new IntermediateResponse(currentResponse));
         }
@@ -116,10 +116,8 @@ public class Serial {
 
         if(intermediateMessages) {
             readResponse();
-            String responseCode = getResponseCode();
-            while(checkIntermediateMessage(responseCode)) {
+            while(checkIntermediateMessage(currentResponse)) {
                 readResponse();
-                responseCode = getResponseCode();
             }
             return;
         }
@@ -131,7 +129,7 @@ public class Serial {
             while (!authorizationCode.trim().isEmpty() && !printOnPOS) {
                 readResponse();
                 try {
-                    authorizationCode = getAuthorizationCode();
+                    authorizationCode = getAuthorizationCode(currentResponse);
                     if (!authorizationCode.trim().isEmpty()) {
                         saleDetailResponse.add(currentResponse);
                     }
@@ -218,25 +216,17 @@ public class Serial {
         return sb.toString();
     }
 
-    private String getResponseCode() {
-        return currentResponse.substring(1, currentResponse.length()-2).split("\\|")[1];
+    private String getFunctionCode(String response) {
+        return response.substring(1, response.length()-2).split("\\|")[0];
     }
 
-    private String getFunctionCode() {
-        return currentResponse.substring(1, currentResponse.length()-2).split("\\|")[0];
+    private String getAuthorizationCode(String response) {
+        return response.substring(1, response.length()-2).split("\\|")[5];
     }
 
-    private String getAuthorizationCode() {
-        return currentResponse.substring(1, currentResponse.length()-2).split("\\|")[5];
-    }
-
-    private boolean checkIntermediateMessage(String responseCode)
+    private boolean checkIntermediateMessage(String response)
     {
-        List<String> intermediateMsg = new ArrayList<>(
-                Arrays.asList("78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89")
-        );
-
-        return intermediateMsg.contains(responseCode);
+        return response.length() >= 1 && getFunctionCode(response).equals("0900");
     }
 
     public interface OnIntermediateMessageReceivedListener {
