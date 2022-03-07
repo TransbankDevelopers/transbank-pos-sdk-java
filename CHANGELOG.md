@@ -4,6 +4,13 @@ Todos los cambios notables a este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 y este proyecto adhiere a [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.1] - 2022-03-03
+### Added
+- Se agrega método para detectar si el puerto se encuentra abierto 
+
+### Fixed
+- Se soluciona un problema que no permitía detectar todos los mensajes intermedios de forma correcta.
+
 ## [3.0.0] - 2021-23-12
 ### Fixed
 - Se soluciona problema que impedía finalizar el hilo principal cuando se producía una excepción por timeout.

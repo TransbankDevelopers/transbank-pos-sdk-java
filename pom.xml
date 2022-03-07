@@ -24,7 +24,7 @@
 
     <groupId>com.github.transbankdevelopers</groupId>
     <artifactId>transbank-sdk-pos-java</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.1.1-SNAPSHOT</version>
     <name>Transbank POS Java SDK</name>
 
     <inceptionYear>2020</inceptionYear>
@@ -43,7 +43,7 @@
         <connection>scm:git:https://github.com/TransbankDevelopers/transbank-pos-sdk-java.git</connection>
         <developerConnection>scm:git:https://github.com/TransbankDevelopers/transbank-pos-sdk-java.git</developerConnection>
         <url>https://github.com/TransbankDevelopers/transbank-pos-sdk-java.git</url>
-        <tag>v3.0.0-SNAPSHOT</tag>
+        <tag>v3.1.0-SNAPSHOT</tag>
     </scm>
 
     <licenses>
