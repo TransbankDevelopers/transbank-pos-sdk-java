@@ -10,6 +10,7 @@ import cl.transbank.pos.responses.integrado.*;
 import cl.transbank.pos.utils.Serial;
 import lombok.extern.log4j.Log4j2;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class POSIntegrado extends Serial {
             LoadKeysResponse response = new LoadKeysResponse(currentResponse);
             log.debug(response.toString());
             return response;
-        } catch (TransbankException e) {
+        } catch (TransbankException | IOException e) {
             throw new TransbankLoadKeysException("Unable to execute load keys in pos", e);
         }
     }
@@ -72,7 +73,7 @@ public class POSIntegrado extends Serial {
             SaleResponse response = new SaleResponse(currentResponse);
             log.debug(response.toString());
             return response;
-        } catch (TransbankException e) {
+        } catch (TransbankException | IOException e) {
             throw new TransbankSaleException("Unable to execute sale on pos", e);
         }
     }
@@ -89,7 +90,7 @@ public class POSIntegrado extends Serial {
             MultiCodeSaleResponse response = new MultiCodeSaleResponse(currentResponse);
             log.debug(response.toString());
             return response;
-        } catch (TransbankException e) {
+        } catch (TransbankException | IOException e) {
             throw new TransbankMultiCodeSaleException("Unable to execute sale on pos", e);
         }
     }
@@ -100,7 +101,7 @@ public class POSIntegrado extends Serial {
             LastSaleResponse response = new LastSaleResponse(currentResponse);
             log.debug(response.toString());
             return response;
-        } catch (TransbankException e) {
+        } catch (TransbankException | IOException e) {
             throw new TransbankLastSaleException("Unable to recover last sale from pos", e);
         }
     }
@@ -113,7 +114,7 @@ public class POSIntegrado extends Serial {
             MultiCodeLastSaleResponse response = new MultiCodeLastSaleResponse(currentResponse);
             log.debug(response.toString());
             return response;
-        } catch (TransbankException e) {
+        } catch (TransbankException | IOException e) {
             throw new TransbankMultiCodeLastSaleException("Unable to recover last sale from pos", e);
         }
     }
@@ -126,7 +127,7 @@ public class POSIntegrado extends Serial {
             RefundResponse response = new RefundResponse(currentResponse);
             log.debug(response.toString());
             return response;
-        } catch (TransbankException e) {
+        } catch (TransbankException | IOException e) {
             throw new TransbankRefundException("Unable to make refund on pos", e);
         }
     }
@@ -137,7 +138,7 @@ public class POSIntegrado extends Serial {
             TotalsResponse response = new TotalsResponse(currentResponse);
             log.debug(response.toString());
             return response;
-        } catch (TransbankException e) {
+        } catch (TransbankException | IOException e) {
             throw new TransbankTotalsException("Unable to get totals from pos", e);
         }
     }
@@ -154,7 +155,7 @@ public class POSIntegrado extends Serial {
                 log.debug(saleDetail.toString());
             }
             return details;
-        } catch (TransbankException e) {
+        } catch (TransbankException | IOException e) {
             throw new TransbankDetailException("Unable to request sale detail on pos", e);
         }
     }
@@ -171,7 +172,7 @@ public class POSIntegrado extends Serial {
                 log.debug(saleDetail.toString());
             }
             return details;
-        } catch (TransbankException e) {
+        } catch (TransbankException | IOException e) {
             throw new TransbankMultiCodeDetailException("Unable to request sale detail on pos", e);
         }
     }
@@ -182,7 +183,7 @@ public class POSIntegrado extends Serial {
             CloseResponse response = new CloseResponse(currentResponse);
             log.debug(response.toString());
             return response;
-        } catch (TransbankException e) {
+        } catch (TransbankException | IOException e) {
             throw new TransbankCloseException("Unable to execute close in pos", e);
         }
     }

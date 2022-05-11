@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -92,11 +93,11 @@ public class Serial {
         return lrc;
     }
 
-    protected void write(String payload) throws TransbankException { write(payload, false); }
+    protected void write(String payload) throws TransbankException, IOException { write(payload, false); }
 
-    protected void write(String payload, boolean intermediateMessages) throws TransbankException { write(payload, intermediateMessages, false, false); }
+    protected void write(String payload, boolean intermediateMessages) throws TransbankException, IOException { write(payload, intermediateMessages, false, false); }
 
-    protected void write(String payload, boolean intermediateMessages, boolean saleDetail, boolean printOnPOS) throws TransbankException {
+    protected void write(String payload, boolean intermediateMessages, boolean saleDetail, boolean printOnPOS) throws TransbankException, IOException {
         currentResponse = "";
 
         checkCanWrite();
@@ -106,6 +107,8 @@ public class Serial {
 
         log.debug(String.format("Request [Hex]: %s", toHexString(hexCommand)));
         log.debug(String.format("Request [ASCII]: %s", command));
+
+        port.flushIOBuffers();
 
         port.writeBytes(hexCommand, hexCommand.length);
 
@@ -195,6 +198,7 @@ public class Serial {
 
         if(isTimeoutCompleted[0]) {
             timer.cancel();
+            port.flushIOBuffers();
             throw new TransbankException("Read operation Timeout");
         }
         timer.cancel();
