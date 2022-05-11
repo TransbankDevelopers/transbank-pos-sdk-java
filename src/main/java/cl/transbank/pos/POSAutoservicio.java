@@ -7,6 +7,8 @@ import cl.transbank.pos.responses.autoservicio.*;
 import cl.transbank.pos.utils.Serial;
 import lombok.extern.log4j.Log4j2;
 
+import java.io.IOException;
+
 @Log4j2
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class POSAutoservicio extends Serial {
@@ -33,7 +35,7 @@ public class POSAutoservicio extends Serial {
             LoadKeysResponse response = new LoadKeysResponse(currentResponse);
             log.debug(response.toString());
             return response;
-        } catch (TransbankException e) {
+        } catch (TransbankException | IOException e) {
             throw new TransbankLoadKeysException("Unable to execute load keys in pos", e);
         }
     }
@@ -61,7 +63,7 @@ public class POSAutoservicio extends Serial {
             InitializationResponse response = new InitializationResponse(currentResponse);
             log.debug(response.toString());
             return response;
-        } catch (TransbankException e) {
+        } catch (TransbankException | IOException e) {
             throw new TransbankInitializationResponseException("Unable to execute initialization response in pos", e);
         }
     }
@@ -84,7 +86,7 @@ public class POSAutoservicio extends Serial {
             SaleResponse response = new SaleResponse(currentResponse);
             log.debug(response.toString());
             return response;
-        } catch (TransbankException e) {
+        } catch (TransbankException | IOException e) {
             throw new TransbankSaleException("Unable to execute sale on pos", e);
         }
     }
@@ -107,7 +109,7 @@ public class POSAutoservicio extends Serial {
             MultiCodeSaleResponse response = new MultiCodeSaleResponse(currentResponse);
             log.debug(response.toString());
             return response;
-        } catch (TransbankException e) {
+        } catch (TransbankException | IOException e) {
             throw new TransbankMultiCodeSaleException("Unable to execute sale on pos", e);
         }
     }
@@ -120,7 +122,7 @@ public class POSAutoservicio extends Serial {
             LastSaleResponse response = new LastSaleResponse(currentResponse);
             log.debug(response.toString());
             return response;
-        } catch (TransbankException e) {
+        } catch (TransbankException | IOException e) {
             throw new TransbankLastSaleException("Unable to recover last sale from pos", e);
         }
     }
@@ -131,7 +133,7 @@ public class POSAutoservicio extends Serial {
             RefundResponse response = new RefundResponse(currentResponse);
             log.debug(response.toString());
             return response;
-        } catch (TransbankException e) {
+        } catch (TransbankException | IOException e) {
             throw new TransbankRefundException("Unable to make refund on pos", e);
         }
     }
@@ -144,7 +146,7 @@ public class POSAutoservicio extends Serial {
             CloseResponse response = new CloseResponse(currentResponse);
             log.debug(response.toString());
             return response;
-        } catch (TransbankException e) {
+        } catch (TransbankException | IOException e) {
             throw new TransbankCloseException("Unable to execute close in pos", e);
         }
     }
