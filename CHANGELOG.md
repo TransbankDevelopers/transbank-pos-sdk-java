@@ -4,7 +4,11 @@ Todos los cambios notables a este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 y este proyecto adhiere a [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [3.0.1] - 2022-03-03
+## [3.1.1] - 2022-05-12
+### Fixed
+- Se añade descarte del buffer del puerto serial antes de una escritura o cuando se produce un timeout. `El desarrollado de la librería de comunicaciones serial acota que la funcionalidad para limpiar el buffer puede no funcionar en algunos dispositivos conversores USB-Serial`.
+
+## [3.1.0] - 2022-03-03
 ### Added
 - Se agrega método para detectar si el puerto se encuentra abierto 
 
