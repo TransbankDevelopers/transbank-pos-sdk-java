@@ -27,7 +27,7 @@ jobs:
           - name: Set up Java 8
             uses: actions/setup-java@v4
             with:
-              distribution: 'oracle'
+              distribution: 'temurin'
               java-version: 8
 
           - name: Import GPG keys
