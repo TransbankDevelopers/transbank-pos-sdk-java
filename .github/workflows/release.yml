@@ -40,6 +40,7 @@ jobs:
           
           - name: Deploy
             run: |
+              gpg --list-secret-keys
               export GPG_TTY=$(tty)
               chmod +x scripts/deploy.sh
               ./scripts/deploy.sh

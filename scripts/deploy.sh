@@ -7,7 +7,7 @@ then
     then
         VERSION_NUMBER=${TAG:1}
         echo "on a tag -> set pom.xml <version> to $VERSION_NUMBER"
-        mvn --settings scripts/settings.xml org.codehaus.mojo:versions-maven-plugin:2.1:set -DnewVersion=$VERSION_NUMBER 1>/dev/null 2>/dev/null
+        mvn --settings scripts/settings.xml org.codehaus.mojo:versions-maven-plugin:2.1:set -DnewVersion=$VERSION_NUMBER 1>/dev/null 2>/dev/null -e -X
     else
         echo "Tag does not start with v: ${TAG} keep snapshot version in pom.xml"
     fi
