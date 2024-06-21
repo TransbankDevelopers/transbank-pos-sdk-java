@@ -1,5 +1,6 @@
-[![Build Status](https://app.travis-ci.com/TransbankDevelopers/transbank-pos-sdk-java.svg?branch=master)](https://app.travis-ci.com/github/TransbankDevelopers/transbank-pos-sdk-java)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.github.transbankdevelopers%3Atransbank-sdk-pos-java&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.github.transbankdevelopers%3Atransbank-sdk-pos-java)
+[![Build and Scan](https://github.com/TransbankDevelopers/transbank-pos-sdk-java/actions/workflows/build.yml/badge.svg)](https://github.com/TransbankDevelopers/transbank-pos-sdk-java/actions/workflows/build.yml)
+[![Release to Mave](https://github.com/TransbankDevelopers/transbank-pos-sdk-java/actions/workflows/release.yml/badge.svg)](https://github.com/TransbankDevelopers/transbank-pos-sdk-java/actions/workflows/release.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=TransbankDevelopers_transbank-pos-sdk-java&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=TransbankDevelopers_transbank-pos-sdk-java)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.transbankdevelopers/transbank-sdk-pos-java/badge.svg?style=plastic)](https://search.maven.org/artifact/com.github.transbankdevelopers/transbank-sdk-pos-java)
 
 #	Transbank POS SDK Java
