@@ -1,0 +1,36 @@
+name: Build and Scan
+
+on:
+    pull_request:
+      branches:
+        - "*"
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v4
+            with:
+                fetch-depth: 0
+
+          - name: Set up Java 8
+            uses: actions/setup-java@v4
+            with:
+              distribution: 'temurin'
+              java-version: 8
+
+          - name: Compile
+            run: mvn --settings scripts/settings.xml clean compile
+
+          - name: Set up Java 17
+            uses: actions/setup-java@v4
+            with:
+              distribution: 'temurin'
+              java-version: 17
+
+          - name: Run SonarCloud analysis
+            run: mvn --settings scripts/settings.xml sonar:sonar -Dsonar.token=$SONAR_TOKEN -Dsonar.projectKey=TransbankDevelopers_transbank-pos-sdk-java

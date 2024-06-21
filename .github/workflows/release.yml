@@ -1,0 +1,45 @@
+name: Release to Mave
+
+on: 
+    release:
+      types: [created]
+
+jobs:
+    release:
+        runs-on: ubuntu-latest
+
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GPG_SECRET_KEYS: ${{ secrets.GPG_SECRET_KEYS }}
+          GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          GPG_EXECUTABLE: ${{ secrets.GPG_EXECUTABLE }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+        steps:
+          - name: Use checkout
+            uses: actions/checkout@v4
+            with:
+                fetch-depth: 0
+
+          - name: Set up Java 8
+            uses: actions/setup-java@v4
+            with:
+              distribution: 'temurin'
+              java-version: 8
+
+          - name: Import GPG keys
+            run: |
+              echo $GPG_SECRET_KEYS | base64 --decode | gpg --import
+              echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust
+          
+          - name: Build with Jacoco
+            run: mvn --settings scripts/settings.xml clean org.jacoco:jacoco-maven-plugin:prepare-agent package org.jacoco:jacoco-maven-plugin:report
+          
+          - name: Deploy
+            run: |
+              chmod +x scripts/deploy.sh
+              ./scripts/deploy.sh
+
