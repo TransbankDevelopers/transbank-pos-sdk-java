@@ -61,12 +61,15 @@ public class POSIntegrado extends Serial {
         }
     }
 
-    public SaleResponse sale(int amount, String ticket, boolean sendStatus) throws TransbankSaleException {
+    public SaleResponse sale(int amount, String ticket, boolean sendVoucher, boolean sendStatus) throws TransbankSaleException {
         if (amount < 50) throw new TransbankSaleException("Amount must be greater than 50.");
         if (amount > 999999999) throw new TransbankSaleException("Amount must be less than 999999999.");
         if (ticket.trim().length() > 6) throw new TransbankSaleException("Ticket must be up to 6 in length");
 
-        String command = String.format("0200|%s|%s|||%s|", amount, ticket, sendStatus ? 1 : 0);
+        int printVoucher = sendVoucher ? 0 : 1;
+        int sendIntermediateMsg = sendStatus ? 0 : 1;
+
+        String command = String.format("0200|%s|%s||%s|%s|", amount, ticket, printVoucher, sendIntermediateMsg);
 
         try {
             write(command, sendStatus);

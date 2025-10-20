@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static cl.transbank.pos.utils.ParameterParser.*;
@@ -33,6 +34,7 @@ public class SaleResponse extends LoadKeysResponse {
     private final Date realDate;
     private final int employeeId;
     private final int tip;
+    private final List<String> voucher;
 
     public SaleResponse(String response) {
         super(response);
@@ -52,29 +54,30 @@ public class SaleResponse extends LoadKeysResponse {
         realDate = parseRealDate(baseResponse, parameterMap);
         employeeId = parseIntParameter(baseResponse, parameterMap, "EmployeeId");
         tip = parseIntParameter(baseResponse, parameterMap, "Tip");
+        voucher = parsePrintingField(baseResponse, parameterMap);
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         String formattedAccountingDate = accountingDate != null ? dateFormat.format(accountingDate) : "";
         String formattedRealDate = realDate != null ? dateFormat.format(realDate) : "";
         return super.toString() + "\n" +
-            "Ticket: " + ticket + "\n" +
-            "AuthorizationCode Code: " + authorizationCode + "\n" +
-            "Amount: " + amount + "\n" +
-            "Shares Number: " + sharesNumber + "\n" +
-            "Shares Amount: " + sharesAmount + "\n" +
-            "Last 4 Digits: " + last4Digits + "\n" +
-            "Operation Number: " + operationNumber + "\n" +
-            "Card Type: " + cardType + "\n" +
-            "Accounting Date: " + formattedAccountingDate + "\n" +
-            "Account Number: " + accountNumber + "\n" +
-            "Card Brand: " + cardBrand + "\n" +
-            "Real Date: " + formattedRealDate + "\n" +
-            "Employee Id: " + employeeId + "\n" +
-            "Tip: " + tip;
+                "Ticket: " + ticket + "\n" +
+                "AuthorizationCode Code: " + authorizationCode + "\n" +
+                "Amount: " + amount + "\n" +
+                "Shares Number: " + sharesNumber + "\n" +
+                "Shares Amount: " + sharesAmount + "\n" +
+                "Last 4 Digits: " + last4Digits + "\n" +
+                "Operation Number: " + operationNumber + "\n" +
+                "Card Type: " + cardType + "\n" +
+                "Accounting Date: " + formattedAccountingDate + "\n" +
+                "Account Number: " + accountNumber + "\n" +
+                "Card Brand: " + cardBrand + "\n" +
+                "Real Date: " + formattedRealDate + "\n" +
+                "Employee Id: " + employeeId + "\n" +
+                "Tip: " + tip + "\n" +
+                "Voucher: " + ((voucher.size() > 1) ? "\r\n" + String.join("\r\n", voucher) : voucher.get(0));
     }
 
     private static Map<String, Integer> initializeParameterMap() {
@@ -94,6 +97,7 @@ public class SaleResponse extends LoadKeysResponse {
         baseMap.put("RealTime", 16);
         baseMap.put("EmployeeId", 17);
         baseMap.put("Tip", 18);
+        baseMap.put("Voucher", 19);
         return Collections.unmodifiableMap(baseMap);
     }
 }
