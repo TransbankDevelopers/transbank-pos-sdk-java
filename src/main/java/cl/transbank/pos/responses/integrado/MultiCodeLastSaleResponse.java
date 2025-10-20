@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static cl.transbank.pos.utils.ParameterParser.*;
@@ -15,7 +16,7 @@ public class MultiCodeLastSaleResponse extends LastSaleResponse {
     @Getter(AccessLevel.NONE)
     private final Map<String, Integer> parameterMap;
 
-    private final String voucher;
+    private final List<String> voucher;
     private final int change;
     private final long commerceProviderCode;
 
@@ -23,18 +24,17 @@ public class MultiCodeLastSaleResponse extends LastSaleResponse {
         super(response);
         parameterMap = initializeParameterMap();
 
-        voucher = parseStringParameter(baseResponse, parameterMap, "Voucher");
+        voucher = parsePrintingField(baseResponse, parameterMap);
         change = parseIntParameter(baseResponse, parameterMap, "Change");
         commerceProviderCode = parseLongParameter(baseResponse, parameterMap, "CommerceCode");
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return super.toString() + "\n" +
-            "Voucher: " + voucher + "\n" +
-            "Change: " + change + "\n" +
-            "Commerce Provider Code: " + commerceProviderCode;
+                "Voucher: " + ((voucher.size() > 1) ? "\r\n" + String.join("\r\n", voucher) : voucher.get(0)) + "\n" +
+                "Change: " + change + "\n" +
+                "Commerce Provider Code: " + commerceProviderCode;
     }
 
     private static Map<String, Integer> initializeParameterMap() {
