@@ -32,14 +32,12 @@ public class MultiCodeSaleResponse extends SaleResponse {
     public String toString()
     {
         return super.toString() + "\n" +
-            "Filler: " + filler + "\n" +
             "Change: " + change + "\n" +
             "Commerce Provider Code: " + commerceProviderCode;
     }
 
     private static Map<String, Integer> initializeParameterMap() {
         Map<String, Integer> baseMap = new HashMap<>();
-        baseMap.put("Filler", 19);
         baseMap.put("Change", 20);
         baseMap.put("CommerceProviderCode", 21);
         return Collections.unmodifiableMap(baseMap);
