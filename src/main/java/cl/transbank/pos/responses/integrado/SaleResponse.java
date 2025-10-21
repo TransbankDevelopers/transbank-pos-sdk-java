@@ -34,7 +34,7 @@ public class SaleResponse extends LoadKeysResponse {
     private final Date realDate;
     private final int employeeId;
     private final int tip;
-    private final List<String> voucher;
+    private final List<String> printingField;
 
     public SaleResponse(String response) {
         super(response);
@@ -54,7 +54,7 @@ public class SaleResponse extends LoadKeysResponse {
         realDate = parseRealDate(baseResponse, parameterMap);
         employeeId = parseIntParameter(baseResponse, parameterMap, "EmployeeId");
         tip = parseIntParameter(baseResponse, parameterMap, "Tip");
-        voucher = parsePrintingField(baseResponse, parameterMap);
+        printingField = parsePrintingField(baseResponse, parameterMap);
     }
 
     @Override
@@ -62,6 +62,7 @@ public class SaleResponse extends LoadKeysResponse {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         String formattedAccountingDate = accountingDate != null ? dateFormat.format(accountingDate) : "";
         String formattedRealDate = realDate != null ? dateFormat.format(realDate) : "";
+        String formattedPrintingField = printingField.size() > 1 ? String.join("\n", printingField) : "";
         return super.toString() + "\n" +
                 "Ticket: " + ticket + "\n" +
                 "AuthorizationCode Code: " + authorizationCode + "\n" +
@@ -77,7 +78,8 @@ public class SaleResponse extends LoadKeysResponse {
                 "Real Date: " + formattedRealDate + "\n" +
                 "Employee Id: " + employeeId + "\n" +
                 "Tip: " + tip + "\n" +
-                "Voucher: " + ((voucher.size() > 1) ? "\r\n" + String.join("\r\n", voucher) : voucher.get(0));
+                "PrintingField: "
+                + "\n" + formattedPrintingField;
     }
 
     private static Map<String, Integer> initializeParameterMap() {
@@ -97,7 +99,7 @@ public class SaleResponse extends LoadKeysResponse {
         baseMap.put("RealTime", 16);
         baseMap.put("EmployeeId", 17);
         baseMap.put("Tip", 18);
-        baseMap.put("Voucher", 19);
+        baseMap.put("PrintingField", 19);
         return Collections.unmodifiableMap(baseMap);
     }
 }
