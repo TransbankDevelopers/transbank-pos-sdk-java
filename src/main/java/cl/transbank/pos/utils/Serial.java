@@ -130,7 +130,7 @@ public class Serial {
 
         if (saleDetail) {
             saleDetailResponse = new ArrayList<>();
-            String authorizationCode = "";
+            String authorizationCode = "Start";
             while (!authorizationCode.trim().isEmpty() && !printOnPOS) {
                 readMessage();
                 try {
