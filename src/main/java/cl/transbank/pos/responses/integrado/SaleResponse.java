@@ -1,13 +1,9 @@
 package cl.transbank.pos.responses.integrado;
 
-import cl.transbank.pos.responses.common.LoadKeysResponse;
 import lombok.AccessLevel;
 import lombok.Getter;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
