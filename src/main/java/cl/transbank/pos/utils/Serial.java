@@ -70,6 +70,9 @@ public class Serial {
     }
 
     public boolean closePort() {
+        if (port == null) {
+            return false;
+        }
         return port.closePort();
     }
 
@@ -326,6 +329,9 @@ public class Serial {
     }
 
     public boolean isPortOpen() {
+        if (port == null) {
+            return false;
+        }
         return port.isOpen();
     }
 }
