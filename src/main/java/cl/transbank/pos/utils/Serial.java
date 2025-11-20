@@ -16,6 +16,7 @@ public class Serial {
     protected static final byte ACK = 0x06;
     protected static final byte NACK = 0x15;
     protected static final int MAX_NACK_ATTEMPTS = 2;
+    protected static final int CONSECUTIVE_EMPTY_AUTHCODE_LIMIT = 2;
     public static final int DEFAULT_TIMEOUT = 150000;
     public static final int DEFAULT_BAUDRATE = 115200;
     private static final long NANOSECONDS_PER_MILLISECOND = 1_000_000L;
@@ -133,16 +134,24 @@ public class Serial {
 
         if (saleDetail) {
             saleDetailResponse = new ArrayList<>();
-            String authorizationCode = "Start";
-            while (!authorizationCode.trim().isEmpty() && !printOnPOS) {
+            if (printOnPOS) {
+                return;
+            }
+
+            int consecutiveEmptyAuthCodes = 0;
+
+            while (consecutiveEmptyAuthCodes < CONSECUTIVE_EMPTY_AUTHCODE_LIMIT) {
                 readMessage();
                 try {
-                    authorizationCode = getAuthorizationCode(currentResponse);
-                    if (!authorizationCode.trim().isEmpty()) {
+                    String authorizationCode = getAuthorizationCode(currentResponse);
+                    if (authorizationCode != null && !authorizationCode.trim().isEmpty()) {
                         saleDetailResponse.add(currentResponse);
+                        consecutiveEmptyAuthCodes = 0;
+                    } else {
+                        consecutiveEmptyAuthCodes++; 
                     }
                 } catch (IndexOutOfBoundsException e) {
-                    authorizationCode = "";
+                    consecutiveEmptyAuthCodes++;
                 }
             }
             return;
