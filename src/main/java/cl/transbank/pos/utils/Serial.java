@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -192,7 +193,7 @@ public class Serial {
 
     private String readExisting() throws TransbankException {
         long deadline = System.nanoTime() + (long) timeout * NANOSECONDS_PER_MILLISECOND;
-        StringBuilder responseBuilder = new StringBuilder();
+        ByteArrayOutputStream responseBuffer = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
 
         while (System.nanoTime() < deadline) {
@@ -205,8 +206,7 @@ public class Serial {
             int bytesRead = port.readBytes(buffer, bytesToRead);
 
             if (bytesRead > 0) {
-                String chunk = new String(buffer, 0, bytesRead, StandardCharsets.ISO_8859_1);
-                responseBuilder.append(chunk);
+                responseBuffer.write(buffer, 0, bytesRead);
 
                 if (bytesRead < bytesToRead) {
                     break;
@@ -218,11 +218,11 @@ public class Serial {
             }
         }
 
-        if (responseBuilder.length() == 0 && System.nanoTime() >= deadline) {
+        if (responseBuffer.size() == 0 && System.nanoTime() >= deadline) {
             throw new TransbankException("Read operation Timeout");
         }
 
-        return responseBuilder.toString();
+        return new String(responseBuffer.toByteArray(), StandardCharsets.ISO_8859_1);
     }
 
     protected boolean checkAck() throws TransbankException {
