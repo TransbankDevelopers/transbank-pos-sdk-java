@@ -23,6 +23,7 @@ public class Serial {
     private static final long NANOSECONDS_PER_MILLISECOND = 1_000_000L;
     private static final char STX = '\u0002';
     private static final char ETX = '\u0003';
+    private final Object waitMonitor = new Object();
 
     @Getter
     @Setter
@@ -175,7 +176,7 @@ public class Serial {
             fullResponse = readExisting();
 
             while (checkMissingEtx(fullResponse)) {
-                sleepQuiet(50);
+                waitQuiet(50);
 
                 if (port.bytesAvailable() <= 0) {
                     sendNack();
@@ -261,7 +262,7 @@ public class Serial {
         port.writeBytes(nack, nack.length);
         sentNack++;
         fullResponse = "";
-        sleepQuiet(50);
+        waitQuiet(50);
     }
 
     private boolean checkMissingEtx(String response) {
@@ -294,10 +295,13 @@ public class Serial {
         return x;
     }
 
-    private void sleepQuiet(long ms) {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException ignored) {
+    private void waitQuiet(long ms) {
+        synchronized (waitMonitor) {
+            try {
+                waitMonitor.wait(ms);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 
