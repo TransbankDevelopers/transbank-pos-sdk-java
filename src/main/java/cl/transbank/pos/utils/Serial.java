@@ -112,6 +112,22 @@ public class Serial {
             throws TransbankException, IOException {
         currentResponse = "";
         checkCanWrite();
+        sendCommandAndValidateAck(payload);
+
+        if (intermediateMessages) {
+            consumeIntermediateMessages();
+            return;
+        }
+
+        if (saleDetail) {
+            handleSaleDetail(printOnPOS);
+            return;
+        }
+
+        readMessage();
+    }
+
+    private void sendCommandAndValidateAck(String payload) throws TransbankException, IOException {
         String command = createCommand(payload);
         byte[] hexCommand = command.getBytes(StandardCharsets.ISO_8859_1);
         log.debug(String.format("Request [Hex]: %s", toHexString(hexCommand)));
@@ -123,43 +139,37 @@ public class Serial {
             throw new TransbankException("NACK received, check the message sent to the POS");
         }
         log.debug("Read ACK Ok");
+    }
 
-        if (intermediateMessages) {
+    private void consumeIntermediateMessages() throws TransbankException {
+        readMessage();
+        while (checkIntermediateMessage(currentResponse)) {
             readMessage();
-            boolean isIntermediateMessage = checkIntermediateMessage(currentResponse);
-            while (isIntermediateMessage) {
-                readMessage();
-                isIntermediateMessage = checkIntermediateMessage(currentResponse);
-            }
+        }
+    }
+
+    private void handleSaleDetail(boolean printOnPOS) throws TransbankException {
+        saleDetailResponse = new ArrayList<>();
+        if (printOnPOS) {
             return;
         }
 
-        if (saleDetail) {
-            saleDetailResponse = new ArrayList<>();
-            if (printOnPOS) {
-                return;
-            }
+        int consecutiveEmptyAuthCodes = 0;
 
-            int consecutiveEmptyAuthCodes = 0;
-
-            while (consecutiveEmptyAuthCodes < CONSECUTIVE_EMPTY_AUTHCODE_LIMIT) {
-                readMessage();
-                try {
-                    String authorizationCode = getAuthorizationCode(currentResponse);
-                    if (authorizationCode != null && !authorizationCode.trim().isEmpty()) {
-                        saleDetailResponse.add(currentResponse);
-                        consecutiveEmptyAuthCodes = 0;
-                    } else {
-                        consecutiveEmptyAuthCodes++; 
-                    }
-                } catch (IndexOutOfBoundsException e) {
+        while (consecutiveEmptyAuthCodes < CONSECUTIVE_EMPTY_AUTHCODE_LIMIT) {
+            readMessage();
+            try {
+                String authorizationCode = getAuthorizationCode(currentResponse);
+                if (authorizationCode != null && !authorizationCode.trim().isEmpty()) {
+                    saleDetailResponse.add(currentResponse);
+                    consecutiveEmptyAuthCodes = 0;
+                } else {
                     consecutiveEmptyAuthCodes++;
                 }
+            } catch (IndexOutOfBoundsException e) {
+                consecutiveEmptyAuthCodes++;
             }
-            return;
         }
-
-        readMessage();
     }
 
     private void readMessage() throws TransbankException {
