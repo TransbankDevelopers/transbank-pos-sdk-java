@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Clock;
 import java.util.*;
 
 @Log4j2
@@ -20,10 +21,10 @@ public class Serial {
     protected static final int CONSECUTIVE_EMPTY_AUTHCODE_LIMIT = 2;
     public static final int DEFAULT_TIMEOUT = 150000;
     public static final int DEFAULT_BAUDRATE = 115200;
-    private static final long NANOSECONDS_PER_MILLISECOND = 1_000_000L;
     private static final char STX = '\u0002';
     private static final char ETX = '\u0003';
     private final Object waitMonitor = new Object();
+    private Clock clock = Clock.systemUTC();
 
     @Getter
     @Setter
@@ -39,6 +40,10 @@ public class Serial {
 
     public void setOnIntermediateMessageReceivedListener(OnIntermediateMessageReceivedListener listener) {
         onIntermediateMessageReceivedListener = listener;
+    }
+
+    private long currentTimeMillis() {
+        return clock.millis();
     }
 
     private void setCurrentResponse(String response) {
@@ -203,11 +208,11 @@ public class Serial {
     }
 
     private String readExisting() throws TransbankException {
-        long deadline = System.nanoTime() + (long) timeout * NANOSECONDS_PER_MILLISECOND;
+        long deadline = currentTimeMillis() + timeout;
         ByteArrayOutputStream responseBuffer = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
 
-        while (System.nanoTime() < deadline) {
+        while (currentTimeMillis() < deadline) {
             int availableBytes = port.bytesAvailable();
             if (availableBytes <= 0) {
                 break;
@@ -229,7 +234,7 @@ public class Serial {
             }
         }
 
-        if (responseBuffer.size() == 0 && System.nanoTime() >= deadline) {
+        if (responseBuffer.size() == 0 && currentTimeMillis() >= deadline) {
             throw new TransbankException("Read operation Timeout");
         }
 
@@ -251,10 +256,10 @@ public class Serial {
     }
 
     private void waitResponse() throws TransbankException {
-        long deadline = System.nanoTime() + (long) timeout * NANOSECONDS_PER_MILLISECOND;
+        long deadline = currentTimeMillis() + timeout;
 
-        while (System.nanoTime() < deadline && port.bytesAvailable() <= 0) {
-            // wait for data
+        while (currentTimeMillis() < deadline && port.bytesAvailable() <= 0) {
+            waitQuiet(1);
         }
 
         if (port.bytesAvailable() <= 0) {
