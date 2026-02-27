@@ -11,6 +11,12 @@ import static cl.transbank.pos.utils.ParameterParser.parseLongParameter;
 import static cl.transbank.pos.utils.ParameterParser.parseStringParameter;
 
 @Getter
+/**
+ * Parsed response for key-loading operations.
+ * <p>
+ * Extends {@link BasicResponse} with common commerce and terminal identifiers
+ * returned by the POS.
+ */
 public class LoadKeysResponse extends BasicResponse {
 
     @Getter(AccessLevel.NONE)

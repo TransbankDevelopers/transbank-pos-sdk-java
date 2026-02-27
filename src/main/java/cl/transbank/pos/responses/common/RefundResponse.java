@@ -11,6 +11,12 @@ import static cl.transbank.pos.utils.ParameterParser.parseIntParameter;
 import static cl.transbank.pos.utils.ParameterParser.parseStringParameter;
 
 @Getter
+/**
+ * Parsed response for refund operations.
+ * <p>
+ * Extends {@link LoadKeysResponse} and adds refund-specific data
+ * returned by the POS: authorization code and operation ID.
+ */
 public class RefundResponse extends LoadKeysResponse {
 
     @Getter(AccessLevel.NONE)
