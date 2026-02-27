@@ -13,6 +13,12 @@ import java.util.Map;
 
 import static cl.transbank.pos.utils.ParameterParser.parseRealDate;
 
+/**
+ * Parsed response for initialization status in POS Autoservicio.
+ * <p>
+ * Extends {@link BasicResponse} and adds the POS real date/time
+ * reported in the initialization response.
+ */
 @Getter
 public class InitializationResponse extends BasicResponse {
 
