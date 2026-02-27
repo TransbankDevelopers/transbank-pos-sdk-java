@@ -54,7 +54,7 @@ public class Serial {
     private void setCurrentResponse(String response) {
         currentResponse = response;
 
-        if (checkIntermediateMessage(currentResponse)
+        if (SerialMessageUtils.checkIntermediateMessage(currentResponse)
                 && onIntermediateMessageReceivedListener != null) {
             onIntermediateMessageReceivedListener.onReceived(new IntermediateResponse(currentResponse));
         }
@@ -153,7 +153,7 @@ public class Serial {
 
     private void consumeIntermediateMessages() throws TransbankException {
         readMessage();
-        while (checkIntermediateMessage(currentResponse)) {
+        while (SerialMessageUtils.checkIntermediateMessage(currentResponse)) {
             readMessage();
         }
     }
@@ -169,7 +169,7 @@ public class Serial {
         while (consecutiveEmptyAuthCodes < CONSECUTIVE_EMPTY_AUTHCODE_LIMIT) {
             readMessage();
             try {
-                String authorizationCode = getAuthorizationCode(currentResponse);
+                String authorizationCode = SerialMessageUtils.getAuthorizationCode(currentResponse);
                 if (authorizationCode != null && !authorizationCode.trim().isEmpty()) {
                     saleDetailResponse.add(currentResponse);
                     consecutiveEmptyAuthCodes = 0;
@@ -195,7 +195,7 @@ public class Serial {
 
             fullResponse = readExisting();
 
-            while (checkMissingEtx(fullResponse)) {
+            while (SerialMessageUtils.checkMissingEtx(fullResponse)) {
                 waitQuiet(50);
 
                 if (port.bytesAvailable() <= 0) {
@@ -204,7 +204,7 @@ public class Serial {
                     fullResponse = fullResponse + readExisting();
                 }
             }
-        } while (!checkReceivedLrc(fullResponse));
+        } while (!SerialMessageUtils.checkReceivedLrc(fullResponse));
 
         setCurrentResponse(fullResponse);
         log.debug(String.format("Response [Hex]: %s", toHexString(fullResponse.getBytes(StandardCharsets.ISO_8859_1))));
@@ -285,36 +285,6 @@ public class Serial {
         waitQuiet(50);
     }
 
-    private boolean checkMissingEtx(String response) {
-        if (response.isEmpty())
-            return false;
-        if (response.length() < 2)
-            return true;
-        return response.charAt(response.length() - 2) != ETX;
-    }
-
-    private boolean checkReceivedLrc(String response) {
-        if (response.isEmpty())
-            return false;
-        if (checkIntermediateMessage(response))
-            return true;
-        char received = response.charAt(response.length() - 1);
-        char calculated = calculateResponseLrc(response);
-        return received == calculated;
-    }
-
-    private char calculateResponseLrc(String message) {
-        String trimmed = message.substring(1, message.length() - 1);
-        return calculateLrc(trimmed);
-    }
-
-    private char calculateLrc(String message) {
-        char x = 0;
-        for (int i = 0; i < message.length(); i++)
-            x ^= message.charAt(i);
-        return x;
-    }
-
     private void waitQuiet(long ms) {
         synchronized (waitMonitor) {
             try {
@@ -337,24 +307,6 @@ public class Serial {
             sb.append(String.format("%02X%s", data[i], (i < data.length - 1) ? "-" : ""));
         }
         return sb.toString();
-    }
-
-    private String getFunctionCode(String response) {
-        return response.split("\\|", -1)[0];
-    }
-
-    private String getAuthorizationCode(String response) {
-        String[] parts = response.split("\\|", -1);
-        return parts.length > 5 ? parts[5] : "";
-    }
-
-    private boolean checkIntermediateMessage(String response) {
-        if (response.length() >= 1) {
-            String payload = response.substring(1, response.length() - 2);
-            return getFunctionCode(payload).equals("0900");
-        }
-
-        return false;
     }
 
     /**
