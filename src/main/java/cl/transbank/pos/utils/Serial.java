@@ -14,6 +14,11 @@ import java.time.Clock;
 import java.util.*;
 
 @Log4j2
+/**
+ * Base class for POS serial communication.
+ * Handles port management, command framing (STX/ETX/LRC), ACK/NACK flow,
+ * response reading with timeout, and intermediate message callbacks.
+ */
 public class Serial {
     protected static final byte ACK = 0x06;
     protected static final byte NACK = 0x15;
@@ -352,6 +357,9 @@ public class Serial {
         return false;
     }
 
+    /**
+     * Callback for intermediate POS responses (function code {@code 0900}).
+     */
     public interface OnIntermediateMessageReceivedListener {
         void onReceived(IntermediateResponse intermediateMessage);
     }

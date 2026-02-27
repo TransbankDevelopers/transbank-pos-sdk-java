@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Utility class that maps POS response codes to their corresponding meaning.
+ */
 public class ResponseCodes {
     public static final Map<Integer, String> responseMessage;
 
