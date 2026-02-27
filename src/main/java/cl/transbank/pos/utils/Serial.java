@@ -13,12 +13,12 @@ import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.util.*;
 
-@Log4j2
 /**
  * Base class for POS serial communication.
  * Handles port management, command framing (STX/ETX/LRC), ACK/NACK flow,
  * response reading with timeout, and intermediate message callbacks.
  */
+@Log4j2
 public class Serial {
     protected static final byte ACK = 0x06;
     protected static final byte NACK = 0x15;
