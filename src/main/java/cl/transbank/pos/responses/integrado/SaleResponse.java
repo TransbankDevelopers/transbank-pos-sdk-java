@@ -10,6 +10,12 @@ import java.util.Map;
 
 import static cl.transbank.pos.utils.ParameterParser.*;
 
+/**
+ * Parsed response for sale operations in POS Integrado.
+ * <p>
+ * Extends {@link BaseSaleResponse} and adds the printable voucher
+ * lines returned by the POS.
+ */
 @Getter
 public class SaleResponse extends BaseSaleResponse {
 

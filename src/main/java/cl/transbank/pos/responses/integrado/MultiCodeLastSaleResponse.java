@@ -10,6 +10,12 @@ import java.util.Map;
 
 import static cl.transbank.pos.utils.ParameterParser.*;
 
+/**
+ * Parsed response for multi-code last sale queries in POS Integrado.
+ * <p>
+ * Extends {@link SaleResponse} and adds multi-code specific fields.
+ */
+
 @Getter
 public class MultiCodeLastSaleResponse extends LastSaleResponse {
 

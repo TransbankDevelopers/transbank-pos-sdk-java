@@ -12,6 +12,12 @@ import java.util.Map;
 
 import static cl.transbank.pos.utils.ParameterParser.*;
 
+/**
+ * Parsed response for sale detail entries in POS Integrado.
+ * <p>
+ * Extends {@link SaleResponse} and adds detail-specific sale fields
+ * returned by detail queries.
+ */
 @Getter
 public class DetailResponse extends SaleResponse {
 
