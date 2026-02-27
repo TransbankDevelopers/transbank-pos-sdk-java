@@ -11,6 +11,10 @@ import java.io.IOException;
 
 @Log4j2
 @SuppressWarnings({"unused", "UnusedReturnValue"})
+/**
+ * POS Autoservicio client implementation built on top of the serial protocol base.
+ * Provides command methods for initialization, sales, refunds and close operations.
+ */
 public class POSAutoservicio extends Serial {
     public boolean poll() throws TransbankException {
         try {
