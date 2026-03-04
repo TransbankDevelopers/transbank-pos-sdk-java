@@ -215,25 +215,19 @@ public class Serial {
         long deadline = currentTimeMillis() + timeout;
         ByteArrayOutputStream responseBuffer = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
+        boolean stopReading = false;
 
-        while (currentTimeMillis() < deadline) {
+        while (currentTimeMillis() < deadline && !stopReading) {
             int availableBytes = port.bytesAvailable();
             if (availableBytes <= 0) {
-                break;
-            }
+                stopReading = true;
+            } else {
+                int bytesToRead = Math.min(availableBytes, buffer.length);
+                int bytesRead = port.readBytes(buffer, bytesToRead);
 
-            int bytesToRead = Math.min(availableBytes, buffer.length);
-            int bytesRead = port.readBytes(buffer, bytesToRead);
-
-            if (bytesRead > 0) {
-                responseBuffer.write(buffer, 0, bytesRead);
-
-                if (bytesRead < bytesToRead) {
-                    break;
-                }
-
-                if (port.bytesAvailable() == 0) {
-                    break;
+                if (bytesRead > 0) {
+                    responseBuffer.write(buffer, 0, bytesRead);
+                    stopReading = bytesRead < bytesToRead || port.bytesAvailable() == 0;
                 }
             }
         }
