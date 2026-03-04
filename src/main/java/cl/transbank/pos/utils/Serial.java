@@ -28,8 +28,6 @@ public class Serial {
     public static final int DEFAULT_BAUDRATE = 115200;
     private static final char STX = '\u0002';
     private static final char ETX = '\u0003';
-    private final Object waitMonitor = new Object();
-    private Clock clock = Clock.systemUTC();
 
     @Getter
     @Setter
@@ -48,6 +46,7 @@ public class Serial {
     }
 
     private long currentTimeMillis() {
+        Clock clock = Clock.systemUTC();
         return clock.millis();
     }
 
@@ -286,6 +285,7 @@ public class Serial {
     }
 
     private void waitQuiet(long ms) {
+        Object waitMonitor = new Object();
         synchronized (waitMonitor) {
             try {
                 waitMonitor.wait(ms);
