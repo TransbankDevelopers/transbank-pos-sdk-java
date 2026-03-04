@@ -29,12 +29,12 @@ public final class SerialMessageUtils {
     }
 
     public static boolean checkIntermediateMessage(String response) {
-        if (response.length() >= 1) {
-            String payload = response.substring(1, response.length() - 2);
-            return getFunctionCode(payload).equals("0900");
+        if (response.isEmpty()) {
+            return false;
         }
 
-        return false;
+        String payload = response.substring(1, response.length() - 2);
+        return getFunctionCode(payload).equals("0900");
     }
 
     private static char calculateResponseLrc(String message) {
