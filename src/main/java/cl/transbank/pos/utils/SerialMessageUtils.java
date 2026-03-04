@@ -10,10 +10,6 @@ public final class SerialMessageUtils {
     }
 
     public static boolean checkMissingEtx(String response) {
-        if (response.isEmpty())
-            return false;
-        if (response.length() < 2)
-            return true;
         return response.charAt(response.length() - 2) != ETX;
     }
 
