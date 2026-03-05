@@ -9,6 +9,11 @@ import java.util.Map;
 
 import static cl.transbank.pos.utils.ParameterParser.*;
 
+/**
+ * Parsed response for multi-code sale operations in POS Integrado.
+ * <p>
+ * Extends {@link SaleResponse} and adds multi-code specific fields.
+ */
 @Getter
 public class MultiCodeSaleResponse extends SaleResponse {
 

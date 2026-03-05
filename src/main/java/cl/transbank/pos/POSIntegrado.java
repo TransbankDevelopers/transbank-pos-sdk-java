@@ -14,6 +14,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * POS Integrado client implementation built on top of the serial protocol base.
+ * Provides command methods for sales, details, totals, refunds and close operations.
+ */
 @Log4j2
 @SuppressWarnings({ "unused", "UnusedReturnValue" })
 public class POSIntegrado extends Serial {

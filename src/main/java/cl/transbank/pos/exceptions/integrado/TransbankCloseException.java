@@ -2,6 +2,9 @@ package cl.transbank.pos.exceptions.integrado;
 
 import cl.transbank.pos.exceptions.common.TransbankException;
 
+/**
+ * Exception thrown when the close operation fails in POS Integrado.
+ */
 public class TransbankCloseException extends TransbankException {
 
     public TransbankCloseException(String message, Throwable cause) {super(message, cause);}

@@ -10,6 +10,12 @@ import lombok.Getter;
 
 import static cl.transbank.pos.utils.ParameterParser.parseIntParameter;
 
+/**
+ * Base parsed response for POS commands.
+ * <p>
+ * Extracts common fields from the raw protocol payload:
+ * function code, response code, mapped response message and success flag.
+ */
 @Getter
 public class BasicResponse {
 

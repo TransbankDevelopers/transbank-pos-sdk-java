@@ -9,6 +9,10 @@ import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 
+/**
+ * POS Autoservicio client implementation built on top of the serial protocol base.
+ * Provides command methods for initialization, sales, refunds and close operations.
+ */
 @Log4j2
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class POSAutoservicio extends Serial {

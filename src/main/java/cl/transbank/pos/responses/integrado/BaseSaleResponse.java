@@ -13,6 +13,12 @@ import java.util.Map;
 
 import static cl.transbank.pos.utils.ParameterParser.*;
 
+/**
+ * Base parsed response for sale-related operations in POS Integrado.
+ * <p>
+ * Extends {@link LoadKeysResponse} and provides the common sale fields
+ * shared by sale response variants.
+ */
 @Getter
 public class BaseSaleResponse extends LoadKeysResponse {
 

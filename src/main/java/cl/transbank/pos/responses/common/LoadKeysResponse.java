@@ -10,6 +10,12 @@ import lombok.Getter;
 import static cl.transbank.pos.utils.ParameterParser.parseLongParameter;
 import static cl.transbank.pos.utils.ParameterParser.parseStringParameter;
 
+/**
+ * Parsed response for key-loading operations.
+ * <p>
+ * Extends {@link BasicResponse} with common commerce and terminal identifiers
+ * returned by the POS.
+ */
 @Getter
 public class LoadKeysResponse extends BasicResponse {
 

@@ -10,6 +10,13 @@ import java.util.*;
 
 import static cl.transbank.pos.utils.ParameterParser.*;
 
+/**
+ * Parsed response for sale operations in POS Autoservicio.
+ * <p>
+ * Extends {@link LoadKeysResponse} and adds sale-specific data such as
+ * ticket, authorization, amount, card details, operation metadata,
+ * installment values and printable voucher lines.
+ */
 @Getter
 public class SaleResponse extends LoadKeysResponse {
 

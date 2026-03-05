@@ -3,6 +3,12 @@ package cl.transbank.pos.responses.common;
 import lombok.AccessLevel;
 import lombok.Getter;
 
+/**
+ * Parsed representation of intermediate POS status messages.
+ * <p>
+ * Wraps {@link BasicResponse} and exposes its common status fields
+ * (function code, response code and response message).
+ */
 @Getter
 public class IntermediateResponse {
 

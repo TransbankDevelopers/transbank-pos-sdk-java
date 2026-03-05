@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Utility class for parsing POS response fields using parameter index maps.
+ */
 public class ParameterParser {
 
     private ParameterParser() {

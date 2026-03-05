@@ -12,6 +12,12 @@ import java.util.Map;
 
 import static cl.transbank.pos.utils.ParameterParser.*;
 
+/**
+ * Parsed response for multi-code sale operations in POS Autoservicio.
+ * <p>
+ * Extends {@link SaleResponse} and adds multi-code specific fields,
+ * including commerce provider code and voucher/installment data.
+ */
 @Getter
 public class MultiCodeSaleResponse extends SaleResponse {
 

@@ -7,10 +7,17 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Clock;
 import java.util.*;
 
+/**
+ * Base class for POS serial communication.
+ * Handles port management, command framing (STX/ETX/LRC), ACK/NACK flow,
+ * response reading with timeout, and intermediate message callbacks.
+ */
 @Log4j2
 public class Serial {
     protected static final byte ACK = 0x06;
@@ -19,7 +26,6 @@ public class Serial {
     protected static final int CONSECUTIVE_EMPTY_AUTHCODE_LIMIT = 2;
     public static final int DEFAULT_TIMEOUT = 150000;
     public static final int DEFAULT_BAUDRATE = 115200;
-    private static final long NANOSECONDS_PER_MILLISECOND = 1_000_000L;
     private static final char STX = '\u0002';
     private static final char ETX = '\u0003';
 
@@ -39,10 +45,15 @@ public class Serial {
         onIntermediateMessageReceivedListener = listener;
     }
 
+    private long currentTimeMillis() {
+        Clock clock = Clock.systemUTC();
+        return clock.millis();
+    }
+
     private void setCurrentResponse(String response) {
         currentResponse = response;
 
-        if (checkIntermediateMessage(currentResponse)
+        if (SerialMessageUtils.checkIntermediateMessage(currentResponse)
                 && onIntermediateMessageReceivedListener != null) {
             onIntermediateMessageReceivedListener.onReceived(new IntermediateResponse(currentResponse));
         }
@@ -110,6 +121,22 @@ public class Serial {
             throws TransbankException, IOException {
         currentResponse = "";
         checkCanWrite();
+        sendCommandAndValidateAck(payload);
+
+        if (intermediateMessages) {
+            consumeIntermediateMessages();
+            return;
+        }
+
+        if (saleDetail) {
+            handleSaleDetail(printOnPOS);
+            return;
+        }
+
+        readMessage();
+    }
+
+    private void sendCommandAndValidateAck(String payload) throws TransbankException, IOException {
         String command = createCommand(payload);
         byte[] hexCommand = command.getBytes(StandardCharsets.ISO_8859_1);
         log.debug(String.format("Request [Hex]: %s", toHexString(hexCommand)));
@@ -121,43 +148,37 @@ public class Serial {
             throw new TransbankException("NACK received, check the message sent to the POS");
         }
         log.debug("Read ACK Ok");
+    }
 
-        if (intermediateMessages) {
+    private void consumeIntermediateMessages() throws TransbankException {
+        readMessage();
+        while (SerialMessageUtils.checkIntermediateMessage(currentResponse)) {
             readMessage();
-            boolean isIntermediateMessage = checkIntermediateMessage(currentResponse);
-            while (isIntermediateMessage) {
-                readMessage();
-                isIntermediateMessage = checkIntermediateMessage(currentResponse);
-            }
+        }
+    }
+
+    private void handleSaleDetail(boolean printOnPOS) throws TransbankException {
+        saleDetailResponse = new ArrayList<>();
+        if (printOnPOS) {
             return;
         }
 
-        if (saleDetail) {
-            saleDetailResponse = new ArrayList<>();
-            if (printOnPOS) {
-                return;
-            }
+        int consecutiveEmptyAuthCodes = 0;
 
-            int consecutiveEmptyAuthCodes = 0;
-
-            while (consecutiveEmptyAuthCodes < CONSECUTIVE_EMPTY_AUTHCODE_LIMIT) {
-                readMessage();
-                try {
-                    String authorizationCode = getAuthorizationCode(currentResponse);
-                    if (authorizationCode != null && !authorizationCode.trim().isEmpty()) {
-                        saleDetailResponse.add(currentResponse);
-                        consecutiveEmptyAuthCodes = 0;
-                    } else {
-                        consecutiveEmptyAuthCodes++; 
-                    }
-                } catch (IndexOutOfBoundsException e) {
+        while (consecutiveEmptyAuthCodes < CONSECUTIVE_EMPTY_AUTHCODE_LIMIT) {
+            readMessage();
+            try {
+                String authorizationCode = SerialMessageUtils.getAuthorizationCode(currentResponse);
+                if (authorizationCode != null && !authorizationCode.trim().isEmpty()) {
+                    saleDetailResponse.add(currentResponse);
+                    consecutiveEmptyAuthCodes = 0;
+                } else {
                     consecutiveEmptyAuthCodes++;
                 }
+            } catch (IndexOutOfBoundsException e) {
+                consecutiveEmptyAuthCodes++;
             }
-            return;
         }
-
-        readMessage();
     }
 
     private void readMessage() throws TransbankException {
@@ -173,8 +194,8 @@ public class Serial {
 
             fullResponse = readExisting();
 
-            while (checkMissingEtx(fullResponse)) {
-                sleepQuiet(50);
+            while (SerialMessageUtils.checkMissingEtx(fullResponse)) {
+                waitQuiet(50);
 
                 if (port.bytesAvailable() <= 0) {
                     sendNack();
@@ -182,7 +203,7 @@ public class Serial {
                     fullResponse = fullResponse + readExisting();
                 }
             }
-        } while (!checkReceivedLrc(fullResponse));
+        } while (!SerialMessageUtils.checkReceivedLrc(fullResponse));
 
         setCurrentResponse(fullResponse);
         log.debug(String.format("Response [Hex]: %s", toHexString(fullResponse.getBytes(StandardCharsets.ISO_8859_1))));
@@ -191,38 +212,31 @@ public class Serial {
     }
 
     private String readExisting() throws TransbankException {
-        long deadline = System.nanoTime() + (long) timeout * NANOSECONDS_PER_MILLISECOND;
-        StringBuilder responseBuilder = new StringBuilder();
+        long deadline = currentTimeMillis() + timeout;
+        ByteArrayOutputStream responseBuffer = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
+        boolean stopReading = false;
 
-        while (System.nanoTime() < deadline) {
+        while (currentTimeMillis() < deadline && !stopReading) {
             int availableBytes = port.bytesAvailable();
             if (availableBytes <= 0) {
-                break;
-            }
+                stopReading = true;
+            } else {
+                int bytesToRead = Math.min(availableBytes, buffer.length);
+                int bytesRead = port.readBytes(buffer, bytesToRead);
 
-            int bytesToRead = Math.min(availableBytes, buffer.length);
-            int bytesRead = port.readBytes(buffer, bytesToRead);
-
-            if (bytesRead > 0) {
-                String chunk = new String(buffer, 0, bytesRead, StandardCharsets.ISO_8859_1);
-                responseBuilder.append(chunk);
-
-                if (bytesRead < bytesToRead) {
-                    break;
-                }
-
-                if (port.bytesAvailable() == 0) {
-                    break;
+                if (bytesRead > 0) {
+                    responseBuffer.write(buffer, 0, bytesRead);
+                    stopReading = bytesRead < bytesToRead || port.bytesAvailable() == 0;
                 }
             }
         }
 
-        if (responseBuilder.length() == 0 && System.nanoTime() >= deadline) {
+        if (responseBuffer.size() == 0 && currentTimeMillis() >= deadline) {
             throw new TransbankException("Read operation Timeout");
         }
 
-        return responseBuilder.toString();
+        return new String(responseBuffer.toByteArray(), StandardCharsets.ISO_8859_1);
     }
 
     protected boolean checkAck() throws TransbankException {
@@ -240,10 +254,10 @@ public class Serial {
     }
 
     private void waitResponse() throws TransbankException {
-        long deadline = System.nanoTime() + (long) timeout * NANOSECONDS_PER_MILLISECOND;
+        long deadline = currentTimeMillis() + timeout;
 
-        while (System.nanoTime() < deadline && port.bytesAvailable() <= 0) {
-            // wait for data
+        while (currentTimeMillis() < deadline && port.bytesAvailable() <= 0) {
+            waitQuiet(1);
         }
 
         if (port.bytesAvailable() <= 0) {
@@ -261,43 +275,22 @@ public class Serial {
         port.writeBytes(nack, nack.length);
         sentNack++;
         fullResponse = "";
-        sleepQuiet(50);
+        waitQuiet(50);
     }
 
-    private boolean checkMissingEtx(String response) {
-        if (response.isEmpty())
-            return false;
-        if (response.length() < 2)
-            return true;
-        return response.charAt(response.length() - 2) != ETX;
-    }
-
-    private boolean checkReceivedLrc(String response) {
-        if (response.isEmpty())
-            return false;
-        if (checkIntermediateMessage(response))
-            return true;
-        char received = response.charAt(response.length() - 1);
-        char calculated = calculateResponseLrc(response);
-        return received == calculated;
-    }
-
-    private char calculateResponseLrc(String message) {
-        String trimmed = message.substring(1, message.length() - 1);
-        return calculateLrc(trimmed);
-    }
-
-    private char calculateLrc(String message) {
-        char x = 0;
-        for (int i = 0; i < message.length(); i++)
-            x ^= message.charAt(i);
-        return x;
-    }
-
-    private void sleepQuiet(long ms) {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException ignored) {
+    private void waitQuiet(long ms) {
+        Object waitMonitor = new Object();
+        synchronized (waitMonitor) {
+            long deadline = currentTimeMillis() + ms;
+            long remaining = ms;
+            try {
+                while (remaining > 0) {
+                    waitMonitor.wait(remaining);
+                    remaining = deadline - currentTimeMillis();
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 
@@ -315,24 +308,9 @@ public class Serial {
         return sb.toString();
     }
 
-    private String getFunctionCode(String response) {
-        return response.split("\\|", -1)[0];
-    }
-
-    private String getAuthorizationCode(String response) {
-        String[] parts = response.split("\\|", -1);
-        return parts.length > 5 ? parts[5] : "";
-    }
-
-    private boolean checkIntermediateMessage(String response) {
-        if (response.length() >= 1) {
-            String payload = response.substring(1, response.length() - 2);
-            return getFunctionCode(payload).equals("0900");
-        }
-
-        return false;
-    }
-
+    /**
+     * Callback for intermediate POS responses (function code {@code 0900}).
+     */
     public interface OnIntermediateMessageReceivedListener {
         void onReceived(IntermediateResponse intermediateMessage);
     }

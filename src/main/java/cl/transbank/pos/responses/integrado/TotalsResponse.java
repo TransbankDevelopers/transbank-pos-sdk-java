@@ -10,6 +10,12 @@ import lombok.Getter;
 
 import static cl.transbank.pos.utils.ParameterParser.parseIntParameter;
 
+/**
+ * Parsed response for totals operations in POS Integrado.
+ * <p>
+ * Extends {@link BasicResponse} and adds transaction summary values:
+ * transaction count and total amount currently reported by the POS.
+ */
 @Getter
 public class TotalsResponse extends BasicResponse {
 

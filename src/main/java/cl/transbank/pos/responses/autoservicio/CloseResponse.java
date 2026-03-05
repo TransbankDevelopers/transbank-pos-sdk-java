@@ -11,6 +11,12 @@ import java.util.Map;
 
 import static cl.transbank.pos.utils.ParameterParser.parsePrintingField;
 
+/**
+ * Parsed response for close operations in POS Autoservicio.
+ * <p>
+ * Extends {@link LoadKeysResponse} and adds the printable close report
+ * returned by the POS.
+ */
 @Getter
 public class CloseResponse extends LoadKeysResponse {
 
