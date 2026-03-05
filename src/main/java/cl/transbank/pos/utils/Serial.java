@@ -281,8 +281,13 @@ public class Serial {
     private void waitQuiet(long ms) {
         Object waitMonitor = new Object();
         synchronized (waitMonitor) {
+            long deadline = currentTimeMillis() + ms;
+            long remaining = ms;
             try {
-                waitMonitor.wait(ms);
+                while (remaining > 0) {
+                    waitMonitor.wait(remaining);
+                    remaining = deadline - currentTimeMillis();
+                }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
