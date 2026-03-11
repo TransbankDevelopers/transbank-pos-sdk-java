@@ -124,7 +124,6 @@ public class Serial {
 
     protected void write(String payload, boolean intermediateMessages, boolean saleDetail, boolean printOnPOS)
             throws TransbankException, IOException {
-        log.debug("write() start: payload=" + payload);
         currentResponse = "";
         checkCanWrite();
         sendCommandAndValidateAck(payload);
@@ -139,7 +138,6 @@ public class Serial {
             return;
         }
 
-        log.debug("write() -> about to readMessage()");
         readMessage();
     }
 

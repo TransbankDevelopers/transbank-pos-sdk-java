@@ -49,6 +49,12 @@ public class MultiCodeSaleResponse extends SaleResponse {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         String formattedAccountingDate = getAccountingDate() != null ? dateFormat.format(getAccountingDate()) : "";
         String formattedRealDate = getRealDate() != null ? dateFormat.format(getRealDate()) : "";
+        String printingFieldText = "";
+        if (printingField != null && !printingField.isEmpty()) {
+            printingFieldText = (printingField.size() > 1)
+                    ? "\r\n" + String.join("\r\n", printingField)
+                    : printingField.get(0);
+        }
         return  "Function:" + getFunctionCode() + "\n" +
                 "Response code: " + getResponseCode() + "\n" +
                 "Response message: " + getResponseMessage() + "\n" +
@@ -66,7 +72,7 @@ public class MultiCodeSaleResponse extends SaleResponse {
                 "Card Brand: " + getCardBrand() + "\n" +
                 "Real Date: " + formattedRealDate + "\n" +
                 "Commerce Provider Code: " + commerceProviderCode + "\n" +
-                "Printing Field: " + ((printingField.size() > 1) ? "\r\n" + String.join("\r\n", printingField) : printingField.get(0))  + "\n" +
+                "Printing Field: " + printingFieldText + "\n" +
                 "Shares Type: " + sharesType + "\n" +
                 "Shares Number: " + sharesNumber + "\n" +
                 "Shares Amount: " + sharesAmount + "\n" +
