@@ -35,6 +35,7 @@ public class Serial {
     protected String currentResponse;
     protected SerialPort port;
     protected List<String> saleDetailResponse;
+    protected SerialMessageUtils.PosModel lrcPosModel = SerialMessageUtils.PosModel.INTEGRADO;
 
     private Serial.OnIntermediateMessageReceivedListener onIntermediateMessageReceivedListener;
 
@@ -43,6 +44,10 @@ public class Serial {
 
     public void setOnIntermediateMessageReceivedListener(OnIntermediateMessageReceivedListener listener) {
         onIntermediateMessageReceivedListener = listener;
+    }
+
+    protected void setLrcPosModel(SerialMessageUtils.PosModel posModel) {
+        lrcPosModel = posModel;
     }
 
     private long currentTimeMillis() {
@@ -119,6 +124,7 @@ public class Serial {
 
     protected void write(String payload, boolean intermediateMessages, boolean saleDetail, boolean printOnPOS)
             throws TransbankException, IOException {
+        log.debug("write() start: payload=" + payload);
         currentResponse = "";
         checkCanWrite();
         sendCommandAndValidateAck(payload);
@@ -133,6 +139,7 @@ public class Serial {
             return;
         }
 
+        log.debug("write() -> about to readMessage()");
         readMessage();
     }
 
@@ -203,7 +210,7 @@ public class Serial {
                     fullResponse = fullResponse + readExisting();
                 }
             }
-        } while (!SerialMessageUtils.checkReceivedLrc(fullResponse));
+        } while (!SerialMessageUtils.checkReceivedLrc(fullResponse, lrcPosModel));
 
         setCurrentResponse(fullResponse);
         log.debug(String.format("Response [Hex]: %s", toHexString(fullResponse.getBytes(StandardCharsets.ISO_8859_1))));

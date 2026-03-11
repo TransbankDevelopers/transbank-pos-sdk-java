@@ -5,6 +5,7 @@ import cl.transbank.pos.exceptions.autoservicio.*;
 import cl.transbank.pos.responses.common.*;
 import cl.transbank.pos.responses.autoservicio.*;
 import cl.transbank.pos.utils.Serial;
+import cl.transbank.pos.utils.SerialMessageUtils;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
@@ -16,6 +17,10 @@ import java.io.IOException;
 @Log4j2
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class POSAutoservicio extends Serial {
+    public POSAutoservicio() {
+        setLrcPosModel(SerialMessageUtils.PosModel.AUTOSERVICIO);
+    }
+
     public boolean poll() throws TransbankException {
         try {
             checkCanWrite();
@@ -83,7 +88,8 @@ public class POSAutoservicio extends Serial {
         if (amount > 999999999) throw new TransbankSaleException("Amount must be less than 999999999.");
         if (ticket.trim().length() > 20) throw new TransbankSaleException("Ticket must be up to 20 in length");
 
-        String command = String.format("0200|%s|%s|%s|%s", amount, ticket, sendVoucher ? 1 : 0, sendStatus ? 1 : 0);
+        String paddedAmount = String.format("%09d", amount);
+        String command = String.format("0200|%s|%s||%s|%s", paddedAmount, ticket, sendVoucher ? 1 : 0, sendStatus ? 1 : 0);
 
         try {
             write(command, sendStatus);
@@ -106,7 +112,8 @@ public class POSAutoservicio extends Serial {
         if (amount > 999999999) throw new TransbankMultiCodeSaleException("Amount must be less than 999999999.");
         if (ticket.trim().length() > 20) throw new TransbankMultiCodeSaleException("Ticket must be up to 20 in length");
 
-        String command = String.format("0270|%s|%s|%s|%s|%s", amount, ticket, sendVoucher ? 1 : 0, sendStatus ? 1 : 0, commerceCode);
+        String paddedAmount = String.format("%09d", amount);
+        String command = String.format("0270|%s|%s|%s|%s|%s", paddedAmount, ticket, sendVoucher ? 1 : 0, sendStatus ? 1 : 0, commerceCode);
 
         try {
             write(command, sendStatus);
