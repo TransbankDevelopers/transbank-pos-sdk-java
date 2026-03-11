@@ -35,19 +35,19 @@ public class Serial {
     protected String currentResponse;
     protected SerialPort port;
     protected List<String> saleDetailResponse;
-    protected SerialMessageUtils.PosModel lrcPosModel = SerialMessageUtils.PosModel.INTEGRADO;
+    protected final SerialMessageUtils.PosModel lrcPosModel;
 
     private Serial.OnIntermediateMessageReceivedListener onIntermediateMessageReceivedListener;
 
     private String fullResponse = "";
     private int sentNack = 0;
 
-    public void setOnIntermediateMessageReceivedListener(OnIntermediateMessageReceivedListener listener) {
-        onIntermediateMessageReceivedListener = listener;
+    protected Serial(SerialMessageUtils.PosModel posModel) {
+        this.lrcPosModel = posModel;
     }
 
-    protected void setLrcPosModel(SerialMessageUtils.PosModel posModel) {
-        lrcPosModel = posModel;
+    public void setOnIntermediateMessageReceivedListener(OnIntermediateMessageReceivedListener listener) {
+        onIntermediateMessageReceivedListener = listener;
     }
 
     private long currentTimeMillis() {

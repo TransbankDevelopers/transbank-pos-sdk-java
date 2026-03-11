@@ -18,7 +18,7 @@ import java.io.IOException;
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class POSAutoservicio extends Serial {
     public POSAutoservicio() {
-        setLrcPosModel(SerialMessageUtils.PosModel.AUTOSERVICIO);
+        super(SerialMessageUtils.PosModel.AUTOSERVICIO);
     }
 
     public boolean poll() throws TransbankException {
