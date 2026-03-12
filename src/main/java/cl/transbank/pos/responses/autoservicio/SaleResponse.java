@@ -66,6 +66,12 @@ public class SaleResponse extends LoadKeysResponse {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         String formattedAccountingDate = accountingDate != null ? dateFormat.format(accountingDate) : "";
         String formattedRealDate = realDate != null ? dateFormat.format(realDate) : "";
+        String printingFieldText = "";
+        if (printingField != null && !printingField.isEmpty()) {
+            printingFieldText = (printingField.size() > 1)
+                    ? "\r\n" + String.join("\r\n", printingField)
+                    : printingField.get(0);
+        }
         return super.toString() + "\n" +
             "Ticket: " + ticket + "\n" +
             "AuthorizationCode Code: " + authorizationCode + "\n" +
@@ -77,7 +83,7 @@ public class SaleResponse extends LoadKeysResponse {
             "Account Number: " + accountNumber + "\n" +
             "Card Brand: " + cardBrand + "\n" +
             "Real Date: " + formattedRealDate + "\n" +
-            "Printing Field: " + ((printingField.size() > 1) ? "\r\n" + String.join("\r\n", printingField) : printingField.get(0))  + "\n" +
+            "Printing Field: " + printingFieldText + "\n" +
             "Shares Type: " + sharesType + "\n" +
             "Shares Number: " + sharesNumber + "\n" +
             "Shares Amount: " + sharesAmount + "\n" +

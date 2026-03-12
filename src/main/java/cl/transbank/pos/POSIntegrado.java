@@ -8,6 +8,7 @@ import cl.transbank.pos.responses.common.LoadKeysResponse;
 import cl.transbank.pos.responses.common.RefundResponse;
 import cl.transbank.pos.responses.integrado.*;
 import cl.transbank.pos.utils.Serial;
+import cl.transbank.pos.utils.SerialMessageUtils;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
@@ -21,6 +22,10 @@ import java.util.List;
 @Log4j2
 @SuppressWarnings({ "unused", "UnusedReturnValue" })
 public class POSIntegrado extends Serial {
+    public POSIntegrado() {
+        super(SerialMessageUtils.PosModel.INTEGRADO);
+    }
+
     public boolean poll() throws TransbankException {
         try {
             checkCanWrite();

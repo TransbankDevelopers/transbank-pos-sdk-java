@@ -35,11 +35,16 @@ public class Serial {
     protected String currentResponse;
     protected SerialPort port;
     protected List<String> saleDetailResponse;
+    private final SerialMessageUtils.PosModel lrcPosModel;
 
     private Serial.OnIntermediateMessageReceivedListener onIntermediateMessageReceivedListener;
 
     private String fullResponse = "";
     private int sentNack = 0;
+
+    protected Serial(SerialMessageUtils.PosModel posModel) {
+        this.lrcPosModel = posModel;
+    }
 
     public void setOnIntermediateMessageReceivedListener(OnIntermediateMessageReceivedListener listener) {
         onIntermediateMessageReceivedListener = listener;
@@ -203,7 +208,7 @@ public class Serial {
                     fullResponse = fullResponse + readExisting();
                 }
             }
-        } while (!SerialMessageUtils.checkReceivedLrc(fullResponse));
+        } while (!SerialMessageUtils.checkReceivedLrc(fullResponse, lrcPosModel));
 
         setCurrentResponse(fullResponse);
         log.debug(String.format("Response [Hex]: %s", toHexString(fullResponse.getBytes(StandardCharsets.ISO_8859_1))));

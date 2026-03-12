@@ -5,6 +5,14 @@ package cl.transbank.pos.utils;
  */
 public final class SerialMessageUtils {
     private static final char ETX = '\u0003';
+    private static final int LRC_LENGTH = 1;
+    private static final int AUTOSERVICIO_START_INDEX = 0;
+    private static final int INTEGRADO_START_INDEX = 1;
+
+    public enum PosModel {
+        AUTOSERVICIO,
+        INTEGRADO
+    }
 
     private SerialMessageUtils() {
     }
@@ -14,12 +22,16 @@ public final class SerialMessageUtils {
     }
 
     public static boolean checkReceivedLrc(String response) {
+        return checkReceivedLrc(response, PosModel.INTEGRADO);
+    }
+
+    public static boolean checkReceivedLrc(String response, PosModel posModel) {
         if (response.isEmpty())
             return false;
         if (checkIntermediateMessage(response))
             return true;
         char received = response.charAt(response.length() - 1);
-        char calculated = calculateResponseLrc(response);
+        char calculated = calculateResponseLrc(response, posModel);
         return received == calculated;
     }
 
@@ -37,8 +49,10 @@ public final class SerialMessageUtils {
         return getFunctionCode(payload).equals("0900");
     }
 
-    private static char calculateResponseLrc(String message) {
-        String trimmed = message.substring(1, message.length() - 1);
+    private static char calculateResponseLrc(String message, PosModel posModel) {
+        int startIndex = posModel == PosModel.AUTOSERVICIO ? AUTOSERVICIO_START_INDEX : INTEGRADO_START_INDEX;
+        int charsToKeep = message.length() - startIndex - LRC_LENGTH;
+        String trimmed = message.substring(startIndex, startIndex + charsToKeep);
         return calculateLrc(trimmed);
     }
 
