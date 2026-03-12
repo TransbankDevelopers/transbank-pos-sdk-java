@@ -35,7 +35,7 @@ public class Serial {
     protected String currentResponse;
     protected SerialPort port;
     protected List<String> saleDetailResponse;
-    protected final SerialMessageUtils.PosModel lrcPosModel;
+    private final SerialMessageUtils.PosModel lrcPosModel;
 
     private Serial.OnIntermediateMessageReceivedListener onIntermediateMessageReceivedListener;
 
