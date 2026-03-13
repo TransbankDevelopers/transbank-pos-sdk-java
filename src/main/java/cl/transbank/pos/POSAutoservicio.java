@@ -89,7 +89,7 @@ public class POSAutoservicio extends Serial {
         if (ticket.trim().length() > 20) throw new TransbankSaleException("Ticket must be up to 20 in length");
 
         String paddedAmount = String.format("%09d", amount);
-        String command = String.format("0200|%s|%s||%s|%s", paddedAmount, ticket, sendVoucher ? 1 : 0, sendStatus ? 1 : 0);
+        String command = String.format("0200|%s|%s|%s|%s", paddedAmount, ticket, sendVoucher ? 1 : 0, sendStatus ? 1 : 0);
 
         try {
             write(command, sendStatus);
